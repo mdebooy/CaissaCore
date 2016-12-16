@@ -1,0 +1,157 @@
+[Event "Nordwalder Variant"]
+[Site "Openingen"]
+[Date "????.??.??"]
+[Round "1"]
+[White "Gambiet, Konings"]
+[Black "de Booij, Marco"]
+[Result "*"]
+
+
+	   1.	e4          	e5 =         
+	   2.	f4          	Qf6         
+	   3.	Nc3         	
+
+    ( 3.fxe5?? Qh4+! 4.g3 Qxe4+ 5.Qe2 Qxh1 6.Nf3 b6! 7.Kf2 Bb7! 8.Ng5 
+    Qxh2+ 9.Ke1 Qxg3+ 10.Kd1 Qxg5 )
+
+	   3.	...        	Qxf4        
+	   4.	d4          	Qh4+        
+	   5.	g3          	Qd8 N D     
+	   6.	dxe5        	d6!         
+	   7.	Bc4         	
+
+    ( 7.Nf3 Bg4 8.Bb5+ c6 9.Bc4 Nd7 10.exd6 Bxf3 11.Qxf3 Ne5 -+ )
+    ( 7.Be3?! dxe5 8.Qxd8+ Kxd8 9.O-O-O+ Nd7 10.Bc4 
+        ( 10.Nf3 f6 -+ )
+    10...f6 -+ )
+    ( 7.exd6 Bxd6! )
+
+	   7.	...        	Nc6         
+	   8.	Nf3         	
+
+    ( 8.exd6 Bxd6 9.Nb5 Bb4+ 10.c3 Qxd1+ 11.Kxd1 Ba5 12.Bf4 Bg4+ 13.Kc2 
+    O-O-O 14.b4 Bb6 15.a4 a6 16.a5 axb5 17.axb6 bxc4 18.bxc7 Re8 19.Nf3 
+    Bxf3 20.Ra8+ Kd7 21.Rxe8 Nge7 22.Rxh8 Bxe4+ 23.Kb2 Bxh1 24.b5 Na7 25.
+    Rd8+ Ke6 )
+    ( 8.Bf4?! dxe5 )
+
+	   8.	...        	Bg4         
+	   9.	O-O         	
+
+    ( 9.Bxf7+ Kxf7 10.O-O? Ke8 11.h3 Bxh3 12.Ng5 Bxf1 13.Qxf1 Nxe5 14.Ne6 
+    Qf6 15.Nxc7+ Kf7 16.Bf4 )
+
+	   9.	...        	Qd7         
+	  10.	Bf4         	O-O-O       
+
+    ( 10...Bxf3 11.Qxf3 dxe5 12.Rad1 
+        ( 12.Be3 f6 13.Rad1 Bd6 = )
+    12...Bd6 = )
+
+	  11.	exd6        	Bxd6        
+	  12.	Bxd6        	cxd6        
+
+    ( 12...Qe8 13.Bxf7! +- )
+
+
+*
+
+[Event "Nordwalder Variant"]
+[Site "Openingen"]
+[Date "????.??.??"]
+[Round "2"]
+[White "Gambiet, Konings"]
+[Black "de Booij, Marco"]
+[Result "*"]
+
+1.e4 e5 2.f4 Qf6 3.Nc3 Qxf4 4.d4 Qh4+ 5.g3 Qd8
+6.dxe5 d6 7.Bc4 Nc6 8.Nf3 Bg4 9.O-O Qd7
+10.Bf4 O-O-O 11.exd6 Bxd6 12.Bxd6 cxd6 *
+
+[Event "USA 40c/11"]
+[Site "?"]
+[Date "1985.??.??"]
+[Round "3"]
+[White "Shipman, J."]
+[Black "Weber, J."]
+[Result "1-0"]
+[Annotator "Smirnov"]
+[SetUp "1"]
+[FEN "r1b1k1r1/ppppbppp/8/1q6/6Q1/2B5/PPP2PPP/R3R1K1 w q - 0 1"]
+[PlyCount "25"]
+[EventDate "1985.??.??"]
+
+{White has a few obvious attacking moves. The problem is to make right
+calculation (until the end).} 1. Rxe7+ {!} (1. Bf6 {? (This moves looks very
+nice, but it's losing really)} d6 {!} (1... d5 {?} 2. Rxe7+ Kf8 3. Qh5 Be6 4.
+Re1 gxf6 5. R1xe6 Rg7 6. Re1 $16) 2. Rxe7+ Kf8 {(now all the white's pieces
+are under an attack)} 3. Qg5 Qxg5 4. Bxg5 h6 5. Rae1 Be6 $19) (1. Qh4 {!? 
+(this move is winning as well as 1.Re7)} Qc5 (1... f6 {?} 2. Qxh7 Qd5 3. Bxf6
+$18 {!!}) 2. Bb4 $18) 1... Kxe7 2. Qe4+ {! (though Re1 seems much more natural,
+Qe4 is the most precise way)} (2. Re1+ {?!} Kd6 {and now it's not that simple
+to find a direct win for white}) 2... Kd8 (2... Kf8 {?} 3. Re1 $18) (2... Kd6 {
+?} 3. Rd1+ {now white is easily winning. This is the point of 2.Qe4 move.}) 3.
+Qh4+ f6 4. Bxf6+ Ke8 5. Re1+ Kf7 (5... Kf8 6. Bxg7+ Kxg7 (6... Rxg7 7. Qf6+) 7.
+Re7+ Kg6 8. Qxh7+ Kf6 9. Qf7+ $18) 6. Re7+ Kg6 7. Be5 $1 {(This cuts off the
+black's queen and now the white's 3 pieces are attacking the lonely king)} d6 (
+7... h5 8. Rxg7+ Rxg7 9. Qf6+ Kh7 10. Qxg7#) 8. Qg3+ Kh5 9. Qf3+ Kh6 (9... Bg4
+10. Qf7+ Kh6 11. Bf4+) 10. Qf4+ g5 11. Qf6+ Rg6 12. Rxh7+ Kxh7 13. Qh8# 1-0
+
+[Event "USA 40c/11"]
+[Site "?"]
+[Date "1985.??.??"]
+[Round "4"]
+[White "Shipman, J."]
+[Black "Weber, J."]
+[Result "1-0"]
+[Annotator "Smirnov"]
+[SetUp "1"]
+[FEN "r1b1k1r1/ppppbppp/8/1q6/6Q1/2B5/PPP2PPP/R3R1K1 w q - 0 1"]
+[PlyCount "25"]
+[EventDate "1985.??.??"]
+
+1.Rxe7+ Kxe7 2.Qe4+ Kd8 3.Qh4+ f6 4.Bxf6+ Ke8 5.Re1+ Kf7
+6.Re7+ Kg6 7.Be5 d6 8.Qg3+ Kh5 9.Qf3+ Kh6 10.Qf4+ g5
+11.Qf6+ Rg6 12.Rxh7+ Kxh7 13.Qh8# 1-0
+
+[Event "SF-2013-0-00212"]
+[Site "Lechenicher SchachServer"]
+[Date "2013.12.24"]
+[Round "5"]
+[White "Gorman, Andrew"]
+[Black "de Booij, Marco"]
+[Result "0-1"]
+[WhiteElo "977"]
+[BlackElo "1062"]
+[ECO "C54k"]
+[EventDate "2013.09.29"]
+[Vertaal "nl" ]
+
+1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.c3 Nf6 5.d4 exd4 6.e5 d5 7.b4 Bb6 8.exf6 
+dxc4 9.b5 Nb8 10.Qe2+ Be6 11.fxg7 Rg8 12.Nxd4 Bxd4 13.cxd4 Rxg7 14.0–0 Qd5
+15.g3 Nd7 16.Bb2 0-0-0 17.Nc3 Qd6 18.a4 Rgg8 19.Rad1 Nb6 20.Rd2 Nd5 21.
+Nxd5 Qxd5 22.Qe5 Qf3 23.Qe3 Qd5 24.f3 Rde8 25.Qe4 Qd6 26.Ra1 Bd5 27.Qf5+ 
+Kb8 28.Ba3 Qh6 29.Rg2 Qe3+ 30.Rf2 Qxd4 31.Rb1 Re2 32.Rf1 Be6 33.Qf4 Qxf4 
+34.Rxe2 Qd4+ 35.Kg2 c3 36.Re4 Qd2+ 37.Kh1 Bh3 38.Rg1 Be6 39.Rg2 Qd1+ 40.
+Rg1 Qxf3+ 0-1
+
+[Event "SF-2013-0-00212"]
+[Site "Lechenicher SchachServer"]
+[Date "2013.12.24"]
+[Round "6"]
+[White "Gorman, Andrew"]
+[Black "de Booij, Marco"]
+[Result "0-1"]
+[WhiteElo "977"]
+[BlackElo "1062"]
+[ECO "C54k"]
+[EventDate "2013.09.29"]
+
+1.e4 e5 2.Pf3 Pc6 3.Lc4 Lc5 4.c3 Pf6 5.d4 exd4 6.e5 d5 7.b4 Lb6 8.exf6
+dxc4 9.b5 Pb8 10.De2+ Le6 11.fxg7 Tg8 12.Pxd4 Lxd4 13.cxd4 Txg7 14.O-O Dd5
+15.g3 Pd7 16.Lb2 O-O-O 17.Pc3 Dd6 18.a4 Tgg8 19.Tad1 Pb6 20.Td2 Pd5 21.
+Pxd5 Dxd5 22.De5 Df3 23.De3 Dd5 24.f3 Tde8 25.De4 Dd6 26.Ta1 Ld5 27.Df5+ 
+Kb8 28.La3 Dh6 29.Tg2 De3+ 30.Tf2 Dxd4 31.Tb1 Te2 32.Tf1 Le6 33.Df4 Dxf4
+34.Txe2 Dd4+ 35.Kg2 c3 36.Te4 Dd2+ 37.Kh1 Lh3 38.Tg1 Le6 39.Tg2 Dd1+ 40.
+Tg1 Dxf3+ 0-1
+
