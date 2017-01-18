@@ -16,6 +16,8 @@
  */
 package eu.debooy.caissa;
 
+import java.io.Serializable;
+
 /**
  * Deze class wordt gebruikt voor de PGN Tag Round. Met behulp van deze class
  * kan er op de Round gesorteerd worden.
@@ -31,7 +33,9 @@ package eu.debooy.caissa;
  * 
  * @author Marco de Booij
  */
-public class Round implements Comparable<Round>, Cloneable {
+public class Round implements Comparable<Round>, Serializable {
+  private static final  long  serialVersionUID  = 1L;
+
   private String  round = "";
 
   /**

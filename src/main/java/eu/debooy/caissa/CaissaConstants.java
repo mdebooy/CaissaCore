@@ -50,6 +50,10 @@ public final class CaissaConstants {
   public static final int     REMISE            = 1;
   public static final int     VERLIES           = 0;
 
+  public static final String  KORTE_ROCHADE     = "O-O";
+  public static final String  LANGE_ROCHADE     = "O-O-O";
+  public static final String  EN_PASSANT        = " e.p.";
+
   public static final String  PARTIJ_WIT_WINT   = "1-0";
   public static final String  PARTIJ_REMISE     = "1/2-1/2";
   public static final String  PARTIJ_ZWART_WINT = "0-1";

@@ -53,33 +53,18 @@ public class Zet implements Comparable<Object>, Serializable {
   public Zet() {
   }
 
-  /**
-   * @param naar het naar veld
-   * @param van het van veld
-   */
   public Zet(int van, int naar) {
     this.stuk = ' ';
     this.naar = naar;
     this.van  = van;
   }
 
-  /**
-   * @param stuk het stuk
-   * @param naar het naar veld
-   * @param van het van veld
-   */
   public Zet(char stuk, int van, int naar) {
     this.stuk = stuk;
     this.naar = naar;
     this.van  = van;
   }
 
-  /**
-   * @param stuk het stuk
-   * @param naar het naar veld
-   * @param van het van veld
-   * @param promotieStuk het stuk waar de pion naar promoveert
-   */
   public Zet(char stuk, int van, int naar, char promotieStuk) {
     this.stuk         = stuk;
     this.naar         = naar;
@@ -87,9 +72,6 @@ public class Zet implements Comparable<Object>, Serializable {
     this.promotieStuk = promotieStuk;
   }
 
-  /**
-   * @return de zet in ChessTheatre formaat
-   */
   public String getChessTheatreZet() {
     StringBuilder zet   = new StringBuilder();
 
@@ -154,11 +136,6 @@ public class Zet implements Comparable<Object>, Serializable {
     return zet.toString().replace(' ', 'P');
   }
 
-  /**
-   * Bij correspondentieschaak geldt a1=11, a8=18, h1=81 en h8=88.
-   * 
-   * @return de zet in Correspondentieschaak formaat
-   */
   public String getCorrespondentieZet() {
     StringBuilder zet = new StringBuilder();
 
@@ -170,19 +147,16 @@ public class Zet implements Comparable<Object>, Serializable {
     return zet.toString();
   }
 
-  /**
-   * @return de korte notatie
-   */
   public String getKorteNotatie() {
     StringBuilder zet = new StringBuilder();
     
     if (stuk == 'K'
       && (van - naar) == -2) {
-        zet.append("O-O");
+        zet.append(CaissaConstants.KORTE_ROCHADE);
     } else {
       if (stuk == 'K'
         && (van - naar) == 2) {
-          zet.append("O-O-O");
+          zet.append(CaissaConstants.LANGE_ROCHADE);
       } else {
         zet.append(stuk);
         if (korteNotatieLevel == 1
@@ -218,26 +192,20 @@ public class Zet implements Comparable<Object>, Serializable {
     return zet.toString().trim();
   }
 
-  /**
-   * @return het 'level' van de korte notatie
-   */
   public int getKorteNotatieLevel() {
     return korteNotatieLevel;
   }
 
-  /**
-   * @return de lange notatie
-   */
   public String getLangeNotatie() {
     StringBuilder zet = new StringBuilder();
 
     if (stuk == 'K'
       && (van - naar) == -2) {
-        zet.append("O-O");
+        zet.append(CaissaConstants.KORTE_ROCHADE);
     } else {
       if (stuk == 'K'
         && (van - naar) == 2) {
-        zet.append("O-O-O");
+        zet.append(CaissaConstants.LANGE_ROCHADE);
       } else {
         zet.append(stuk);
         zet.append(CaissaUtils.internToExtern(van));
@@ -260,26 +228,20 @@ public class Zet implements Comparable<Object>, Serializable {
       zet.append('#');
     }
     if (ep) {
-      zet.append(" e.p.");
+      zet.append(CaissaConstants.EN_PASSANT);
     }
 
     return zet.toString().trim();
   }
 
-  /**
-   * @return het naar veld
-   */
   public int getNaar() {
     return naar;
   }
 
-  /**
-   * @return de PGN notatie
-   */
   public String getPgnNotatie() {
     String  zet       = getKorteNotatie();
 
-    if (zet.endsWith(" e.p.")) {
+    if (zet.endsWith(CaissaConstants.EN_PASSANT)) {
       zet = zet.substring(0, zet.length() - 5);
     }
     if (promotieStuk == ' ') {
@@ -295,61 +257,43 @@ public class Zet implements Comparable<Object>, Serializable {
     return zet;
   }
 
-  /**
-   * @return het stuk waar de pion naar promoveert
-   */
   public char getPromotieStuk() {
     return promotieStuk;
   }
 
-  /**
-   * @return het stuk
-   */
   public char getStuk() {
     return stuk;
   }
 
-  /**
-   * @return het van veld
-   */
   public int getVan() {
     return van;
   }
 
-  /**
-   * @return korte notatie
-   */
   public String getZet() {
     return getKorteNotatie();
   }
 
-  /**
-   * Geef de zet van KortenotatieLevel 'notatie'
-   * 
-   * @param notatie het KortenotatieLevel
-   * @return de zet in Kortenotatie van 'notatie' level
-   */
   protected String getZet(int notatie) {
     StringBuilder zet = new StringBuilder();
 
     if (stuk == 'K') {
       if ((van - naar) == 2) {
         if (schaak) {
-          return "O-O+";
+          return CaissaConstants.KORTE_ROCHADE + "+";
         }
         if (mat) {
-          return "O-O#";
+          return CaissaConstants.KORTE_ROCHADE + "#";
         }
-        return "O-O";
+        return CaissaConstants.KORTE_ROCHADE;
       }
       if ((van - naar) == -2) {
         if (schaak) {
-          return "O-O-O+";
+          return CaissaConstants.LANGE_ROCHADE + "+";
         }
         if (mat) {
-          return "O-O-O#";
+          return CaissaConstants.LANGE_ROCHADE + "#";
         }
-        return "O-O-O";
+        return CaissaConstants.LANGE_ROCHADE;
       }
     }
 
@@ -375,66 +319,38 @@ public class Zet implements Comparable<Object>, Serializable {
     return zet.toString().trim();
   }
 
-  /**
-   * @return is het een En-Passant zet?
-   */
   public boolean isEp() {
     return ep;
   }
 
-  /**
-   * @return geeft de zet mat?
-   */
   public boolean isMat() {
     return mat;
   }
 
-  /**
-   * @return geeft de zet schaak?
-   */
   public boolean isSchaak() {
     return schaak;
   }
 
-  /**
-   * @return is het een slagzet?
-   */
   public boolean isSlagzet() {
     return (slagzet || ep);
   }
 
-  /**
-   * @param ep is het een En-Passant zet?
-   */
   public void setEp(boolean ep) {
     this.ep = ep;
   }
 
-  /**
-   * @param korteNotatieLevel
-   */
   public void setKorteNotatieLevel(int korteNotatieLevel) {
     this.korteNotatieLevel = korteNotatieLevel;
   }
 
-  /**
-   * @param mat geeft de zet mat?
-   */
   public void setMat(boolean mat) {
     this.mat = mat;
   }
 
-  /**
-   * @param naar het naar veld
-   */
   public void setNaar(int naar) {
     this.naar = naar;
   }
 
-  /**
-   * @param promotieStuk het stuk waar de pion naar promoveert
-   * @throws ZetException 
-   */
   public void setPromotieStuk(char promotieStuk) throws ZetException {
     if ("NBRQ".indexOf(promotieStuk) < 0) {
       throw new ZetException("PromotieStuk foutief [" + promotieStuk + "]");
@@ -443,24 +359,14 @@ public class Zet implements Comparable<Object>, Serializable {
     this.promotieStuk = promotieStuk;
   }
 
-  /**
-   * @param schaak geeft de schaak?
-   */
   public void setSchaak(boolean schaak) {
     this.schaak = schaak;
   }
 
-  /**
-   * @param slagzet is het een slagzet?
-   */
   public void setSlagzet(boolean slagzet) {
     this.slagzet = slagzet;
   }
 
-  /**
-   * @param stuk het stuk dat gezet wordt
-   * @throws ZetException 
-   */
   public void setStuk(char stuk) throws ZetException {
     if (CaissaConstants.NOTATIE_STUKKEN.indexOf(stuk) < 0) {
       throw new ZetException("Stuk foutief [" + stuk + "]");
@@ -469,16 +375,10 @@ public class Zet implements Comparable<Object>, Serializable {
     this.stuk = stuk;
   }
 
-  /**
-   * @param van het van veld
-   */
   public void setVan(int van) {
     this.van = van;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   public int compareTo(Object obj) {
     Zet other = (Zet) obj;
 
@@ -510,10 +410,6 @@ public class Zet implements Comparable<Object>, Serializable {
     return DoosConstants.EQUAL;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;
@@ -534,28 +430,10 @@ public class Zet implements Comparable<Object>, Serializable {
     return true;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
   public int hashCode() {
-    final int prime   = 31;
-    int       result  = super.hashCode();
-
-    result = prime * result + (ep ? 0 : 1);
-    result = prime * result + (mat ? 0 : 1);
-    result = prime * result + naar;
-    result = prime * result + (schaak ? 0 : 1);
-    result = prime * result + (slagzet ? 0 : 1);
-    result = prime * result + stuk;
-    result = prime * result + van;
-    return result;
+    return van * 100000 + naar * 1000 + promotieStuk;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
-  @Override
   public String toString() {
     return getLangeNotatie() + "|" + getKorteNotatie();
   }
