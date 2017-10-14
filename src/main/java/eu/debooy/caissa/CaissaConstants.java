@@ -45,6 +45,12 @@ public final class CaissaConstants {
   public static final int     TOREN             = 4;
   public static final int     DAME              = 5;
   public static final int     KONING            = 6;
+  public static final int     ZPION             = -1;
+  public static final int     ZPAARD            = -2;
+  public static final int     ZLOPER            = -3;
+  public static final int     ZTOREN            = -4;
+  public static final int     ZDAME             = -5;
+  public static final int     ZKONING           = -6;
 
   public static final int     WINST             = 2;
   public static final int     REMISE            = 1;
