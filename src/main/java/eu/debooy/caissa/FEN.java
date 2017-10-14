@@ -61,7 +61,7 @@ import java.io.Serializable;
  * @author Marco de Booij
  */
 //TODO Aanpassen aan schaak960 ivm rochade.
-public class FEN implements Cloneable, Serializable {
+public class FEN implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private Boolean witKorteRochade   = true;
@@ -119,20 +119,13 @@ public class FEN implements Cloneable, Serializable {
     positie = nieuwePositie.toString();
   }
 
-  @Override
-  protected FEN clone() throws CloneNotSupportedException {
-    FEN fen = (FEN) super.clone();
-
-    return fen;
-  }
-
   public void doeZet(Zet zet) throws FenException {
     int veldVan   = zet.getVan();
     int veldNaar  = zet.getNaar();
     int stukVan   = bord[veldVan];
     int stukNaar  = bord[veldNaar];
     if (stukNaar != 0
-        || Math.abs(stukVan) == 1) {
+        || Math.abs(stukVan) == CaissaConstants.PION) {
       halvezetten = 0;
     } else {
       halvezetten++;
@@ -153,7 +146,7 @@ public class FEN implements Cloneable, Serializable {
     bord[veldNaar] = stukVan;
     if (!"-".equals(enPassant)
         && veldNaar == CaissaUtils.externToIntern(enPassant)
-        && Math.abs(stukVan) == 1) {
+        && Math.abs(stukVan) == CaissaConstants.PION) {
       if ((veldVan-veldNaar) == -9
           || (veldVan-veldNaar) == 11) {
         bord[veldVan-1] = 0;
@@ -166,31 +159,31 @@ public class FEN implements Cloneable, Serializable {
     if (aanZet == 'w') {
       aanZet  = 'b';
       if (veldVan == 21
-          && stukVan == 2) {
-        witKorteRochade = false;
+          && stukVan == CaissaConstants.TOREN) {
+        witLangeRochade = false;
       }
       if (veldVan == 25
-          && stukVan == 6) {
+          && stukVan == CaissaConstants.KONING) {
         witKorteRochade = false;
         witLangeRochade = false;
       }
       if (veldVan == 28
-          && stukVan == 2) {
-        witLangeRochade = false;
+          && stukVan == CaissaConstants.TOREN) {
+        witKorteRochade = false;
       }
       // Korte rochade
-      if (stukVan == 6
+      if (stukVan == CaissaConstants.KONING
           && (veldVan - veldNaar) == -2) {
-        bord[26]  = 4;
+        bord[26]  = CaissaConstants.TOREN;
         bord[28]  = 0;
       }
       // Lange rochade
-      if (stukVan == 6
+      if (stukVan == CaissaConstants.KONING
           && (veldVan - veldNaar) == 2) {
-        bord[24]  = 4;
+        bord[24]  = CaissaConstants.TOREN;
         bord[21]  = 0;
       }
-      if (stukVan == 1
+      if (stukVan == CaissaConstants.PION
           && (veldNaar - veldVan) == 20) {
         enPassant = CaissaUtils.internToExtern(veldNaar-10);
       } else {
@@ -199,31 +192,31 @@ public class FEN implements Cloneable, Serializable {
     } else {
       aanZet  = 'w';
       if (veldVan == 91
-          && stukVan == -2) {
-        zwartKorteRochade = false;
+          && stukVan == CaissaConstants.ZTOREN) {
+        zwartLangeRochade = false;
       }
       if (veldVan == 95
-          && stukVan == -6) {
+          && stukVan == CaissaConstants.ZKONING) {
         zwartKorteRochade = false;
         zwartLangeRochade = false;
       }
       if (veldVan == 98
-          && stukVan == -2) {
-        zwartLangeRochade = false;
+          && stukVan == CaissaConstants.ZTOREN) {
+        zwartKorteRochade = false;
       }
       // Korte rochade
-      if (stukVan == -6
+      if (stukVan == CaissaConstants.ZKONING
           && (veldVan - veldNaar) == -2) {
-        bord[96]  = -4;
+        bord[96]  = CaissaConstants.ZTOREN;
         bord[98]  = 0;
       }
       // Lange rochade
-      if (stukVan == -6
+      if (stukVan == CaissaConstants.ZKONING
           && (veldVan - veldNaar) == 2) {
-        bord[94]  = -4;
+        bord[94]  = CaissaConstants.ZTOREN;
         bord[91]  = 0;
       }
-      if (stukVan == -1
+      if (stukVan == CaissaConstants.ZPION
           && (veldVan - veldNaar) == 20) {
         enPassant = CaissaUtils.internToExtern(veldNaar+10);
       } else {
@@ -233,7 +226,6 @@ public class FEN implements Cloneable, Serializable {
     }
   }
 
-  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof FEN)) {
       return false;
@@ -379,7 +371,6 @@ public class FEN implements Cloneable, Serializable {
     return zwartLangeRochade;
   }
 
-  @Override
   public int hashCode() {
     return getFen().hashCode();
   }
@@ -578,7 +569,6 @@ public class FEN implements Cloneable, Serializable {
     return -1;
   }
 
-  @Override
   public String toString() {
     return getFen();
   }

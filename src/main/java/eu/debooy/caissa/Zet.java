@@ -72,6 +72,18 @@ public class Zet implements Comparable<Object>, Serializable {
     this.promotieStuk = promotieStuk;
   }
 
+  public Zet(Zet zet) {
+    ep                = zet.ep;
+    korteNotatieLevel = zet.korteNotatieLevel;
+    mat               = zet.mat;
+    naar              = zet.naar;
+    promotieStuk      = zet.promotieStuk;
+    schaak            = zet.schaak;
+    slagzet           = zet.slagzet;
+    stuk              = zet.stuk;
+    van               = zet.van;
+  }
+
   public String getChessTheatreZet() {
     StringBuilder zet   = new StringBuilder();
 
@@ -263,6 +275,21 @@ public class Zet implements Comparable<Object>, Serializable {
 
   public char getStuk() {
     return stuk;
+  }
+
+  public String getUciNotatie() {
+    StringBuilder zet = new StringBuilder();
+
+    zet.append((char) (van%10 + 64));
+    zet.append((char) (van/10 + 47));
+    zet.append((char) (naar%10 + 64));
+    zet.append((char) (naar/10 + 47));
+
+    if (promotieStuk != ' ') {
+      zet.append(promotieStuk);
+    }
+
+    return zet.toString().toLowerCase();
   }
 
   public int getVan() {
