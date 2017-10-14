@@ -22,7 +22,7 @@ package eu.debooy.caissa;
  * 
  * Volgens Wikipedia:
  * 
- * Een Elo-rating is een getalsmatige aanduiding van de sterkte van een speler.
+ * Een ELO-rating is een getalsmatige aanduiding van de sterkte van een speler.
  * Het wordt het meest gebruikt in schaken en go, maar kan in principe gebruikt
  * worden bij elke sport waarbij spelers 1 tegen 1 spelen.
  * 
@@ -67,13 +67,13 @@ public final class ELO {
   }
 
   /**
-   * Deze ELO berekening is gebaseerd op het algoritme van Slow Chess Blitz.
-   * http://www.3dkingdoms.com/chess/elo.htm
+   * Deze ELO berekening is gebaseerd op de Engelse Wikipedia pagina:
+   * https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details
    * 
    * @param elo             - De ELO van de speler.
    * @param uitslag         - De uitslag (2=winst, 1=remise, 0=verlies).
    * @param eloTegenstander - De ELO van de tegenstander.
-   * @param kFactor         - Coefficient.
+   * @param kFactor         - Coëfficiënt.
    * @param maxVerschil     - Maximaal verschil tussen de ratings.
    * @return
    */
