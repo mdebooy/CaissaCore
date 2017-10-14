@@ -28,9 +28,11 @@ import java.util.Date;
 public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private static final long serialVersionUID = 1L;
 
-  private Date    officieel;
+  private Date    eerstePartij;
+  private Date    laatstePartij;
   private Date    maxDatum;
   private Date    minDatum;
+  private Date    officieel;
   private Double  punten            = 0.0;
   private Double  weerstandspunten  = 0.0;
   private Integer partijen          = 0;
@@ -49,17 +51,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     punten += punt;
   }
 
-  /**
-   * Add 1 to partijen.
-   */
   public void addPartij() {
     partijen++;
   }
 
-  /**
-   * Add weerstandspunten to weerstandspunten.
-   * @param weerstandspunten
-   */
   public void addWeerstandspunten(Double weerstandspunten) {
     this.weerstandspunten += weerstandspunten;
   }
@@ -72,7 +67,6 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
    *   4 De 'kleinste' naam
    * De grootste moet als eerste in de lijst komen. 
    */
-  @Override
   public int compareTo(Spelerinfo other) {
     if (this == other) {
       return DoosConstants.EQUAL;
@@ -94,7 +88,6 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return this.naam.compareToIgnoreCase(other.naam);
   }
 
-  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof Spelerinfo)) {
       return false;
@@ -108,201 +101,157 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return true;
   }
 
-  /**
-   * @return the elo
-   */
+  public Date getEerstePartij() {
+    if (null == eerstePartij) {
+      return null;
+    }
+    return new Date(eerstePartij.getTime());
+  }
+
   public Integer getElo() {
     return elo;
   }
 
-  /**
-   * @return the landKode
-   */
+  public Date getLaatstePartij() {
+    if (null == laatstePartij) {
+      return null;
+    }
+    return new Date(laatstePartij.getTime());
+  }
+
   public String getLandKode() {
     return landKode;
   }
 
-  /**
-   * @return the maxDatum
-   */
   public Date getMaxDatum() {
     if (null == maxDatum) {
       return null;
     }
-    return (Date) maxDatum.clone();
+    return new Date(maxDatum.getTime());
   }
 
-  /**
-   * @return the maxElo
-   */
   public Integer getMaxElo() {
     return maxElo;
   }
 
-  /**
-   * @return the minDatum
-   */
   public Date getMinDatum() {
     if (null == minDatum) {
       return null;
     }
-    return (Date) minDatum.clone();
+    return new Date(minDatum.getTime());
   }
 
-  /**
-   * @return the minElo
-   */
   public Integer getMinElo() {
     return minElo;
   }
 
-  /**
-   * @return the naam
-   */
   public String getNaam() {
     return naam;
   }
 
-  /**
-   * @return the officiel
-   */
   public Date getOfficieel() {
     if (null == officieel) {
       return null;
     }
-    return (Date) officieel.clone();
+    return new Date(officieel.getTime());
   }
 
-  /**
-   * @return the partijen
-   */
   public Integer getPartijen() {
     return partijen;
   }
 
-  /**
-   * @return the punten
-   */
   public Double getPunten() {
     return punten;
   }
 
-  /**
-   * @return the spelerId
-   */
   public Integer getSpelerId() {
     return spelerId;
   }
 
-  /**
-   * @return the weerstandspunten
-   */
   public Double getWeerstandspunten() {
     return weerstandspunten;
   }
 
-  @Override
   public int hashCode() {
     return spelerId.hashCode();
   }
 
-  /**
-   * @param elo the elo to set
-   */
+  public void setEerstePartij(Date eerstePartij) {
+    if (null == eerstePartij) {
+      this.eerstePartij = null;
+    } else {
+      this.eerstePartij = new Date(eerstePartij.getTime());
+    }
+  }
+
   public void setElo(Integer elo) {
     this.elo = elo;
   }
 
-  /**
-   * @param landKode the landKode to set
-   */
+  public void setLaatstePartij(Date laatstePartij) {
+    if (null == laatstePartij) {
+      this.laatstePartij  = null;
+    } else {
+      this.laatstePartij  = new Date(laatstePartij.getTime());
+    }
+  }
+
   public void setLandKode(String landKode) {
     this.landKode = landKode;
   }
 
-  /**
-   * @param maxDatum the maxDatum to set
-   */
   public void setMaxDatum(Date maxDatum) {
     if (null == maxDatum) {
       this.maxDatum = null;
     } else {
-      this.maxDatum = (Date) maxDatum.clone();
+      this.maxDatum = new Date(maxDatum.getTime());
     }
   }
 
-  /**
-   * @param maxElo the maxElo to set
-   */
   public void setMaxElo(Integer maxElo) {
     this.maxElo = maxElo;
   }
 
-  /**
-   * @param minDatum the minDatum to set
-   */
   public void setMinDatum(Date minDatum) {
     if (null == minDatum) {
       this.minDatum = null;
     } else {
-      this.minDatum = (Date) minDatum.clone();
+      this.minDatum = new Date(minDatum.getTime());
     }
   }
 
-  /**
-   * @param minElo the minElo to set
-   */
   public void setMinElo(Integer minElo) {
     this.minElo = minElo;
   }
 
-  /**
-   * @param naam the naam to set
-   */
   public void setNaam(String naam) {
     this.naam = naam;
   }
 
-  /**
-   * @param officiel the officiel to set
-   */
   public void setOfficieel(Date officieel) {
     if (null == officieel) {
       this.officieel  = null;
     } else {
-      this.officieel  = (Date) officieel.clone();
+      this.officieel  = new Date(officieel.getTime());
     }
   }
 
-  /**
-   * @param partijen the partijen to set
-   */
   public void setPartijen(Integer partijen) {
     this.partijen = partijen;
   }
 
-  /**
-   * @param punten the punten to set
-   */
   public void setPunten(Double punten) {
     this.punten = punten;
   }
 
-  /**
-   * @param spelerId the spelerId to set
-   */
   public void setSpelerId(Integer spelerId) {
     this.spelerId = spelerId;
   }
 
-  /**
-   * @param weerstandspunten the weerstandspunten to set
-   */
   public void setWeerstandspunten(Double weerstandspunten) {
     this.weerstandspunten = weerstandspunten;
   }
 
-  @Override
   public String toString() {
     StringBuilder result  = new StringBuilder();
 
