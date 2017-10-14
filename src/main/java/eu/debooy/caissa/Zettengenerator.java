@@ -17,7 +17,6 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CaissaException;
-import eu.debooy.caissa.exceptions.FenException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -304,16 +303,9 @@ public class Zettengenerator {
     List<String>  stellingen  = new ArrayList<String>();
 
     for (Zet  zet: zetten) {
-      FEN nieuweFen = null;
-      try {
-        nieuweFen = fen.clone();
-        nieuweFen.doeZet(zet);
-        stellingen.add(nieuweFen.getFen());
-      } catch (CloneNotSupportedException e) {
-        throw new CaissaException(e);
-      } catch (FenException e) {
-        throw new CaissaException(e);
-      }
+      FEN nieuweFen = new FEN(fen.getFen());
+      nieuweFen.doeZet(zet);
+      stellingen.add(nieuweFen.getFen());
     }
 
     return stellingen;
