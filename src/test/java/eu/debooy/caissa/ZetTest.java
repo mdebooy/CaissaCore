@@ -70,7 +70,7 @@ public class ZetTest extends TestCase {
     zet = new Zet(' ', 65, 76);
     zet.setEp(true);
 
-    assertTrue("21P8..".equals(zet.getChessTheatreZet()));
+    assertTrue("21P6..".equals(zet.getChessTheatreZet()));
     assertTrue("5566".equals(zet.getCorrespondentieZet()));
     assertTrue("exf6 e.p.".equals(zet.getKorteNotatie()));
     assertTrue("e5xf6 e.p.".equals(zet.getLangeNotatie()));

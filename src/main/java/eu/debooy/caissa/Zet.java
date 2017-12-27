@@ -117,7 +117,7 @@ public class Zet implements Comparable<Object>, Serializable {
       if (van < naar) {
         // Wit
         if (naar%10 > van%10) {
-          zet.append("" + (voor - 1) + " 8..");
+          zet.append("" + (voor - 1) + " 6..");
         } else {
           zet.append("" + (voor - 1) + " 7..");
         }
