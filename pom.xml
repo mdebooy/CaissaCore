@@ -14,8 +14,8 @@
   <description>Verschillende Caissa Core Classes.</description>
   <inceptionYear>2008</inceptionYear>
   <scm>
-    <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaisaCore.git</connection>
-    <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaisaCore.git</developerConnection>
+    <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaissaCore.git</connection>
+    <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaissaCore.git</developerConnection>
     <tag>caissa-core-0.1.13</tag>
   </scm>
 
