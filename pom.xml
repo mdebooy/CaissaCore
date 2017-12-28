@@ -8,7 +8,7 @@
   </parent>
   <groupId>eu.debooy.caissa</groupId>
   <artifactId>caissa-core</artifactId>
-  <version>0.1.13</version>
+  <version>0.1.12-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Caissa (Core)</name>
   <description>Verschillende Caissa Core Classes.</description>
