@@ -102,7 +102,7 @@ public final class ELO {
   public static Integer berekenTPR(Integer toernooiElo, Integer gewonnen,
                                    Integer remise, Integer verloren) {
     if (gewonnen + remise + verloren == 0) {
-      return null;
+      return toernooiElo;
     }
 
     Float   score           = gewonnen.floatValue() + (remise.floatValue() / 2);
