@@ -26,7 +26,10 @@ import org.junit.Test;
 public class ELOTest extends TestCase {
   @Test
   public void testBerekenTPR01() {
-    assertNull(ELO.berekenTPR(0, 0, 0, 0));
+    Integer tpr = ELO.berekenTPR(0, 0, 0, 0);
+    assertTrue(0 == tpr);
+    tpr = ELO.berekenTPR(1668, 0, 0, 0);
+    assertTrue(1668 == tpr);
   }
 
   @Test
