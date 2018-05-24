@@ -86,7 +86,7 @@ import java.util.TreeMap;
  * 
  * @author Marco de Booij
  */
-public class PGN implements Comparable<PGN>, Cloneable, Serializable {
+public class PGN implements Comparable<PGN>, Serializable {
   private static final  long  serialVersionUID  = 1L;
 
   private boolean       ranked          = true;
@@ -117,6 +117,19 @@ public class PGN implements Comparable<PGN>, Cloneable, Serializable {
     Arrays.sort(uitslagen);
   }
 
+  public PGN(PGN pgn) throws PgnException {
+    Arrays.sort(sevenTagRoster);
+    Arrays.sort(uitslagen);
+
+    ranked        = pgn.ranked;
+    rated         = pgn.rated;
+    for (Entry<String, String> tag : pgn.getTags().entrySet()) {
+      addTag(tag.getKey(), tag.getValue());
+    }
+    zetten        = pgn.getZetten();
+    zuivereZetten = pgn.getZuivereZetten();
+  }
+
   /**
    * Sorteren op Event, Site, Round, Date, White, Black, Result, zetten.
    */
@@ -124,7 +137,6 @@ public class PGN implements Comparable<PGN>, Cloneable, Serializable {
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
-    @Override
     public int compare(PGN pgn1, PGN pgn2) {
       // 1e sleutel
       int diff  = pgn1.getTag(CaissaConstants.PGNTAG_EVENT)
@@ -182,7 +194,6 @@ public class PGN implements Comparable<PGN>, Cloneable, Serializable {
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
-    @Override
     public int compare(PGN pgn1, PGN pgn2) {
       // 1e sleutel
       int   diff    = pgn1.getTag(CaissaConstants.PGNTAG_DATE)
@@ -249,22 +260,11 @@ public class PGN implements Comparable<PGN>, Cloneable, Serializable {
   }
 
   /**
-   * 
-   */
-  @Override
-  public PGN clone() throws CloneNotSupportedException {
-    PGN pgn = (PGN) super.clone();
-
-    return pgn;
-  }
-
-  /**
    * Vergelijk deze PGN met een andere
    * 
    * @param other een ander PGN object
    * @return -1, 0 of 1
    */
-  @Override
   public int compareTo(PGN other) {
     return getSevenTagsAsString()
         .compareTo(((PGN) other).getSevenTagsAsString());
@@ -282,7 +282,6 @@ public class PGN implements Comparable<PGN>, Cloneable, Serializable {
   /**
    * Is de PGN gelijk aan de andere?
    */
-  @Override
   public boolean equals(Object other) {
     if (!(other instanceof PGN)) {
       return false;
@@ -748,7 +747,6 @@ public class PGN implements Comparable<PGN>, Cloneable, Serializable {
   /**
    * @result de PGN partij
    */
-  @Override
   public String toString() {
     StringBuilder result  = new StringBuilder();
 
