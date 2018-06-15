@@ -153,7 +153,7 @@ public final class CaissaUtils {
         }
 
         // Verwerk de zetten
-        String uitslag = partij.getTag("Result");
+        String        uitslag = partij.getTag("Result");
         StringBuilder zetten  = new StringBuilder();
         while (null != line && !line.trim().endsWith(uitslag)) {
           if (line.startsWith("[")) {
@@ -170,14 +170,17 @@ public final class CaissaUtils {
           lijnnummer++;
         }
         if (null != line) {
-          zetten.append(line.substring(0, line.indexOf(uitslag)));
+          zetten.append(line);
         } else {
           String  eol = System.getProperty("line.separator");
           throw new PgnException("PGN bestand incorrect tijdens partij: "
                                  + eol + partij.toString() + eol + eol
                                  + "Lijnnummer: " + lijnnummer);
         }
-        partij.setZetten(zetten.toString().trim());
+        String  resultaat = zetten.toString().trim();
+        partij.setZetten(
+            resultaat.substring(0, resultaat.length() - uitslag.length())
+                     .trim());
 
         partijen.add(partij);
 
