@@ -127,7 +127,6 @@ public class PGN implements Comparable<PGN>, Serializable {
       addTag(tag.getKey(), tag.getValue());
     }
     zetten        = pgn.getZetten();
-    zuivereZetten = pgn.getZuivereZetten();
   }
 
   /**

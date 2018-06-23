@@ -34,7 +34,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Date    minDatum;
   private Date    officieel;
   private Double  punten            = 0.0;
-  private Double  weerstandspunten  = 0.0;
+  private Double  tieBreakScore     = 0.0;
   private Integer partijen          = 0;
   private Integer spelerId;
   private Integer elo;
@@ -55,15 +55,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     partijen++;
   }
 
-  public void addWeerstandspunten(Double weerstandspunten) {
-    this.weerstandspunten += weerstandspunten;
+  public void addTieBreakScore(Double tieBreakScore) {
+    this.tieBreakScore  += tieBreakScore;
   }
 
   /**
    * De SpelerInfo moet als volgt gesorteerd worden:
    *   1 De meeste punten.
    *   2 De minste partijen.
-   *   3 De meeste weerstandspunten
+   *   3 De meeste tieBreakScore
    *   4 De 'kleinste' naam
    * De grootste moet als eerste in de lijst komen. 
    */
@@ -80,7 +80,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     if (verschil != 0) {
       return verschil;
     }
-    verschil  = other.weerstandspunten.compareTo(this.weerstandspunten);
+    verschil  = other.tieBreakScore.compareTo(this.tieBreakScore);
     if (verschil != 0) {
       return verschil;
     }
@@ -168,8 +168,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return spelerId;
   }
 
-  public Double getWeerstandspunten() {
-    return weerstandspunten;
+  public Double getTieBreakScore() {
+    return tieBreakScore;
   }
 
   public int hashCode() {
@@ -248,8 +248,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     this.spelerId = spelerId;
   }
 
-  public void setWeerstandspunten(Double weerstandspunten) {
-    this.weerstandspunten = weerstandspunten;
+  public void setTieBreakScore(Double tieBreakScore) {
+    this.tieBreakScore  = tieBreakScore;
   }
 
   public String toString() {
@@ -261,7 +261,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
           .append(elo).append(" - ")
           .append(punten).append(" - ")
           .append(partijen).append(" - ")
-          .append(weerstandspunten).append(" - ");
+          .append(tieBreakScore).append(" - ");
 
     return result.toString();
   }

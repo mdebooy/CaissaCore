@@ -39,6 +39,9 @@ public final class CaissaConstants {
   public static final int     TOERNOOI_ENKEL    = 1;
   public static final int     TOERNOOI_DUBBEL   = 2;
 
+  public static final String  TIEBREAK_SB       = "SB";
+  public static final String  TIEBREAK_WP       = "WP";
+
   public static final int     PION              = 1;
   public static final int     PAARD             = 2;
   public static final int     LOPER             = 3;

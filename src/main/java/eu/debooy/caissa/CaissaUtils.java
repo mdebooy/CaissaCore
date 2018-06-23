@@ -44,25 +44,62 @@ public final class CaissaUtils {
   }
 
   /**
+   * Bereken de Sonneborn–Berger score.
+   * 
+   * @param punten  Een array met Spelerinfo per speler van het toernooi.
+   * @param matrix De matrix die moet worden opgevuld met de uitslagen.
+   */
+  private static void berekenSBscore(Spelerinfo[] speler, double[][] matrix,
+                                     int toernooiType) {
+    int noSpelers = speler.length;
+    int kolommen  = matrix[0].length;
+    for (int i = 0; i < noSpelers; i++) {
+      Double  sbScore = 0.0;
+      for (int j = 0; j < kolommen; j++) {
+        if (toernooiType > 0 && matrix[i][j] > 0.0) {
+          sbScore += speler[j / toernooiType].getPunten()
+                              * matrix[i][j];
+        }
+      }
+      speler[i].setTieBreakScore(sbScore);
+    }
+  }
+
+  public static void berekenTieBreakScore(String tieBreakType,
+                                          Spelerinfo[] speler,
+                                          double[][] matrix,
+                                          int toernooiType) {
+    switch (tieBreakType) {
+      case CaissaConstants.TIEBREAK_SB:
+                berekenSBscore(speler, matrix, toernooiType);
+                break;
+      case CaissaConstants.TIEBREAK_WP:
+                berekenWeerstandspunten(speler, matrix, toernooiType);
+                break;
+      default:
+        break;
+    }
+  }
+
+  /**
    * Bereken de weestandspunten.
    * 
    * @param punten  Een array met Spelerinfo per speler van het toernooi.
    * @param matrix De matrix die moet worden opgevuld met de uitslagen.
    */
-  public static void berekenWeestandspunten(Spelerinfo[] speler,
-                                            double[][] matrix,
-                                            int toernooiType) {
+  private static void berekenWeerstandspunten(Spelerinfo[] speler,
+                                             double[][] matrix,
+                                             int toernooiType) {
     int noSpelers = speler.length;
     int kolommen  = matrix[0].length;
     for (int i = 0; i < noSpelers; i++) {
       Double weerstandspunten = 0.0;
       for (int j = 0; j < kolommen; j++) {
-        if (toernooiType > 0 && matrix[i][j] > 0.0) {
-          weerstandspunten += speler[j / toernooiType].getPunten()
-                              * matrix[i][j];
+        if (toernooiType > 0) {
+          weerstandspunten += speler[j / toernooiType].getPunten();
         }
       }
-      speler[i].setWeerstandspunten(weerstandspunten);
+      speler[i].setTieBreakScore(weerstandspunten);
     }
   }
 
@@ -369,7 +406,8 @@ public final class CaissaUtils {
   public static void vulToernooiMatrix(Collection<PGN> partijen,
                                        Spelerinfo[] speler, String[] halve,
                                        double[][] matrix, int toernooiType,
-                                       boolean sorteerOpStand) {
+                                       boolean sorteerOpStand,
+                                       String tieBreakType) {
     int       aantalIteraties = sorteerOpStand ? 2 : 1;
     int       noSpelers       = speler.length;
     String[]  namen           = new String[noSpelers];
@@ -466,9 +504,9 @@ public final class CaissaUtils {
         }
       }
 
-      // Bereken de weerstandspunten na de eerste iteratie.
+      // Bereken de Tie-Break Score na de eerste iteratie.
       if (i == 0) {
-        berekenWeestandspunten(speler, matrix, toernooiType);
+        berekenTieBreakScore(tieBreakType, speler, matrix, toernooiType);
       }
     }
   }

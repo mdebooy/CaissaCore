@@ -51,41 +51,41 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo4.setNaam("Jansen, Jan");
     spelerinfo4.setPartijen(9);
     spelerinfo4.setPunten(8.5);
-    spelerinfo4.setWeerstandspunten(20.0);
+    spelerinfo4.setTieBreakScore(20.0);
 
     spelerinfo2.setNaam("Adams, Jan");
     spelerinfo2.setPartijen(10);
     spelerinfo2.setPunten(8.5);
-    spelerinfo2.setWeerstandspunten(20.0);
+    spelerinfo2.setTieBreakScore(20.0);
 
     spelerinfo3.setNaam("de Vries, Jan");
     spelerinfo3.setPartijen(10);
     spelerinfo3.setPunten(8.5);
-    spelerinfo3.setWeerstandspunten(20.0);
+    spelerinfo3.setTieBreakScore(20.0);
 
     spelerinfo1.setNaam("Jansen, Jan");
     spelerinfo1.setPartijen(10);
     spelerinfo1.setPunten(8.5);
-    spelerinfo1.setWeerstandspunten(20.0);
+    spelerinfo1.setTieBreakScore(20.0);
 
     spelerinfo8.setNaam("Jansen, Jan");
     spelerinfo8.setPartijen(10);
     spelerinfo8.setPunten(8.5);
-    spelerinfo8.setWeerstandspunten(20.0);
+    spelerinfo8.setTieBreakScore(20.0);
 
     spelerinfo6.setNaam("Jansen, Jan");
     spelerinfo6.setPartijen(10);
     spelerinfo6.setPunten(8.5);
-    spelerinfo6.setWeerstandspunten(19.75);
+    spelerinfo6.setTieBreakScore(19.75);
 
     spelerinfo5.setNaam("Jansen, Jan");
     spelerinfo5.setPartijen(10);
     spelerinfo5.setPunten(7.5);
-    spelerinfo5.setWeerstandspunten(20.0);
+    spelerinfo5.setTieBreakScore(20.0);
 
     spelerinfo7.setPartijen(0);
     spelerinfo7.setPunten(0.0);
-    spelerinfo7.setWeerstandspunten(0.0);
+    spelerinfo7.setTieBreakScore(0.0);
   }
 
   @Test
@@ -120,6 +120,6 @@ public class SpelerinfoTest extends TestCase {
 
   private String velden(Spelerinfo speler) {
     return speler.getPunten() + " - " + speler.getPartijen() + " - "
-           + speler.getWeerstandspunten() + " - " + speler.getNaam();
+           + speler.getTieBreakScore() + " - " + speler.getNaam();
   }
 }
