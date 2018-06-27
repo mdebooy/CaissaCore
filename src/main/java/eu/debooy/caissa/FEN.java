@@ -62,7 +62,9 @@ import java.io.Serializable;
  */
 //TODO Aanpassen aan schaak960 ivm rochade.
 public class FEN implements Serializable {
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID  = 1L;
+
+  private static final String  ERROR_ENPASSANT  = "EnPassant foutief";
 
   private Boolean witKorteRochade   = true;
   private Boolean witLangeRochade   = true;
@@ -455,15 +457,15 @@ public class FEN implements Serializable {
     }
 
     if ("abcdefgh".indexOf(enPassant.charAt(0)) < 0) {
-      throw new FenException("EnPassant foutief [" + enPassant + "]");
+      throw new FenException(ERROR_ENPASSANT + " [" + enPassant + "]");
     }
     if (aanZet == 'b'
         && enPassant.charAt(1) != '3') {
-      throw new FenException("EnPassant foutief [" + enPassant + "]");
+      throw new FenException(ERROR_ENPASSANT + " [" + enPassant + "]");
     }
     if (aanZet == 'w'
         && enPassant.charAt(1) != '6') {
-      throw new FenException("EnPassant foutief [" + enPassant + "]");
+      throw new FenException(ERROR_ENPASSANT + " [" + enPassant + "]");
     }
     // TODO test of het wel een e.p. pion is.
 

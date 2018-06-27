@@ -579,6 +579,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   public boolean isBye() {
     String  wit   = getWhite();
     String  zwart = getBlack();
+
     return ("bye".equalsIgnoreCase(wit)
         || "bye".equalsIgnoreCase(zwart)
         || DoosUtils.isBlankOrNull(wit)
@@ -610,12 +611,7 @@ public class PGN implements Comparable<PGN>, Serializable {
    * @return
    */
   public boolean isSpeler(String speler) {
-    if (getBlack().equals(speler)
-        || getWhite().equals(speler)) {
-      return true;
-    }
-
-    return false;
+    return (getBlack().equals(speler) || getWhite().equals(speler));
   }
 
   /**

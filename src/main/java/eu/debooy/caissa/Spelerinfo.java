@@ -94,11 +94,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     }
 
     final Spelerinfo other = (Spelerinfo) obj;
-    if (!spelerId.equals(other.spelerId)) {
-      return false;
-    }
 
-    return true;
+    return spelerId.equals(other.spelerId);
   }
 
   public Date getEerstePartij() {
