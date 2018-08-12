@@ -38,6 +38,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Integer partijen          = 0;
   private Integer spelerId;
   private Integer elo;
+  private Integer elogroei;
   private Integer maxElo;
   private Integer minElo;
   private String  landKode;
@@ -107,6 +108,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Integer getElo() {
     return elo;
+  }
+
+  public Integer getElogroei() {
+    return elogroei;
   }
 
   public Date getLaatstePartij() {
@@ -183,6 +188,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public void setElo(Integer elo) {
     this.elo = elo;
+  }
+
+  public void setElogroei(Integer elogroei) {
+    this.elogroei  = elogroei;
   }
 
   public void setLaatstePartij(Date laatstePartij) {
