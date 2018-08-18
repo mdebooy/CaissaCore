@@ -448,13 +448,8 @@ public class Zet implements Comparable<Object>, Serializable {
       return false;
     }
     final Zet other = (Zet) obj;
-    if (van != other.van
-        || naar != other.naar
-        || promotieStuk != other.promotieStuk) {
-      return false;
-    }
-
-    return true;
+    return !(van != other.van || naar != other.naar
+             || promotieStuk != other.promotieStuk);
   }
 
   public int hashCode() {

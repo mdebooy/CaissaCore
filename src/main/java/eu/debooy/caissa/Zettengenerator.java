@@ -1,4 +1,5 @@
 /**
+
  * Copyright 2008 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.0 or - as soon they will be approved by
@@ -266,22 +267,21 @@ public class Zettengenerator {
       // Kijk niet naar pion zetten. Enkel bij andere stukken kunnen er 2 naar
       // hetzelfde veld gaan. Uitgezonderd bij een slagzet van een pion maar
       // die zijn door de normale notatie al 'uniek'.
-      if (zet1.getStuk() != ' ') {
-        if (zet1.getNaar() == zet2.getNaar()
-            && zet1.getStuk() == zet2.getStuk()) {
-          if (CaissaUtils.internToExtern(zet1.getVan()).charAt(0) !=
-              CaissaUtils.internToExtern(zet2.getVan()).charAt(0)) {
-            zet1.setKorteNotatieLevel(1);
-            zet2.setKorteNotatieLevel(1);
-          } else {
-            zet1.setKorteNotatieLevel(2);
-            zet2.setKorteNotatieLevel(2);
-          }
-          zetten.remove(i);
-          zetten.add(i, zet1);
-          zetten.remove(i+1);
-          zetten.add(i+1, zet2);
+      if (zet1.getStuk() != ' '
+          && zet1.getNaar() == zet2.getNaar()
+          && zet1.getStuk() == zet2.getStuk()) {
+        if (CaissaUtils.internToExtern(zet1.getVan()).charAt(0) !=
+            CaissaUtils.internToExtern(zet2.getVan()).charAt(0)) {
+          zet1.setKorteNotatieLevel(1);
+          zet2.setKorteNotatieLevel(1);
+        } else {
+          zet1.setKorteNotatieLevel(2);
+          zet2.setKorteNotatieLevel(2);
         }
+        zetten.remove(i);
+        zetten.add(i, zet1);
+        zetten.remove(i+1);
+        zetten.add(i+1, zet2);
       }
     }
   }

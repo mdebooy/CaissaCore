@@ -30,11 +30,6 @@ public class ZetTest extends TestCase {
   public void testE2e4() {
     zet = new Zet(' ', 35, 55);
 
-//    System.out.println("ChessTheatre   : " + zet.getChessTheatreZet());
-//    System.out.println("Correspondentie: " + zet.getCorrespondentieZet());
-//    System.out.println("Korte Notatie  : " + zet.getKorteNotatie());
-//    System.out.println("Lange Notatie  : " + zet.getLangeNotatie());
-//    System.out.println("PGN Notatie    : " + zet.getPgnNotatie());
     assertTrue("36P15.".equals(zet.getChessTheatreZet()));
     assertTrue("5254".equals(zet.getCorrespondentieZet()));
     assertTrue("e4".equals(zet.getKorteNotatie()));
@@ -165,9 +160,9 @@ public class ZetTest extends TestCase {
 
     assertTrue("56.1KR.".equals(zet.getChessTheatreZet()));
     assertTrue("5131".equals(zet.getCorrespondentieZet()));
-    assertTrue("O-O-O".equals(zet.getKorteNotatie()));
-    assertTrue("O-O-O".equals(zet.getLangeNotatie()));
-    assertTrue("O-O-O".equals(zet.getPgnNotatie()));
+    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getKorteNotatie()));
+    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getLangeNotatie()));
+    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getPgnNotatie()));
   }
 
   @Test
@@ -176,9 +171,9 @@ public class ZetTest extends TestCase {
 
     assertTrue("4.rk.".equals(zet.getChessTheatreZet()));
     assertTrue("5878".equals(zet.getCorrespondentieZet()));
-    assertTrue("O-O".equals(zet.getKorteNotatie()));
-    assertTrue("O-O".equals(zet.getLangeNotatie()));
-    assertTrue("O-O".equals(zet.getPgnNotatie()));
+    assertTrue(CaissaConstants.KORTE_ROCHADE.equals(zet.getKorteNotatie()));
+    assertTrue(CaissaConstants.KORTE_ROCHADE.equals(zet.getLangeNotatie()));
+    assertTrue(CaissaConstants.KORTE_ROCHADE.equals(zet.getPgnNotatie()));
   }
 
   @Test
@@ -188,9 +183,12 @@ public class ZetTest extends TestCase {
 
     assertTrue("60.RK.".equals(zet.getChessTheatreZet()));
     assertTrue("5171".equals(zet.getCorrespondentieZet()));
-    assertTrue("O-O+".equals(zet.getKorteNotatie()));
-    assertTrue("O-O+".equals(zet.getLangeNotatie()));
-    assertTrue("O-O+".equals(zet.getPgnNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getKorteNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getLangeNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getPgnNotatie()));
   }
 
   @Test
@@ -200,8 +198,11 @@ public class ZetTest extends TestCase {
 
     assertTrue(".1kr.".equals(zet.getChessTheatreZet()));
     assertTrue("5838".equals(zet.getCorrespondentieZet()));
-    assertTrue("O-O-O#".equals(zet.getKorteNotatie()));
-    assertTrue("O-O-O#".equals(zet.getLangeNotatie()));
-    assertTrue("O-O-O#".equals(zet.getPgnNotatie()));
+    assertTrue(
+        (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getKorteNotatie()));
+    assertTrue(
+        (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getLangeNotatie()));
+    assertTrue(
+        (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getPgnNotatie()));
   }
 }

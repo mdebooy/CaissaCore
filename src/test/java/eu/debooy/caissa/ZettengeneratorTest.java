@@ -16,12 +16,10 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CaissaException;
-import eu.debooy.caissa.exceptions.FenException;
-import eu.debooy.caissa.exceptions.ZetException;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 
 /**
@@ -30,9 +28,8 @@ import org.junit.Test;
 public class ZettengeneratorTest extends TestCase {
   
   @Test
-  public void testBeginstand() throws FenException, ZetException {
+  public void testBeginstand() throws CaissaException {
     Zettengenerator zetten  = new Zettengenerator(new FEN());
-//    System.out.println(zetten.getZetten().toString());
     assertTrue((zetten.getAantalZetten() == 20));
   }
   
