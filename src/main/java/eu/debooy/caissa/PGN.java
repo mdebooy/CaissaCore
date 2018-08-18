@@ -450,59 +450,9 @@ public class PGN implements Comparable<PGN>, Serializable {
         }
       }
 
-      // Verwijder commentaar
-      while (zuivereZetten.contains("{")) {
-        int accoladesOpen = 1;
-        int start         = zuivereZetten.indexOf('{');
-        int eind          = start + 1;
-        while (accoladesOpen > 0) {
-          switch (zuivereZetten.charAt(eind)) {
-            case '{': accoladesOpen++;
-                      break;
-            case '}': accoladesOpen--;
-                      break;
-          default:
-            break;
-          }
-          eind++;
-        }
-        if (start == 0) {
-          zuivereZetten = zuivereZetten.substring(eind);
-        } else {
-          if (eind == zuivereZetten.length()) {
-            zuivereZetten = zuivereZetten.substring(0, start - 1);            
-          } else {
-            zuivereZetten = zuivereZetten.substring(0, start - 1)
-                            + zuivereZetten.substring(eind);
-          }
-        }
-      }
-      while (zuivereZetten.contains("(")) {
-        int haakjesOpen = 1;
-        int start       = zuivereZetten.indexOf('(');
-        int eind        = start + 1;
-        while (haakjesOpen > 0) {
-          switch (zuivereZetten.charAt(eind)) {
-            case '(': haakjesOpen++;
-                      break;
-            case ')': haakjesOpen--;
-                      break;
-            default:
-              break;
-          }
-          eind++;
-        }
-        if (start == 0) {
-          zuivereZetten = zuivereZetten.substring(eind);
-        } else {
-          if (eind == zuivereZetten.length()) {
-            zuivereZetten = zuivereZetten.substring(0, start - 1);            
-          } else {
-            zuivereZetten = zuivereZetten.substring(0, start - 1)
-                            + zuivereZetten.substring(eind);
-          }
-        }
-      }
+      // Verwijder commentaar en varianten.
+      verwijder('{');
+      verwijder('(');
 
       for (int i = 0; i < annotaties.length; i++) {
         if (zuivereZetten.contains(annotaties[i])) {
@@ -763,5 +713,38 @@ public class PGN implements Comparable<PGN>, Serializable {
   private String translateStukken(String zetten, String naarStukken)
       throws PgnException {
     return CaissaUtils.vertaalStukken(zetten, stukken, naarStukken);
+  }
+
+  private void verwijder(char open) {
+    while (zuivereZetten.contains("" + open)) {
+      int niveau  = 1;
+      int start   = zuivereZetten.indexOf(open);
+      int eind    = start + 1;
+      while (niveau > 0) {
+        switch (zuivereZetten.charAt(eind)) {
+          case '{': niveau++;
+                    break;
+          case '}': niveau--;
+                    break;
+          case '(': niveau++;
+                    break;
+          case ')': niveau--;
+                    break;
+        default:
+          break;
+        }
+        eind++;
+      }
+      if (start == 0) {
+        zuivereZetten = zuivereZetten.substring(eind);
+      } else {
+        if (eind == zuivereZetten.length()) {
+          zuivereZetten = zuivereZetten.substring(0, start - 1);            
+        } else {
+          zuivereZetten = zuivereZetten.substring(0, start - 1)
+                          + zuivereZetten.substring(eind);
+        }
+      }
+    }
   }
 }

@@ -42,64 +42,64 @@ public class PGNTest extends TestCase {
   public void setUp() throws PgnException {
     pgn = new PGN();
 
-    pgn.addTag("Event", "schaak evenement");
-    pgn.addTag("Site",  "tournooi ruimte");
-    pgn.addTag("Date",  "2009.05.17");
-    pgn.addTag("Round", "-");
-    pgn.addTag("White", "witspeler");
-    pgn.addTag("Black", "zwartspeler");
-    pgn.addTag("Result", "*");
+    pgn.addTag(CaissaConstants.PGNTAG_EVENT, "schaak evenement");
+    pgn.addTag(CaissaConstants.PGNTAG_SITE,  "tournooi ruimte");
+    pgn.addTag(CaissaConstants.PGNTAG_DATE,  "2009.05.17");
+    pgn.addTag(CaissaConstants.PGNTAG_ROUND, "-");
+    pgn.addTag(CaissaConstants.PGNTAG_WHITE, "witspeler");
+    pgn.addTag(CaissaConstants.PGNTAG_BLACK, "zwartspeler");
+    pgn.addTag(CaissaConstants.PGNTAG_RESULT, "*");
   }
 
   @Test
   public void testMissingBlack() throws PgnException {
-    pgn.deleteTag("Black");
+    pgn.deleteTag(CaissaConstants.PGNTAG_BLACK);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingDate() throws PgnException {
-    pgn.deleteTag("Date");
+    pgn.deleteTag(CaissaConstants.PGNTAG_DATE);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingEvent() throws PgnException {
-    pgn.deleteTag("Event");
+    pgn.deleteTag(CaissaConstants.PGNTAG_EVENT);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingResult() throws PgnException {
-    pgn.deleteTag("Result");
+    pgn.deleteTag(CaissaConstants.PGNTAG_RESULT);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingRound() throws PgnException {
-    pgn.deleteTag("Round");
+    pgn.deleteTag(CaissaConstants.PGNTAG_ROUND);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingSite() throws PgnException {
-    pgn.deleteTag("Site");
+    pgn.deleteTag(CaissaConstants.PGNTAG_SITE);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingWhite() throws PgnException {
-    pgn.deleteTag("White");
+    pgn.deleteTag(CaissaConstants.PGNTAG_WHITE);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testResultTag() {
     try {
-      pgn.addTag("Result", "fout");
+      pgn.addTag(CaissaConstants.PGNTAG_RESULT, "fout");
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-      ; // Verwachte PgnException
+      // Verwachte PgnException
     }
   }
 
@@ -107,19 +107,19 @@ public class PGNTest extends TestCase {
   public void testResultTags() {
     Map<String, String> tags  = new HashMap<String, String>();
 
-    tags.put("Event", "schaak evenement");
-    tags.put("Site",  "tournooi ruimte");
-    tags.put("Date",  "2009.05.17");
-    tags.put("Round", "-");
-    tags.put("White", "witspeler");
-    tags.put("Black", "zwartspeler");
-    tags.put("Result", "fout");
+    tags.put(CaissaConstants.PGNTAG_EVENT,  "schaak evenement");
+    tags.put(CaissaConstants.PGNTAG_SITE,   "tournooi ruimte");
+    tags.put(CaissaConstants.PGNTAG_DATE,   "2009.05.17");
+    tags.put(CaissaConstants.PGNTAG_ROUND,  "-");
+    tags.put(CaissaConstants.PGNTAG_WHITE,  "witspeler");
+    tags.put(CaissaConstants.PGNTAG_BLACK,  "zwartspeler");
+    tags.put(CaissaConstants.PGNTAG_RESULT, "fout");
 
     try {
       pgn.setTags(tags);
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-      ; // Verwachte PgnException
+      // Verwachte PgnException
     }
   }
 

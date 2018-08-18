@@ -26,6 +26,9 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class FENTest extends TestCase {
+  public static final String  FEN_1E2E4  =
+      "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+
   private FEN fen;
 
   @Test
@@ -41,7 +44,7 @@ public class FENTest extends TestCase {
   @Test
   public void testSetFEN() throws FenException {
     fen = new FEN();
-    fen.setFen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+    fen.setFen(FEN_1E2E4);
     assertTrue(fen.getAanZet() == 'b');
     assertTrue(fen.getEnPassant().equals("e3"));
     assertTrue(fen.getHalvezetten() == 0);
@@ -52,7 +55,7 @@ public class FENTest extends TestCase {
 
   @Test
   public void testZetInfo() throws FenException {
-    fen = new FEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+    fen = new FEN(FEN_1E2E4);
     assertTrue(fen.getAanZet() == 'b');
     assertTrue(fen.getEnPassant().equals("e3"));
     assertTrue(fen.getHalvezetten() == 0);
@@ -74,7 +77,7 @@ public class FENTest extends TestCase {
 
   @Test
   public void testDoeE7e5() throws FenException {
-    fen = new FEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+    fen = new FEN(FEN_1E2E4);
     fen.doeZet(new Zet(' ', 85, 65));
     assertTrue(fen.getAanZet() == 'w');
     assertTrue(fen.getEnPassant().equals("e6"));
@@ -109,7 +112,6 @@ public class FENTest extends TestCase {
   public void testDoeD2d4() throws FenException {
     fen = new FEN("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3");
     fen.doeZet(new Zet(' ', 34, 54));
-//    System.out.println(fen.getFen());
     assertTrue(fen.getAanZet() == 'b');
     assertTrue(fen.getEnPassant().equals("d3"));
     assertTrue(fen.getHalvezetten() == 0);
