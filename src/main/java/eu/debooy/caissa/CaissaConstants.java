@@ -30,6 +30,7 @@ public final class CaissaConstants {
   public static final String  PGNTAG_ECO        = "ECO";
   public static final String  PGNTAG_EVENTDATE  = "EventDate";
   public static final String  PGNTAG_EVENT      = "Event";
+  public static final String  PGNTAG_FEN        = "FEN";
   public static final String  PGNTAG_RESULT     = "Result";
   public static final String  PGNTAG_ROUND      = "Round";
   public static final String  PGNTAG_SITE       = "Site";
