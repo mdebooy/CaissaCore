@@ -87,7 +87,9 @@ import java.util.TreeMap;
  * @author Marco de Booij
  */
 public class PGN implements Comparable<PGN>, Serializable {
-  private static final  long  serialVersionUID  = 1L;
+  private static final  long    serialVersionUID  = 1L;
+  private static final  String  EOL               =
+      System.getProperty("line.separator");
 
   private boolean       ranked          = true;
   private boolean       rated           = true;
@@ -339,7 +341,7 @@ public class PGN implements Comparable<PGN>, Serializable {
    * @return de '7 Tags' tags
    */
   public String getSevenTagsAsString() {
-    String        eol     = "\"]\n";
+    String        eol     = "\"]" + EOL;
     StringBuilder result  = new StringBuilder();
 
     result.append("[Event \"")
@@ -388,7 +390,7 @@ public class PGN implements Comparable<PGN>, Serializable {
    * @return de tags
    */
   public String getTagsAsString() {
-    String        eol     = "\"]\n";
+    String        eol     = "\"]" + EOL;
     StringBuilder result  = new StringBuilder();
 
     result.append(getSevenTagsAsString());
@@ -693,12 +695,19 @@ public class PGN implements Comparable<PGN>, Serializable {
    * @result de PGN partij
    */
   public String toString() {
-    StringBuilder result  = new StringBuilder();
+    StringBuilder result      = new StringBuilder();
+    String        teSplitsen  = zetten + " "
+                                + tags.get(CaissaConstants.PGNTAG_RESULT);
 
     result.append(getTagsAsString());
-    result.append("\n");
-    result.append(zetten + " " + tags.get("Result") + "\n");
-    
+    result.append(EOL);
+    while (teSplitsen.length() > 80) {
+      int splits  = teSplitsen.substring(1, 80).lastIndexOf(" ");
+      result.append(teSplitsen.substring(0, splits + 1) + EOL);
+      teSplitsen  = teSplitsen.substring(splits + 2);
+    }
+    result.append(teSplitsen + EOL);
+
     return  result.toString();
   }
 
