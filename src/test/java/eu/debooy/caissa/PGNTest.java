@@ -130,14 +130,14 @@ public class PGNTest extends TestCase {
 
   @Test
   public void testZuivereZetten() throws PgnException {
-    List<PGN> partijen        = new ArrayList<PGN>();
+    List<PGN> partijen      = new ArrayList<PGN>();
     partijen
         .addAll(
             CaissaUtils.laadPgnBestand("target/test-classes/commentaar.pgn"));
-    int       i               = 0;
-    PGN       partij          = null;
-    String    resultaat       = "";
-    String    zuivereZetten   = "";
+    int       i             = 0;
+    PGN       partij        = null;
+    String    resultaat     = "";
+    String    zuivereZetten = "";
 
     while (i < partijen.size()) {
       partij        = partijen.get(i);
