@@ -23,6 +23,7 @@ import eu.debooy.doosutils.access.TekstBestand;
 import eu.debooy.doosutils.exception.BestandException;
 
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,12 +32,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 
 /**
  * @author Marco de Booij
  */
 public final class CaissaUtils {
+  protected static  ResourceBundle  resourceBundle  =
+      ResourceBundle.getBundle("CaissaCore");
+
   private CaissaUtils() {
   }
 
@@ -157,10 +162,9 @@ public final class CaissaUtils {
         StringBuilder zetten  = new StringBuilder();
         while (!eof && !lijn.trim().endsWith(uitslag)) {
           if (lijn.startsWith("[")) {
-            String  eol = System.getProperty("line.separator");
-            throw new PgnException("PGN bestand incorrect tijdens partij: "
-                                   + eol + partij.toString() + eol + eol
-                                   + "Lijnnummer: " + lijnnummer);
+            throw new PgnException(MessageFormat.format(
+                resourceBundle.getString(PGN.ERR_BESTAND),
+                                   lijnnummer));
           }
           zetten.append(lijn.trim());
           if (!lijn.endsWith(".")) {
@@ -187,7 +191,8 @@ public final class CaissaUtils {
           if (partij.isValid()) {
             partijen.add(partij);
           } else {
-            throw new PgnException("PGN Invalid");
+            throw
+                new PgnException(resourceBundle.getString(PGN.ERR_PGN_INVALID));
           }
         }
 
@@ -200,14 +205,18 @@ public final class CaissaUtils {
       }
       input.close();
     } catch (BestandException e) {
-      throw new PgnException(e.getLocalizedMessage());
+      throw new PgnException(MessageFormat.format(
+          resourceBundle.getString(PGN.ERR_BESTAND_EXCEPTION),
+          e.getLocalizedMessage()));
     } finally {
       try {
         if (input != null) {
           input.close();
         }
       } catch (BestandException e) {
-        throw new PgnException(e.getLocalizedMessage());
+        throw new PgnException(MessageFormat.format(
+            resourceBundle.getString(PGN.ERR_BESTAND_EXCEPTION),
+            e.getLocalizedMessage()));
       }
     }
     return partijen;
@@ -258,8 +267,9 @@ public final class CaissaUtils {
       Zet             juisteZet       = null;
       if (halveZet[i].indexOf('.') >= 0) {
         if (halveZet[i].indexOf('.') == (halveZet[i].length() - 1)) {
-          throw new PgnException(halveZet[i] + " niet correct. [" + pgnZetten
-                                 + "]");
+          throw new PgnException(MessageFormat.format(
+              resourceBundle.getString(PGN.ERR_HALVEZET),
+              halveZet[i], pgnZetten));
         }
         pgnZet  = halveZet[i].substring(halveZet[i].lastIndexOf('.') + 1);
       } else {
@@ -289,7 +299,9 @@ public final class CaissaUtils {
           fen.doeZet(juisteZet);
         }
       } else {
-        throw new PgnException(pgnZet + " niet gevonden. [" + pgnZetten + "]");
+        throw new PgnException(MessageFormat.format(
+            resourceBundle.getString(PGN.ERR_ONGELDIGEZET),
+            pgnZet, pgnZetten));
       }
     }
     return chessTheatre.toString().trim();
@@ -327,7 +339,7 @@ public final class CaissaUtils {
         zetten  = zetten.replace("@-@-@", "O-O-O").replace("@-@", "O-O");
       }
     } else {
-      throw new PgnException("Verkeerde 'aantal' nieuwe Stukken.");
+      throw new PgnException(resourceBundle.getString(PGN.ERR_STUKKEN));
     }
 
     return String.valueOf(result);

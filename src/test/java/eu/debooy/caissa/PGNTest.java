@@ -16,28 +16,44 @@
  */
 package eu.debooy.caissa;
 
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import eu.debooy.caissa.exceptions.PgnException;
+import eu.debooy.doosutils.exception.BestandException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 
 /**
  * @author Marco de Booij
  */
-public class PGNTest extends TestCase {
+public class PGNTest {
+  protected static  ResourceBundle  resourceBundle;
+
   private PGN pgn; 
-  
+
+  @BeforeClass
+  public static void beforeClass() throws BestandException {
+    Locale.setDefault(new Locale("nl"));
+    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+                                                Locale.getDefault());
+  }
+
   @Before
   public void setUp() throws PgnException {
     pgn = new PGN();
@@ -99,7 +115,9 @@ public class PGNTest extends TestCase {
       pgn.addTag(CaissaConstants.PGNTAG_RESULT, "fout");
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-      // Verwachte PgnException
+      assertEquals("testResultTags",
+                   resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
+                   e.getMessage());
     }
   }
 
@@ -119,7 +137,9 @@ public class PGNTest extends TestCase {
       pgn.setTags(tags);
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-      // Verwachte PgnException
+      assertEquals("testResultTags",
+                   resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
+                   e.getMessage());
     }
   }
 

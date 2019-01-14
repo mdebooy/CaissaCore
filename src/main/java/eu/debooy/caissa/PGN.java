@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 
@@ -91,6 +92,17 @@ public class PGN implements Comparable<PGN>, Serializable {
   private static final  String  EOL               =
       System.getProperty("line.separator");
 
+  public static final String  ERR_BESTAND           = "pgn.bestand.incorrect";
+  public static final String  ERR_BESTAND_EXCEPTION = "pgn.bestand.exception";
+  public static final String  ERR_HALVEZET          = "pgn.error.halvezet";
+  public static final String  ERR_ONGELDIGEZET      = "pgn.error.ongeldige.zet";
+  public static final String  ERR_PGN_INVALID       = "pgn.invalid";
+  public static final String  ERR_PGN_UITSLAG       = "pgn.error.uitslag";
+  public static final String  ERR_STUKKEN           = "pgn.error.ongeldige.zet";
+
+  protected static  ResourceBundle  resourceBundle  =
+      ResourceBundle.getBundle("CaissaCore");
+
   private boolean       ranked          = true;
   private boolean       rated           = true;
   private Map<String, String>
@@ -131,9 +143,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     zetten        = pgn.getZetten();
   }
 
-  /**
-   * Sorteren op Event, Site, Round, Date, White, Black, Result, zetten.
-   */
   public static class byEventComparator
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
@@ -188,9 +197,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  /**
-   * Sorteren op Date, Event, Site, Round, White, Black, Result, zetten.
-   */
   public static class defaultComparator
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
@@ -246,43 +252,26 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  /**
-   * @param tag de toe te voegen tag
-   * @param value de waarde van de tag
-   * @throws PgnException 
-   */
   public void addTag(String tag, String value) throws PgnException {
     tags.put(tag, value);
 
     if (CaissaConstants.PGNTAG_RESULT.equals(tag)
         && Arrays.binarySearch(uitslagen, value) < 0) {
-      throw new PgnException("Verkeerde uitslag.");
+      throw new PgnException(resourceBundle.getString(PGN.ERR_PGN_UITSLAG));
     }
   }
 
-  /**
-   * Vergelijk deze PGN met een andere
-   * 
-   * @param other een ander PGN object
-   * @return -1, 0 of 1
-   */
   public int compareTo(PGN other) {
     return getSevenTagsAsString()
         .compareTo(((PGN) other).getSevenTagsAsString());
   }
 
-  /**
-   * @param tag de te verwijderen tag
-   */
   public void deleteTag(String tag) {
     if (tags.containsKey(tag)) {
       tags.remove(tag);
     }
   }
 
-  /**
-   * Is de PGN gelijk aan de andere?
-   */
   public boolean equals(Object other) {
     if (!(other instanceof PGN)) {
       return false;
@@ -292,21 +281,10 @@ public class PGN implements Comparable<PGN>, Serializable {
         .equalsIgnoreCase(((PGN) other).getSevenTagsAsString());
   }
 
-  /**
-   * Geef de BLACK tag.
-   * 
-   * @return
-   */
   public String getBlack() {
     return getTag(CaissaConstants.PGNTAG_BLACK);
   }
 
-  /**
-   * Geeft de "Date" tag als java.util.Date
-   * Het hoeft niet altijd een volledige datum te zijn.
-   * 
-   * @return Date
-   */
   public Date getDate() {
     Date  datum = null;
 
@@ -319,12 +297,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     return datum;
   }
 
-  /**
-   * Geeft de "EventDate" tag als java.util.Date
-   * Het hoeft niet altijd een volledige datum te zijn.
-   * 
-   * @return Date
-   */
   public Date getEventDate() {
     Date  datum = null;
 
@@ -337,9 +309,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     return datum;
   }
 
-  /**
-   * @return de '7 Tags' tags
-   */
   public String getSevenTagsAsString() {
     String        eol     = "\"]" + EOL;
     StringBuilder result  = new StringBuilder();
@@ -360,17 +329,10 @@ public class PGN implements Comparable<PGN>, Serializable {
     return result.toString();
   }
 
-  /**
-   * @return de stukken
-   */
   public String getStukken() {
     return stukken;
   }
 
-  /**
-   * @param tag de tag waarvoor de value gevraagd wordt
-   * @return de value van de tag
-   */
   public String getTag(String tag) {
     if (tags.containsKey(tag)) {
       return tags.get(tag);
@@ -379,16 +341,10 @@ public class PGN implements Comparable<PGN>, Serializable {
     return null;
   }
 
-  /**
-   * @return de tags
-   */
   public Map<String, String> getTags() {
     return tags;
   }
 
-  /**
-   * @return de tags
-   */
   public String getTagsAsString() {
     String        eol     = "\"]" + EOL;
     StringBuilder result  = new StringBuilder();
@@ -405,26 +361,14 @@ public class PGN implements Comparable<PGN>, Serializable {
     return result.toString();
   }
 
-  /**
-   * Geef de WHITE tag.
-   * 
-   * @return
-   */
   public String getWhite() {
     return getTag(CaissaConstants.PGNTAG_WHITE);
   }
 
-  /**
-   * @return de zetten
-   */
   public String getZetten() {
     return zetten;
   }
 
-  /**
-   * @param naarTaal de taal van de stukken in de return
-   * @return de zetten in de taal van naarTaal
-   */
   public String getZetten(String naarTaal) throws PgnException {
     return translateStukken(zetten,
                             CaissaConstants.Stukcodes
@@ -432,10 +376,6 @@ public class PGN implements Comparable<PGN>, Serializable {
                                            .getStukcodes());
   }
 
-  /**
-   * Verwijdert ongewenste tekens en commentaar uit de zetten.
-   * @return 
-   */
   public String getZuivereZetten() {
     if (zuivereZetten.isEmpty()
         && !zetten.isEmpty()) {
@@ -506,28 +446,14 @@ public class PGN implements Comparable<PGN>, Serializable {
     return zuivereZetten;
   }
 
-  /**
-   * Geef de hashCode van de PGN
-   */
   public int hashCode() {
     return getSevenTagsAsString().hashCode();
   }
 
-  /**
-   * Bestaat de TAG?
-   * 
-   * @param tag
-   * @return
-   */
   public boolean hasTag(String tag) {
     return tags.containsKey(tag);
   }
 
-  /**
-   * Is dit een partij met 1 speler?
-   * 
-   * @return
-   */
   public boolean isBye() {
     String  wit   = getWhite();
     String  zwart = getBlack();
@@ -538,79 +464,49 @@ public class PGN implements Comparable<PGN>, Serializable {
         || DoosUtils.isBlankOrNull(zwart));
   }
 
-  /**
-   * Mag de partij gebruikt worden voor de stand?
-   * 
-   * @return
-   */
   public boolean isRanked() {
     return ranked;
   }
 
-  /**
-   * Mag de partij gebruikt worden voor ELO rating?
-   * 
-   * @return
-   */
   public boolean isRated() {
     return rated;
   }
 
-  /**
-   * Speelt de speler in deze partij?
-   * 
-   * @param speler
-   * @return
-   */
   public boolean isSpeler(String speler) {
     return (getBlack().equals(speler) || getWhite().equals(speler));
   }
 
-  /**
-   * Controleert of de PGN volledig is en de TAG Date correct.
-   */
   public boolean isValid() {
     for (int i = 0; i < sevenTagRoster.length; i++)  {
       if (!tags.containsKey(sevenTagRoster[i])) {
         return false;
+      } else {
+        if (DoosUtils.isBlankOrNull(tags.get(sevenTagRoster[i]))) {
+          return false;
+        }
       }
     }
 
     return true;
   }
 
-  /**
-   * @param rated
-   */
   public void setRated(boolean rated) {
     this.rated  = rated;
   }
 
-  /**
-   * @param stukken de waarde van stukken
-   */
   public void setStukken(String stukken) {
     this.stukken = stukken;
   }
 
-  /**
-   * @param tag de toe te voegen tag
-   * @param value de waarde van de tag
-   * @throws PgnException 
-   */
   public void setTag(String tag, String value) throws PgnException {
     tags.put(tag, value);
 
     if (CaissaConstants.PGNTAG_RESULT.equals(tag)
         && Arrays.binarySearch(uitslagen, value) < 0) {
-      throw new PgnException("Verkeerde uitslag.");
+      throw new PgnException(resourceBundle.getString(PGN.ERR_PGN_UITSLAG));
     }
   }
 
-  /**
-   * @param tag de toe te voegen tags
-   * @throws PgnException 
-   */
   public void setTags(Map<String, String> tags) throws PgnException {
     this.tags = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
@@ -619,9 +515,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  /**
-   * @param zetten de zetten van de partij
-   */
   public void setZetten(String zetten) {
     this.zetten = zetten;
 
@@ -647,12 +540,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  /**
-   * Deze method vertaald de stukken van een taal in de standaard taal.
-   * 
-   * @param zetten de zetten van de partij
-   * @param vanTaal de taal van de stukken in zetten
-   */
   public void setZetten(String zetten, String vanTaal) throws PgnException {
     setZetten(translateStukken(zetten,
                                CaissaConstants.Stukcodes
@@ -660,12 +547,6 @@ public class PGN implements Comparable<PGN>, Serializable {
                                               .getStukcodes()));
   }
 
-  /**
-   * Met welke kleur speelt de speler?
-   * 
-   * @param speler
-   * @return
-   */
   public String speeltKleur(String speler) {
     if (getWhite().equals(speler)) {
       return CaissaConstants.PGNTAG_WHITE;
@@ -677,11 +558,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     return null;
   }
 
-  /**
-   * Converteert een PGN Datum in een java.util.Date
-   * @return de PGN Date
-   * @throws ParseException 
-   */
   private Date  toDate(String datum) throws ParseException {
     if (DoosUtils.isBlankOrNull(datum)
         || datum.contains("?")) {
@@ -691,9 +567,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     return Datum.toDate(datum, CaissaConstants.PGN_DATUM_FORMAAT);
   }
 
-  /**
-   * @result de PGN partij
-   */
   public String toString() {
     StringBuilder result      = new StringBuilder();
     String        teSplitsen  = zetten + " "
@@ -711,14 +584,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     return  result.toString();
   }
 
-  /**
-   * Vertaalt de zetten van de standaard taal naar een andere taal.
-   * 
-   * @param zetten de zetten van de partij
-   * @param nieuweStukken de nieuwe waardes van de stukken in zetten
-   * @return vertaalde zetten
-   * @throws PgnException
-   */
   private String translateStukken(String zetten, String naarStukken)
       throws PgnException {
     return CaissaUtils.vertaalStukken(zetten, stukken, naarStukken);
