@@ -19,12 +19,9 @@ package eu.debooy.caissa;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.caissa.exceptions.ZetException;
+import eu.debooy.doosutils.access.TekstBestand;
+import eu.debooy.doosutils.exception.BestandException;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,12 +40,6 @@ public final class CaissaUtils {
   private CaissaUtils() {
   }
 
-  /**
-   * Bereken de Sonneborn–Berger score.
-   * 
-   * @param punten  Een array met Spelerinfo per speler van het toernooi.
-   * @param matrix De matrix die moet worden opgevuld met de uitslagen.
-   */
   private static void berekenSBscore(Spelerinfo[] speler, double[][] matrix,
                                      int toernooiType) {
     int noSpelers = speler.length;
@@ -81,12 +72,6 @@ public final class CaissaUtils {
     }
   }
 
-  /**
-   * Bereken de weestandspunten.
-   * 
-   * @param punten  Een array met Spelerinfo per speler van het toernooi.
-   * @param matrix De matrix die moet worden opgevuld met de uitslagen.
-   */
   private static void berekenWeerstandspunten(Spelerinfo[] speler,
                                              double[][] matrix,
                                              int toernooiType) {
@@ -103,155 +88,131 @@ public final class CaissaUtils {
     }
   }
 
-  /**
-   * Zet het veld om van a1-h8 naar 11-88
-   * 
-   * @param veld
-   * @return
-   */
   public static int externToIntern(String veld) {
     return (veld.charAt(0) - 96) + (veld.charAt(1) - 47) * 10;
   }
 
-  /**
-   * Zet het veld om van 11-88 naar a1-h8
-   * 
-   * @param veld
-   * @return
-   */
   public static String internToExtern(int veld) {
     return "" + (char) (veld%10 + 96) + (char) (veld/10 + 47);
   }
 
-  /**
-   * Staat de koning mat? Zijn er nog zetten?
-   * 
-   * @param fen
-   * @return
-   * @throws ZetException 
-   */
   public static boolean isMat(FEN fen) throws ZetException {
     int zetten  = new Zettengenerator(fen).getAantalZetten();
 
     return (zetten == 0);
   }
 
-  /**
-   * Laad een PGN file in een List van PGN objecten.
-   * 
-   * @param pgnFile
-   * @return
-   * @throws PgnException
-   */
   public static Collection<PGN> laadPgnBestand(String bestand)
       throws PgnException {
     return laadPgnBestand(bestand, Charset.defaultCharset().name());
   }
 
-  /**
-   * Laad een PGN file van een bepaald character set in een List van PGN
-   * objecten.
-   * 
-   * @param bestand
-   * @param charSet
-   * @return
-   * @throws PgnException
-   */
   public static Collection<PGN> laadPgnBestand(String bestand, String charSet)
       throws PgnException {
-    BufferedReader  input       = null;
+    TekstBestand    input       = null;
     int             lijnnummer  = 0;
     Collection<PGN> partijen    = new ArrayList<PGN>();
 
     try {
-      input = new BufferedReader(
-                new InputStreamReader(
-                  new FileInputStream (bestand
-                                       + (bestand.endsWith(".pgn") ? ""
-                                                                   : ".pgn")),
-                                       charSet));
-      String line = input.readLine();
-      lijnnummer++;
-      // Zoek naar de eerste TAG
-      while (line != null && !line.startsWith("[")) {
-        line = input.readLine();
+      input = new TekstBestand.Builder()
+                              .setBestand(bestand
+                                  + (bestand.endsWith(".pgn") ? "" : ".pgn"))
+                              .setCharset(charSet).build();
+
+      
+      boolean eof   = false;
+      String  lijn  = "";
+      if (input.hasNext()) {
+        lijn  = input.next();
         lijnnummer++;
+      } else {
+        eof = true;
       }
-      while (line != null) {
-        PGN partij = new PGN();
+      while (!eof) {
+        PGN     partij  = new PGN();
+
+        // Zoek naar de eerste TAG
+        while (!eof && !lijn.startsWith("[")) {
+          if (input.hasNext()) {
+            lijn  = input.next();
+            lijnnummer++;
+          } else {
+            eof = true;
+          }
+        }
+
         // Verwerk de TAGs
-        while (line != null && line.startsWith("[")) {
-          String tag    = line.substring(1, line.indexOf(' '));
-          String value  = line.substring(line.indexOf('"') + 1,
-              line.lastIndexOf('"'));
-          partij.addTag(tag, value);
-          line = input.readLine();
-          lijnnummer++;
+        while (!eof && lijn.startsWith("[")) {
+          schrijfTag(partij, lijn);
+          if (input.hasNext()) {
+            lijn  = input.next();
+            lijnnummer++;
+          } else {
+            eof = true;
+          }
         }
 
         // Verwerk de zetten
         String        uitslag = partij.getTag("Result");
         StringBuilder zetten  = new StringBuilder();
-        while (null != line && !line.trim().endsWith(uitslag)) {
-          if (line.startsWith("[")) {
+        while (!eof && !lijn.trim().endsWith(uitslag)) {
+          if (lijn.startsWith("[")) {
             String  eol = System.getProperty("line.separator");
             throw new PgnException("PGN bestand incorrect tijdens partij: "
                                    + eol + partij.toString() + eol + eol
                                    + "Lijnnummer: " + lijnnummer);
           }
-          zetten.append(line.trim());
-          if (!line.endsWith(".")) {
+          zetten.append(lijn.trim());
+          if (!lijn.endsWith(".")) {
             zetten.append(" ");
           }
-          line = input.readLine();
-          lijnnummer++;
+          if (input.hasNext()) {
+            lijn  = input.next();
+            lijnnummer++;
+          } else {
+            eof = true;
+          }
         }
-        if (null != line) {
-          zetten.append(line);
+
+        if (!eof && lijn.trim().endsWith(uitslag)) {
+          zetten.append(lijn.trim());
+        } 
+
+        if (null != uitslag) {
+          String  resultaat = zetten.toString().trim();
+          partij.setZetten(
+              resultaat.substring(0, resultaat.length() - uitslag.length())
+                       .trim());
+
+          if (partij.isValid()) {
+            partijen.add(partij);
+          } else {
+            throw new PgnException("PGN Invalid");
+          }
+        }
+
+        if (input.hasNext()) {
+          lijn  = input.next();
+          lijnnummer++;
         } else {
-          String  eol = System.getProperty("line.separator");
-          throw new PgnException("PGN bestand incorrect tijdens partij: "
-                                 + eol + partij.toString() + eol + eol
-                                 + "Lijnnummer: " + lijnnummer);
-        }
-        String  resultaat = zetten.toString().trim();
-        partij.setZetten(
-            resultaat.substring(0, resultaat.length() - uitslag.length())
-                     .trim());
-
-        partijen.add(partij);
-
-        // Zoek naar de eerste TAG
-        while (line != null && !line.startsWith("[")) {
-          line = input.readLine();
-          lijnnummer++;
+          eof = true;
         }
       }
       input.close();
-    } catch (FileNotFoundException ex) {
-      throw new PgnException(ex.getLocalizedMessage());
-    } catch (IOException ex) {
-      throw new PgnException(ex.getLocalizedMessage());
+    } catch (BestandException e) {
+      throw new PgnException(e.getLocalizedMessage());
     } finally {
       try {
         if (input != null) {
           input.close();
         }
-      } catch (IOException ex) {
-        throw new PgnException(ex.getLocalizedMessage());
+      } catch (BestandException e) {
+        throw new PgnException(e.getLocalizedMessage());
       }
     }
     return partijen;
   }
 
-  /**
-   * Deze method zorgt ervoor dat de getZet() method van de Zet een unieke
-   * uitvoer heeft voor deze List.
-   * Zodra een Zet 'niveau' 3 heeft is de zet altijd uniek tenzij de Zet dubbel
-   * in de List voorkomt.
-   * 
-   * @param zetten
-   */
   public static void maakUniek(List<Zet> zetten) {
     Map<String, List<Zet>>  uniekeZetten  = new HashMap<String, List<Zet>>();
 
@@ -280,29 +241,11 @@ public final class CaissaUtils {
     }
   }
 
-  /**
-   * Zet PGN zetten om in zetten voor ChessTheatre.
-   *
-   * @param pgnZetten
-   * @return
-   * @throws FenException
-   * @throws PgnException
-   * @throws ZetException 
-   */
   public static String pgnZettenToChessTheatre(String pgnZetten)
       throws FenException, PgnException {
     return pgnZettenToChessTheatre(new FEN(), pgnZetten);
   }
 
-  /**
-   * Zet PGN zetten vanuit een FEN om in zetten voor ChessTheatre.
-   * 
-   * @param fen
-   * @param pgnZetten
-   * @return
-   * @throws FenException
-   * @throws PgnException
-   */
   public static String pgnZettenToChessTheatre(FEN fen, String pgnZetten)
       throws FenException, PgnException {
     String        pgnZet        = "";
@@ -352,14 +295,13 @@ public final class CaissaUtils {
     return chessTheatre.toString().trim();
   }
 
-  /**
-   * Vertaalt de zetten van de standaard taal naar een andere taal.
-   * 
-   * @param zetten de zetten van de partij
-   * @param nieuweStukken de nieuwe waardes van de stukken in zetten
-   * @return vertaalde zetten
-   * @throws PgnException
-   */
+  private static void schrijfTag(PGN partij, String line) throws PgnException {
+    String tag    = line.substring(1, line.indexOf(' '));
+    String value  = line.substring(line.indexOf('"') + 1,
+        line.lastIndexOf('"'));
+    partij.addTag(tag, value);
+  }
+
   public static String vertaalStukken(String zetten,
                                       String vanStukken, String naarStukken)
       throws PgnException {
@@ -391,18 +333,6 @@ public final class CaissaUtils {
     return String.valueOf(result);
   }
 
-  /**
-   * Vult de matrix en de informatie per speler.
-   * 
-   * @param partijen Een List met alle PGN partijen.
-   * @param punten Een array met Spelerinfo per speler van het toernooi.
-   * @param namen Een array met de namen van de spelers.
-   * @param halve Een array met de namen van de spelers die maar een half
-   *              toernooi meespelen.
-   * @param matrix De matrix die moet worden opgevuld met de uitslagen.
-   * @param sorteerOpStand Moet de matrix gesorteerd zij op de stand? Dit kan
-   *  enkel als de speler array niet null is.
-   */
   public static void vulToernooiMatrix(Collection<PGN> partijen,
                                        Spelerinfo[] speler, String[] halve,
                                        double[][] matrix, int toernooiType,
