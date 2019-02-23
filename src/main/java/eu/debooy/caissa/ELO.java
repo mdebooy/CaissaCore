@@ -122,8 +122,8 @@ public final class ELO {
                           * Math.log10((1 - percentage) / percentage)));
       }
     }
-    Float correctieFactor = new Float(-2 * percentage * percentage + 2
-                                      * percentage + 0.5);
+    Float correctieFactor = Float.valueOf(-2.0f * percentage * percentage + 2
+                                          * percentage + 0.5f);
     tpr                   = Integer.valueOf(Math.round(toernooiElo
                                                        + eloVerandering
                                                        * correctieFactor));
