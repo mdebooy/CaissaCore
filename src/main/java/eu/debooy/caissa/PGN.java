@@ -257,7 +257,7 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     if (CaissaConstants.PGNTAG_RESULT.equals(tag)
         && Arrays.binarySearch(uitslagen, value) < 0) {
-      throw new PgnException(resourceBundle.getString(PGN.ERR_PGN_UITSLAG));
+      throw new PgnException(resourceBundle.getString(ERR_PGN_UITSLAG));
     }
   }
 
@@ -503,7 +503,7 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     if (CaissaConstants.PGNTAG_RESULT.equals(tag)
         && Arrays.binarySearch(uitslagen, value) < 0) {
-      throw new PgnException(resourceBundle.getString(PGN.ERR_PGN_UITSLAG));
+      throw new PgnException(resourceBundle.getString(ERR_PGN_UITSLAG));
     }
   }
 

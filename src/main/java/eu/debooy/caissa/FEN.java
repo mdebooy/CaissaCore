@@ -20,6 +20,8 @@ import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.doosutils.DoosConstants;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 
 /**
@@ -64,7 +66,14 @@ import java.io.Serializable;
 public class FEN implements Serializable {
   private static final long serialVersionUID  = 1L;
 
-  private static final String  ERROR_ENPASSANT  = "EnPassant foutief";
+  private static final String  BEGINSTELLING  =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+
+  private static final String  ERR_AANZET     = "fen.aanzet.incorrect";
+  private static final String  ERR_ENPASSANT  = "fen.ep.incorrect";
+
+  protected static  ResourceBundle  resourceBundle  =
+      ResourceBundle.getBundle("CaissaCore");
 
   private Boolean witKorteRochade   = true;
   private Boolean witLangeRochade   = true;
@@ -75,10 +84,7 @@ public class FEN implements Serializable {
   private Integer halvezetten       = 0;
   private Integer zetnummer         = 1;
   private String  enPassant         = "-";
-  private String  positie           =
-    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-  private char[]  stuk              = {'k', 'q', 'r', 'b', 'n', 'p', '.',
-                                       'P', 'N', 'B', 'R', 'Q', 'K'};
+  private String  positie           = BEGINSTELLING;
 
   public FEN() {
     positieToBord();
@@ -108,7 +114,7 @@ public class FEN implements Serializable {
             nieuwePositie.append("").append(leeg);
             leeg  = 0;
           }
-          nieuwePositie.append(stuk[bord[i*10+j] + 6]);
+          nieuwePositie.append(CaissaUtils.getStuk(bord[i*10+j]));
         }
       }
       if (leeg > 0) {
@@ -134,12 +140,7 @@ public class FEN implements Serializable {
     }
 
     if (zet.getPromotieStuk() != ' ') {
-      stukVan = zoekStuk(zet.getPromotieStuk());
-      if (stukVan < 0) {
-        throw new FenException("Promotiestuk " + zet.getPromotieStuk()
-                               + " onbekend.");
-      }
-      stukVan -= 6;
+      stukVan = CaissaUtils.zoekStuk(zet.getPromotieStuk());
       if (aanZet == 'b') {
         stukVan *= -1;
       }
@@ -242,23 +243,14 @@ public class FEN implements Serializable {
     return null;
   }
 
-  /**
-   * @return the aanZet
-   */
   public char getAanZet() {
     return aanZet;
   }
 
-  /**
-   * @return the bord
-   */
   public int[] getBord() {
     return bord.clone();
   }
 
-  /**
-   * @return the enPassant
-   */
   public String getEnPassant() {
     return enPassant;
   }
@@ -276,9 +268,6 @@ public class FEN implements Serializable {
     return fen.toString();
   }
 
-  /**
-   * @return the halvezetten
-   */
   public Integer getHalvezetten() {
     return halvezetten;
   }
@@ -295,7 +284,7 @@ public class FEN implements Serializable {
             kortePositie.append("").append(leeg);
             leeg  = 0;
           }
-          kortePositie.append(stuk[bord[i*10+j] + 6]);
+          kortePositie.append(CaissaUtils.getStuk(bord[i*10+j]));
         }
       }
     }
@@ -306,16 +295,10 @@ public class FEN implements Serializable {
     return kortePositie.toString();
   }
 
-  /**
-   * @return the positie
-   */
   public String getPositie() {
     return positie;
   }
 
-  /**
-   * @return the rochade
-   */
   protected String getRochade() {
     StringBuilder rochade = new StringBuilder();
 
@@ -338,37 +321,22 @@ public class FEN implements Serializable {
     return rochade.toString();
   }
 
-  /**
-   * @return the witKorteRochade
-   */
   public Boolean getWitKorteRochade() {
     return witKorteRochade;
   }
 
-  /**
-   * @return the witLangeRochade
-   */
   public Boolean getWitLangeRochade() {
     return witLangeRochade;
   }
 
-  /**
-   * @return the zetnummer
-   */
   public Integer getZetnummer() {
     return zetnummer;
   }
 
-  /**
-   * @return the zwartKorteRochade
-   */
   public Boolean getZwartKorteRochade() {
     return zwartKorteRochade;
   }
 
-  /**
-   * @return the zwartLangeRochade
-   */
   public Boolean getZwartLangeRochade() {
     return zwartLangeRochade;
   }
@@ -407,18 +375,13 @@ public class FEN implements Serializable {
     }
   }
 
-  /**
-   * Methode om het interne bord in 'leesbare' vorm te laten zien.
-   * 
-   * @return intern bord in 'leesbare' vorm.
-   */
   public String printBord() {
     StringBuilder internBord  = new StringBuilder();
 
     for (int i = 9; i > 1; i--) {
       internBord.append((i - 1)).append(" ");
       for (int j = 1; j < 9; j++) {
-        internBord.append(stuk[bord[(i * 10 + j)] + 6]);
+        internBord.append(CaissaUtils.getStuk(bord[(i * 10 + j)]));
       }
       internBord.append(DoosConstants.EOL);
     }
@@ -427,29 +390,22 @@ public class FEN implements Serializable {
     return internBord.toString();
   }
 
-  /**
-   * @param aanZet the aanZet to set
-   * @throws FenException 
-   */
   public void setAanZet(char aanZet) throws FenException {
     if ("bw".indexOf(aanZet) < 0) {
-      throw new FenException("AanZet niet 'b' of 'w'");
+      throw new FenException(resourceBundle.getString(ERR_AANZET));
     }
 
     this.aanZet = aanZet;
   }
+
   public void setAanZet(String aanZet) throws FenException {
     if (aanZet.length() != 1) {
-      throw new FenException("AanZet geen char");
+      throw new FenException(resourceBundle.getString(ERR_AANZET));
     }
 
     setAanZet(aanZet.charAt(0));
   }
 
-  /**
-   * @param enPassant the enPassant to set
-   * @throws FenException 
-   */
   public void setEnPassant(String enPassant) throws FenException {
     if ("-".equals(enPassant)) {
       this.enPassant = enPassant;
@@ -457,15 +413,18 @@ public class FEN implements Serializable {
     }
 
     if ("abcdefgh".indexOf(enPassant.charAt(0)) < 0) {
-      throw new FenException(ERROR_ENPASSANT + " [" + enPassant + "]");
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ENPASSANT), enPassant));
     }
     if (aanZet == 'b'
         && enPassant.charAt(1) != '3') {
-      throw new FenException(ERROR_ENPASSANT + " [" + enPassant + "]");
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ENPASSANT), enPassant));
     }
     if (aanZet == 'w'
         && enPassant.charAt(1) != '6') {
-      throw new FenException(ERROR_ENPASSANT + " [" + enPassant + "]");
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ENPASSANT), enPassant));
     }
     // TODO test of het wel een e.p. pion is.
 
@@ -483,16 +442,10 @@ public class FEN implements Serializable {
     setZetnummer(Integer.valueOf(veld[5]));
   }
 
-  /**
-   * @param halvezetten the halvezetten to set
-   */
   public void setHalvezetten(Integer halvezetten) {
     this.halvezetten = halvezetten;
   }
 
-  /**
-   * @param positie the positie to set
-   */
   public void setPositie(String positie) {
     this.positie  = positie;
     positieToBord();
@@ -522,53 +475,24 @@ public class FEN implements Serializable {
     }
   }
 
-  /**
-   * @param witKorteRochade the witKorteRochade to set
-   */
   public void setWitKorteRochade(Boolean witKorteRochade) {
     this.witKorteRochade = witKorteRochade;
   }
 
-  /**
-   * @param witLangeRochade the witLangeRochade to set
-   */
   public void setWitLangeRochade(Boolean witLangeRochade) {
     this.witLangeRochade = witLangeRochade;
   }
 
-  /**
-   * @param zetnummer the zetnummer to set
-   */
   public void setZetnummer(Integer zetnummer) {
     this.zetnummer = zetnummer;
   }
 
-  /**
-   * @param zwartKorteRochade the zwartKorteRochade to set
-   */
   public void setZwartKorteRochade(Boolean zwartKorteRochade) {
     this.zwartKorteRochade = zwartKorteRochade;
   }
 
-  /**
-   * @param zwartLangeRochade the zwartLangeRochade to set
-   */
   public void setZwartLangeRochade(Boolean zwartLangeRochade) {
     this.zwartLangeRochade = zwartLangeRochade;
-  }
-
-  /**
-   * @param nodig te zoeken stuk
-   * @return index van het stuk of -1 als het stuk niet bestaat
-   */
-  protected int zoekStuk(char nodig) {
-    for (int i = 0; i < stuk.length; i++) {
-      if (stuk[i] == nodig) {
-        return i;
-      }
-    }
-
-    return -1;
   }
 
   public String toString() {

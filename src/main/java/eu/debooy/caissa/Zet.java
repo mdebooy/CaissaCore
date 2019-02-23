@@ -20,6 +20,8 @@ import eu.debooy.caissa.exceptions.ZetException;
 import eu.debooy.doosutils.DoosConstants;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 
 /**
@@ -39,6 +41,12 @@ import java.io.Serializable;
  */
 public class Zet implements Comparable<Object>, Serializable {
   private static final long serialVersionUID  = 1L;
+
+  private static final String  ERR_PROMOTIESTUK = "zet.promotiestuk.incorrect";
+  private static final String  ERR_STUK         = "zet.incorrect";
+
+  protected static  ResourceBundle  resourceBundle  =
+      ResourceBundle.getBundle("CaissaCore");
 
   private boolean ep                = false;
   private boolean mat               = false;
@@ -380,7 +388,8 @@ public class Zet implements Comparable<Object>, Serializable {
 
   public void setPromotieStuk(char promotieStuk) throws ZetException {
     if ("NBRQ".indexOf(promotieStuk) < 0) {
-      throw new ZetException("PromotieStuk foutief [" + promotieStuk + "]");
+      throw new ZetException(MessageFormat.format(
+          resourceBundle.getString(ERR_PROMOTIESTUK), promotieStuk));
     }
 
     this.promotieStuk = promotieStuk;
@@ -396,7 +405,8 @@ public class Zet implements Comparable<Object>, Serializable {
 
   public void setStuk(char stuk) throws ZetException {
     if (CaissaConstants.NOTATIE_STUKKEN.indexOf(stuk) < 0) {
-      throw new ZetException("Stuk foutief [" + stuk + "]");
+      throw new ZetException(MessageFormat.format(
+          resourceBundle.getString(ERR_STUK), stuk));
     }
 
     this.stuk = stuk;

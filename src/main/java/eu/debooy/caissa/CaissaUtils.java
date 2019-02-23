@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +40,9 @@ import java.util.ResourceBundle;
 public final class CaissaUtils {
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
+
+  private static  char[]  stuk  = {'k', 'q', 'r', 'b', 'n', 'p', '.',
+                                   'P', 'N', 'B', 'R', 'Q', 'K'};
 
   private CaissaUtils() {
   }
@@ -95,6 +97,10 @@ public final class CaissaUtils {
 
   public static int externToIntern(String veld) {
     return (veld.charAt(0) - 96) + (veld.charAt(1) - 47) * 10;
+  }
+
+  public static char getStuk(int stukcode) {
+    return stuk[stukcode + 6];
   }
 
   public static String internToExtern(int veld) {
@@ -262,9 +268,7 @@ public final class CaissaUtils {
     StringBuilder chessTheatre  = new StringBuilder();
 
     for (int i = 0; i < halveZet.length; i++) {
-      Zettengenerator zettengenerator = new Zettengenerator(fen);
-      List<Zet>       zetten          = zettengenerator.getZetten();
-      Zet             juisteZet       = null;
+      Zet juisteZet = null;
       if (halveZet[i].indexOf('.') >= 0) {
         if (halveZet[i].indexOf('.') == (halveZet[i].length() - 1)) {
           throw new PgnException(MessageFormat.format(
@@ -275,35 +279,17 @@ public final class CaissaUtils {
       } else {
         pgnZet  = halveZet[i];
       }
-      // Een mat zet kan alleen bepaald worden als men de volgende zetten gaat
-      // genereren. Om de verwerking sneller te laten gebeuren wordt de mat
-      // aanduiding veranderd in een schaak aanduiding. Mat is tenslotte een
-      // schaak die niet kan worden opgeheven.
-      pgnZet  = pgnZet.replace('#', '+');
-      Iterator<?> iter  = zetten.iterator();
-      while (null == juisteZet
-          && iter.hasNext()) {
-        Zet zet = (Zet) iter.next();
-        if (pgnZet.equals(zet.getPgnNotatie())) {
-          juisteZet = zet;
-        }
-      }
-      if (null != juisteZet) {
-        if (halveZet[i].indexOf('.') >= 0) {
-          chessTheatre.append(juisteZet.getChessTheatreZet()).append(" ");
-        } else {
-          chessTheatre.append(juisteZet.getChessTheatreZet().toLowerCase())
-                      .append(" ");
-        }
-        if (!zetten.isEmpty()) {
-          fen.doeZet(juisteZet);
-        }
+      juisteZet = vindZet(fen, pgnZet);
+      // Zwart moet in lowercase.
+      if (halveZet[i].indexOf('.') >= 0) {
+        chessTheatre.append(juisteZet.getChessTheatreZet()).append(" ");
       } else {
-        throw new PgnException(MessageFormat.format(
-            resourceBundle.getString(PGN.ERR_ONGELDIGEZET),
-            pgnZet, pgnZetten));
+        chessTheatre.append(juisteZet.getChessTheatreZet().toLowerCase())
+                    .append(" ");
       }
+      fen.doeZet(juisteZet);
     }
+
     return chessTheatre.toString().trim();
   }
 
@@ -343,6 +329,23 @@ public final class CaissaUtils {
     }
 
     return String.valueOf(result);
+  }
+
+  public static Zet vindZet(FEN fen, String pgnZet) throws PgnException {
+    Zettengenerator zettengenerator = new Zettengenerator(fen);
+    List<Zet>       zetten          = zettengenerator.getZetten();
+    // Mat wordt pas 'bekend' als er een tweede zettengeneratie wordt gedaan.
+    // Deze manier vermijdt dit. Mat is tenslotte een 'speciale' schaak.
+    String          teVinden        = pgnZet.replace('#', '+');
+
+    for (Zet zet : zetten) {
+      if (teVinden.equals(zet.getPgnNotatie())) {
+        return zet;
+      }
+    }
+
+    throw new PgnException(MessageFormat.format(
+        resourceBundle.getString(PGN.ERR_ONGELDIGEZET), pgnZet, fen.getFen()));
   }
 
   public static void vulToernooiMatrix(Collection<PGN> partijen,
@@ -451,5 +454,15 @@ public final class CaissaUtils {
         berekenTieBreakScore(tieBreakType, speler, matrix, toernooiType);
       }
     }
+  }
+
+  public static int zoekStuk(char stukcode) {
+    for (int i = 0; i < stuk.length; i++) {
+      if (stuk[i] == stukcode) {
+        return i - 6;
+      }
+    }
+
+    return -7;
   }
 }
