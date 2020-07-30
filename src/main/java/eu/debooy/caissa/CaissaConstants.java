@@ -25,6 +25,11 @@ public final class CaissaConstants {
   public static final String  STUKKEN           = "PNBRQK";
   public static final String  NOTATIE_STUKKEN   = " NBRQK";
 
+  public static final String  DEF_STARTDATUM  = "0000.00.00";
+  public static final String  DEF_EINDDATUM   = "9999.99.99";
+
+  public static final String  FMT_PGNTAG        = "[{0} \"{1}\"]";
+
   public static final String  PGNTAG_BLACK      = "Black";
   public static final String  PGNTAG_DATE       = "Date";
   public static final String  PGNTAG_ECO        = "ECO";

@@ -96,7 +96,8 @@ public class PGN implements Comparable<PGN>, Serializable {
   public static final String  ERR_BESTAND_EXCEPTION = "pgn.bestand.exception";
   public static final String  ERR_HALVEZET          = "pgn.error.halvezet";
   public static final String  ERR_ONGELDIGEZET      = "pgn.error.ongeldige.zet";
-  public static final String  ERR_PGN_INVALID       = "pgn.invalid";
+  public static final String  ERR_PGN_INVALID       = "pgn.error.invalid";
+  public static final String  ERR_PGN_ONGESLOTEN    = "pgn.error.ongesloten";
   public static final String  ERR_PGN_UITSLAG       = "pgn.error.uitslag";
   public static final String  ERR_STUKKEN           = "pgn.error.ongeldige.zet";
 

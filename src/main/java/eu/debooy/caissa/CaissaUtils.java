@@ -19,9 +19,9 @@ package eu.debooy.caissa;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.caissa.exceptions.ZetException;
+import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.access.TekstBestand;
 import eu.debooy.doosutils.exception.BestandException;
-
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -103,6 +103,31 @@ public final class CaissaUtils {
     return stuk[stukcode + 6];
   }
 
+  /**
+   * enkel: 0 = Tweekamp, 1 = Enkelrondig, 2 = Dubbelrondig
+   * 1 is default waarde.
+   *
+   * @param enkelrondig
+   * @return
+   */
+  public static int getToernooitype(String enkelrondig) {
+    int enkel;
+
+    switch (enkelrondig) {
+    case DoosConstants.WAAR:
+      enkel = CaissaConstants.TOERNOOI_ENKEL;
+      break;
+    case DoosConstants.ONWAAR:
+      enkel = CaissaConstants.TOERNOOI_DUBBEL;
+      break;
+    default:
+      enkel = CaissaConstants.TOERNOOI_MATCH;
+      break;
+    }
+
+    return enkel;
+  }
+
   public static String internToExtern(int veld) {
     return "" + (char) (veld%10 + 96) + (char) (veld/10 + 47);
   }
@@ -130,7 +155,7 @@ public final class CaissaUtils {
                                   + (bestand.endsWith(".pgn") ? "" : ".pgn"))
                               .setCharset(charSet).build();
 
-      
+
       boolean eof   = false;
       String  lijn  = "";
       if (input.hasNext()) {
@@ -186,7 +211,7 @@ public final class CaissaUtils {
 
         if (!eof && lijn.trim().endsWith(uitslag)) {
           zetten.append(lijn.trim());
-        } 
+        }
 
         if (null != uitslag) {
           String  resultaat = zetten.toString().trim();
@@ -372,7 +397,7 @@ public final class CaissaUtils {
           matrix[j][k]  = -1.0;
         }
       }
-      
+
       // Sorteer de speler array op plaats in de stand. Dit enkel in de 2e
       // iteratie.
       if (i == 1) {
