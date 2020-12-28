@@ -19,7 +19,6 @@ package eu.debooy.caissa;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosUtils;
-
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ import java.util.TreeMap;
 
 /**
  * Deze class bevat een partij in PGN notatie met bijbehorende TAGs.
- * 
+ *
  * Volgens Wikipedia:
  *
  * Portable Game Notation(PGN) is een vorm schaaknotatie waarbij de gegevens van
@@ -43,11 +42,11 @@ import java.util.TreeMap;
  * zich ontwikkeld tot een standaard. Praktische elk schaakprogramma en elke
  * schaakdatabase kan PGN importeren of exporteren en vele websites stellen
  * partijenverzamelingen in PGN beschikbaar.
- * 
+ *
  * Een PGN bestand bestaat uitsluitend uit ASCII-karakters. De standaard
  * extensie van een bestand is .pgn. Een zinvol PGN bestand bestaat uit één of
  * meer partijen. Elke partij bestaat uit twee delen, de Tags en de Movetext.
- * 
+ *
  * Een Tag bestaat uit een linker blokhaak, een symbool, een waarde (tussen
  * dubbele aanhalingstekens) en een rechterblokhaak. Er zijn zeven Tags
  * verplicht, in deze volgorde, (dit is de STR, ofwel Seven Tag Roster):
@@ -63,12 +62,12 @@ import java.util.TreeMap;
  * 6. Black. Hetzelfde voor de zwartspeler.
  * 7. Result. De uitslag. Dit kan zijn "1-0", "1/2-1/2", "0-1" of "*"(onbeslist,
  *    betekent meestal dat de partij nog bezig is).
- * 
+ *
  * Na deze Tags kunnen er nog meer volgen, veel gebruikt zijn:
  * - WhiteElo De Elo-rating van de witspeler.
  * - BlackElo De Elo-rating van de zwartspeler.
  * - ECO De opening volgens de ECO-code.
- * 
+ *
  * In het Movetext-gedeelte worden de zetten van de partij weergegeven in de
  * korte algebraïsche notatie, met Engelse aanduiding van de stukken. Dus K voor
  * koning, Q voor dame, R voor toren, B voor loper en N voor paard. Rokade wordt
@@ -78,13 +77,13 @@ import java.util.TreeMap;
  * Als wit bijvoorbeeld zijn pion van c7 naar c8 zet en promoveert tot paard,
  * wordt dit dus "c8=N". Schaak wordt aangeduid met "+" en mat met "#". Andere
  * tekens, zoals ?, ! en dergelijke worden niet gebruikt.
- * 
+ *
  * Commentaar kan worden toegevoegd tussen accolades. Commentaar begint met een
  * { en loopt door tot de eerste }.
- * 
+ *
  * De partij moet worden afgesloten door het resultaat. Dat moet hetzelfde zijn
  * als aangegeven bij de Tag Result.
- * 
+ *
  * @author Marco de Booij
  */
 public class PGN implements Comparable<PGN>, Serializable {
@@ -108,7 +107,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   private boolean       rated           = true;
   private Map<String, String>
                         tags            =
-      new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+      new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   private String[]      annotaties      = {"+-", "-+", "+--", "--+", "+/-",
                                            "-/+", "+=", "=+", "~", "?", "!",
                                            " ="};
@@ -148,6 +147,7 @@ public class PGN implements Comparable<PGN>, Serializable {
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
+    @Override
     public int compare(PGN pgn1, PGN pgn2) {
       // 1e sleutel
       int diff  = pgn1.getTag(CaissaConstants.PGNTAG_EVENT)
@@ -202,6 +202,7 @@ public class PGN implements Comparable<PGN>, Serializable {
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
+    @Override
     public int compare(PGN pgn1, PGN pgn2) {
       // 1e sleutel
       int   diff    = pgn1.getTag(CaissaConstants.PGNTAG_DATE)
@@ -262,6 +263,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
+  @Override
   public int compareTo(PGN other) {
     return getSevenTagsAsString()
         .compareTo(((PGN) other).getSevenTagsAsString());
@@ -273,6 +275,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
+  @Override
   public boolean equals(Object other) {
     if (!(other instanceof PGN)) {
       return false;
@@ -338,7 +341,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     if (tags.containsKey(tag)) {
       return tags.get(tag);
     }
-    
+
     return null;
   }
 
@@ -397,9 +400,9 @@ public class PGN implements Comparable<PGN>, Serializable {
       verwijder('{');
       verwijder('(');
 
-      for (int i = 0; i < annotaties.length; i++) {
-        if (zuivereZetten.contains(annotaties[i])) {
-          zuivereZetten = zuivereZetten.replace(annotaties[i], "");
+      for (String annotatie : annotaties) {
+        if (zuivereZetten.contains(annotatie)) {
+          zuivereZetten = zuivereZetten.replace(annotatie, "");
         }
       }
 
@@ -414,7 +417,7 @@ public class PGN implements Comparable<PGN>, Serializable {
           zuivereZetten = zuivereZetten.substring(eind);
         } else {
           if (eind == zuivereZetten.length()) {
-            zuivereZetten = zuivereZetten.substring(0, start - 1);            
+            zuivereZetten = zuivereZetten.substring(0, start - 1);
           } else {
             zuivereZetten = zuivereZetten.substring(0, start - 1)
                             + zuivereZetten.substring(eind);
@@ -434,7 +437,7 @@ public class PGN implements Comparable<PGN>, Serializable {
         }
         if (start > 0) {
           if (eind == zuivereZetten.length()) {
-            zuivereZetten = zuivereZetten.substring(0, start + 1);            
+            zuivereZetten = zuivereZetten.substring(0, start + 1);
           } else {
             zuivereZetten = zuivereZetten.substring(0, start + 1)
                             + zuivereZetten.substring(eind);
@@ -447,6 +450,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     return zuivereZetten;
   }
 
+  @Override
   public int hashCode() {
     return getSevenTagsAsString().hashCode();
   }
@@ -478,11 +482,11 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public boolean isValid() {
-    for (int i = 0; i < sevenTagRoster.length; i++)  {
-      if (!tags.containsKey(sevenTagRoster[i])) {
+    for (String str : sevenTagRoster) {
+      if (!tags.containsKey(str)) {
         return false;
       } else {
-        if (DoosUtils.isBlankOrNull(tags.get(sevenTagRoster[i]))) {
+        if (DoosUtils.isBlankOrNull(tags.get(str))) {
           return false;
         }
       }
@@ -509,7 +513,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public void setTags(Map<String, String> tags) throws PgnException {
-    this.tags = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+    this.tags = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     for (Entry<String, String> tag: tags.entrySet()) {
       setTag(tag.getKey(), tag.getValue());
@@ -568,6 +572,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     return Datum.toDate(datum, CaissaConstants.PGN_DATUM_FORMAAT);
   }
 
+  @Override
   public String toString() {
     StringBuilder result      = new StringBuilder();
     String        teSplitsen  = zetten + " "
@@ -614,7 +619,7 @@ public class PGN implements Comparable<PGN>, Serializable {
         zuivereZetten = zuivereZetten.substring(eind);
       } else {
         if (eind == zuivereZetten.length()) {
-          zuivereZetten = zuivereZetten.substring(0, start - 1);            
+          zuivereZetten = zuivereZetten.substring(0, start - 1);
         } else {
           zuivereZetten = zuivereZetten.substring(0, start - 1)
                           + zuivereZetten.substring(eind);
