@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Marco de Booij
+ * Copyright (c) 2008 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,8 +17,8 @@
 package eu.debooy.caissa;
 
 import eu.debooy.doosutils.DoosConstants;
-
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -44,6 +44,16 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private String  landKode;
   private String  naam              = "";
 
+  public static class byNaamComparator
+      implements Comparator<Spelerinfo>, Serializable {
+    private static final  long  serialVersionUID  = 1L;
+
+    @Override
+    public int compare(Spelerinfo spelerinfo1, Spelerinfo spelerinfo2) {
+      return spelerinfo1.getNaam().compareTo(spelerinfo2.getNaam());
+    }
+  }
+
   /**
    * Add punt to punten.
    * @param punt
@@ -66,8 +76,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
    *   2 De minste partijen.
    *   3 De meeste tieBreakScore
    *   4 De 'kleinste' naam
-   * De grootste moet als eerste in de lijst komen. 
+   * De grootste moet als eerste in de lijst komen.
+   * @param other
    */
+  @Override
   public int compareTo(Spelerinfo other) {
     if (this == other) {
       return DoosConstants.EQUAL;
@@ -89,6 +101,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return this.naam.compareToIgnoreCase(other.naam);
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof Spelerinfo)) {
       return false;
@@ -174,6 +187,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return tieBreakScore;
   }
 
+  @Override
   public int hashCode() {
     return spelerId.hashCode();
   }
@@ -258,6 +272,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     this.tieBreakScore  = tieBreakScore;
   }
 
+  @Override
   public String toString() {
     StringBuilder result  = new StringBuilder();
 
