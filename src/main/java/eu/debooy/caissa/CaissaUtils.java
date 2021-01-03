@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Marco de Booij
+ * Copyright (c) 2008 Marco de Booij
  *
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -41,8 +41,8 @@ public final class CaissaUtils {
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
-  private static  char[]  stuk  = {'k', 'q', 'r', 'b', 'n', 'p', '.',
-                                   'P', 'N', 'B', 'R', 'Q', 'K'};
+  private static final  char[]  stuk  = {'k', 'q', 'r', 'b', 'n', 'p', '.',
+                                         'P', 'N', 'B', 'R', 'Q', 'K'};
 
   private CaissaUtils() {
   }
@@ -93,6 +93,41 @@ public final class CaissaUtils {
       }
       speler[i].setTieBreakScore(weerstandspunten);
     }
+  }
+
+  public static String[] bergertabel(int spelers) {
+    int       aantal    = spelers + (spelers%2);
+    int       rondes    = aantal - 1;
+    String[]  resultaat = new String[rondes];
+
+    int   speler  = 1;
+    int[] paring  = new int[aantal];
+    for (int i = 0; i < rondes; i++) {
+      for (int j = 0; j < rondes; j++) {
+        paring[j] = speler;
+        speler++;
+        if (speler > rondes) {
+          speler = 1;
+        }
+        paring[rondes]  = aantal;
+      }
+
+      if (i%2 == 1) {
+        paring[0]       = paring[0] + paring[rondes];
+        paring[rondes]  = paring[0] - paring[rondes];
+        paring[0]       = paring[0] - paring[rondes];
+      }
+
+      StringBuilder ronde = new StringBuilder();
+      for (int j = 0; j < aantal/2; j++) {
+        ronde.append(" ").append(paring[j])
+             .append("-").append(paring[rondes-j]);
+      }
+      speler        = paring[(aantal/2)];
+      resultaat[i]  = ronde.toString().trim();
+    }
+
+    return resultaat;
   }
 
   public static int externToIntern(String veld) {
@@ -147,14 +182,13 @@ public final class CaissaUtils {
       throws PgnException {
     TekstBestand    input       = null;
     int             lijnnummer  = 0;
-    Collection<PGN> partijen    = new ArrayList<PGN>();
+    Collection<PGN> partijen    = new ArrayList<>();
 
     try {
       input = new TekstBestand.Builder()
                               .setBestand(bestand
                                   + (bestand.endsWith(".pgn") ? "" : ".pgn"))
                               .setCharset(charSet).build();
-
 
       boolean eof   = false;
       String  lijn  = "";
@@ -254,17 +288,17 @@ public final class CaissaUtils {
   }
 
   public static void maakUniek(List<Zet> zetten) {
-    Map<String, List<Zet>>  uniekeZetten  = new HashMap<String, List<Zet>>();
+    Map<String, List<Zet>>  uniekeZetten  = new HashMap<>();
 
-    for (Zet zet: zetten) {
+    zetten.forEach(zet -> {
       String    korteNotatie  = zet.getZet();
-      List<Zet> gelijk        = new LinkedList<Zet>();
+      List<Zet> gelijk        = new LinkedList<>();
       if (uniekeZetten.containsKey(korteNotatie)) {
         gelijk  = uniekeZetten.get(korteNotatie);
       }
       gelijk.add(zet);
       uniekeZetten.put(korteNotatie, gelijk);
-    }
+    });
 
     if (zetten.size() == uniekeZetten.size()) {
       return;
@@ -273,9 +307,9 @@ public final class CaissaUtils {
     // Zet de KorteNotatie 'niveau' 1 hoger.
     for (List<Zet> lijst: uniekeZetten.values()) {
       if (lijst.size() > 1) {
-        for (Zet zet: zetten) {
+        zetten.forEach(zet -> {
           zet.setKorteNotatieLevel(zet.getKorteNotatieLevel()+1);
-        }
+        });
       }
       maakUniek(lijst);
     }
@@ -289,24 +323,23 @@ public final class CaissaUtils {
   public static String pgnZettenToChessTheatre(FEN fen, String pgnZetten)
       throws FenException, PgnException {
     String        pgnZet        = "";
-    String[]      halveZet      = pgnZetten.split(" ");
+    String[]      halveZetten   = pgnZetten.split(" ");
     StringBuilder chessTheatre  = new StringBuilder();
 
-    for (int i = 0; i < halveZet.length; i++) {
-      Zet juisteZet = null;
-      if (halveZet[i].indexOf('.') >= 0) {
-        if (halveZet[i].indexOf('.') == (halveZet[i].length() - 1)) {
+    for (String halveZet : halveZetten) {
+      if (halveZet.indexOf('.') >= 0) {
+        if (halveZet.indexOf('.') == (halveZet.length() - 1)) {
           throw new PgnException(MessageFormat.format(
               resourceBundle.getString(PGN.ERR_HALVEZET),
-              halveZet[i], pgnZetten));
+              halveZet, pgnZetten));
         }
-        pgnZet  = halveZet[i].substring(halveZet[i].lastIndexOf('.') + 1);
+        pgnZet  = halveZet.substring(halveZet.lastIndexOf('.') + 1);
       } else {
-        pgnZet  = halveZet[i];
+        pgnZet  = halveZet;
       }
-      juisteZet = vindZet(fen, pgnZet);
+      Zet juisteZet = vindZet(fen, pgnZet);
       // Zwart moet in lowercase.
-      if (halveZet[i].indexOf('.') >= 0) {
+      if (halveZet.indexOf('.') >= 0) {
         chessTheatre.append(juisteZet.getChessTheatreZet()).append(" ");
       } else {
         chessTheatre.append(juisteZet.getChessTheatreZet().toLowerCase())
@@ -344,10 +377,6 @@ public final class CaissaUtils {
                                                fromIndex+1);
           }
         }
-      }
-      // Zet de rochade weer terug.
-      if (vanStukken.contains("O")) {
-        zetten  = zetten.replace("@-@-@", "O-O-O").replace("@-@", "O-O");
       }
     } else {
       throw new PgnException(resourceBundle.getString(PGN.ERR_STUKKEN));
@@ -416,11 +445,11 @@ public final class CaissaUtils {
         String  zwart   = partij.getTag(CaissaConstants.PGNTAG_BLACK);
         if (partij.isRanked()
             && !partij.isBye()) {
-          int     ronde   = 1;
+          int   ronde;
           try {
-            ronde = Integer.valueOf(partij.getTag(CaissaConstants.PGNTAG_ROUND))
-                           .intValue();
-          } catch (NumberFormatException nfe) {
+            ronde =
+                Integer.parseInt(partij.getTag(CaissaConstants.PGNTAG_ROUND));
+          } catch (NumberFormatException e) {
             ronde = 1;
           }
           String  uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
@@ -443,32 +472,42 @@ public final class CaissaUtils {
             kolomW  = iZwart * toernooiType;
             kolomZ  = iWit * toernooiType + toernooiType - 1;
           }
-          if (CaissaConstants.PARTIJ_WIT_WINT.equals(uitslag)) {
-            matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
-            matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
-            if (i == 0) {
-              speler[iWit].addPartij();
-              speler[iWit].addPunt(1.0);
-              speler[iZwart].addPartij();
-            }
-          } else if (CaissaConstants.PARTIJ_REMISE.equals(uitslag)) {
-            matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
-            matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
-                                      + 0.5;
-            if (i == 0) {
-              speler[iWit].addPartij();
-              speler[iWit].addPunt(0.5);
-              speler[iZwart].addPartij();
-              speler[iZwart].addPunt(0.5);
-            }
-          } else if (CaissaConstants.PARTIJ_ZWART_WINT.equals(uitslag)) {
-            matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
-            matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
-                                      + 1.0;
-            if (i == 0) {
-              speler[iWit].addPartij();
-              speler[iZwart].addPartij();
-              speler[iZwart].addPunt(1.0);
+          if (null != uitslag) {
+            switch (uitslag) {
+              case CaissaConstants.PARTIJ_WIT_WINT:
+                matrix[iWit][kolomW]    =
+                    Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
+                matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
+                if (i == 0) {
+                  speler[iWit].addPartij();
+                  speler[iWit].addPunt(1.0);
+                  speler[iZwart].addPartij();
+                }
+                break;
+              case CaissaConstants.PARTIJ_REMISE:
+                matrix[iWit][kolomW]    =
+                    Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
+                matrix[iZwart][kolomZ]  =
+                    Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
+                if (i == 0) {
+                  speler[iWit].addPartij();
+                  speler[iWit].addPunt(0.5);
+                  speler[iZwart].addPartij();
+                  speler[iZwart].addPunt(0.5);
+                }
+                break;
+              case CaissaConstants.PARTIJ_ZWART_WINT:
+                matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
+                matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
+                        + 1.0;
+                if (i == 0) {
+                  speler[iWit].addPartij();
+                  speler[iZwart].addPartij();
+                  speler[iZwart].addPunt(1.0);
+                }
+                break;
+              default:
+                break;
             }
           }
         }
