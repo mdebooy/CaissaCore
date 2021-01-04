@@ -33,16 +33,18 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Date    maxDatum;
   private Date    minDatum;
   private Date    officieel;
-  private Double  punten            = 0.0;
-  private Double  tieBreakScore     = 0.0;
-  private Integer partijen          = 0;
+  private Double  punten        = 0.0;
+  private Double  tieBreakScore = 0.0;
+  private Integer partijen      = 0;
   private Integer spelerId;
   private Integer elo;
   private Integer elogroei;
   private Integer maxElo;
   private Integer minElo;
+  private String  alias;
+  private String  email;
   private String  landKode;
-  private String  naam              = "";
+  private String  naam          = "";
 
   public static class byNaamComparator
       implements Comparator<Spelerinfo>, Serializable {
@@ -119,12 +121,20 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return new Date(eerstePartij.getTime());
   }
 
+  public String getAlias() {
+    return alias;
+  }
+
   public Integer getElo() {
     return elo;
   }
 
   public Integer getElogroei() {
     return elogroei;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   public Date getLaatstePartij() {
@@ -192,6 +202,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return spelerId.hashCode();
   }
 
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
+
   public void setEerstePartij(Date eerstePartij) {
     if (null == eerstePartij) {
       this.eerstePartij = null;
@@ -206,6 +220,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public void setElogroei(Integer elogroei) {
     this.elogroei  = elogroei;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public void setLaatstePartij(Date laatstePartij) {
@@ -274,16 +292,14 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   @Override
   public String toString() {
-    StringBuilder result  = new StringBuilder();
-
-    result.append(spelerId).append(" - ")
-          .append(naam).append(" - ")
-          .append(landKode).append(" - ")
-          .append(elo).append(" - ")
-          .append(punten).append(" - ")
-          .append(partijen).append(" - ")
-          .append(tieBreakScore).append(" - ");
-
-    return result.toString();
+    return new StringBuilder().append(spelerId).append(" - ")
+                              .append(naam).append(" - ")
+                              .append(landKode).append(" - ")
+                              .append(elo).append(" - ")
+                              .append(punten).append(" - ")
+                              .append(partijen).append(" - ")
+                              .append(tieBreakScore).append(" - ")
+                              .append(alias).append(" - ")
+                              .append(email).toString();
   }
 }
