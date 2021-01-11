@@ -52,7 +52,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
     @Override
     public int compare(Spelerinfo spelerinfo1, Spelerinfo spelerinfo2) {
-      return spelerinfo1.getNaam().compareTo(spelerinfo2.getNaam());
+      return spelerinfo1.getNaam().compareToIgnoreCase(spelerinfo2.getNaam());
     }
   }
 
@@ -195,6 +195,21 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Double getTieBreakScore() {
     return tieBreakScore;
+  }
+
+  public String getVolledigenaam() {
+    String[] delen = naam.split(",");
+    if (delen.length == 1) {
+      return naam;
+    }
+
+    return delen[1].trim() + " " + delen[0].trim();
+  }
+
+  public String getVoornaam() {
+    String[] delen = naam.split(",");
+
+    return delen[delen.length-1].trim();
   }
 
   @Override
