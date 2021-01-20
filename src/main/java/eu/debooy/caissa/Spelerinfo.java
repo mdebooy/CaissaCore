@@ -28,23 +28,46 @@ import java.util.Date;
 public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private static final long serialVersionUID = 1L;
 
+  private String  alias;
   private Date    eerstePartij;
-  private Date    laatstePartij;
-  private Date    maxDatum;
-  private Date    minDatum;
-  private Date    officieel;
-  private Double  punten        = 0.0;
-  private Double  tieBreakScore = 0.0;
-  private Integer partijen      = 0;
-  private Integer spelerId;
   private Integer elo;
   private Integer elogroei;
-  private Integer maxElo;
-  private Integer minElo;
-  private String  alias;
   private String  email;
+  private Date    laatstePartij;
   private String  landKode;
+  private Date    maxDatum;
+  private Integer maxElo;
+  private Date    minDatum;
+  private Integer minElo;
   private String  naam          = "";
+  private Date    officieel;
+  private Integer partijen      = 0;
+  private Double  punten        = 0.0;
+  private Integer spelerId;
+  private Double  tieBreakScore = 0.0;
+
+  public Spelerinfo() {
+  }
+
+  public Spelerinfo(Spelerinfo spelerinfo) {
+    alias         = spelerinfo.getAlias();
+    eerstePartij  = spelerinfo.getEerstePartij();
+    elo           = spelerinfo.getElo();
+    elogroei      = spelerinfo.getElogroei();
+    email         = spelerinfo.getEmail();
+    laatstePartij = spelerinfo.getLaatstePartij();
+    landKode      = spelerinfo.getLandKode();
+    maxDatum      = spelerinfo.getMaxDatum();
+    maxElo        = spelerinfo.getMaxElo();
+    minDatum      = spelerinfo.getMinDatum();
+    minElo        = spelerinfo.getMinElo();
+    naam          = spelerinfo.getNaam();
+    officieel     = spelerinfo.getOfficieel();
+    partijen      = spelerinfo.getPartijen();
+    punten        = spelerinfo.getPunten();
+    spelerId      = spelerinfo.getSpelerId();
+    tieBreakScore = spelerinfo.getTieBreakScore();
+  }
 
   public static class byNaamComparator
       implements Comparator<Spelerinfo>, Serializable {
