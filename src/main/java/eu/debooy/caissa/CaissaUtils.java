@@ -32,6 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -132,6 +134,83 @@ public final class CaissaUtils {
 
   public static int externToIntern(String veld) {
     return (veld.charAt(0) - 96) + (veld.charAt(1) - 47) * 10;
+  }
+
+  public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
+                                                boolean enkel) {
+    int                   noSpelers = spelers.size();
+    Map<String, Integer>  spelermap = new HashMap<>();
+
+    if (noSpelers%2 == 1) {
+      String  naam  = "bye";
+      noSpelers++;
+      Spelerinfo  speler  = new Spelerinfo();
+      speler.setSpelerId(noSpelers);
+      speler.setNaam(naam);
+      spelers.add(speler);
+      spelermap.put(naam, noSpelers);
+    }
+
+    String[]    rondetabel  = CaissaUtils.bergertabel(noSpelers);
+    Set<Partij> schema      = new TreeSet<>();
+    int         rondenummer = 1;
+    for (String ronde : rondetabel) {
+      String[]  partijen  = ronde.split(" ");
+      int noPartijen    = partijen.length - 1;
+      int partijnummer  = 1;
+      for (int i = noPartijen; i >= 0; i--) {
+        String[]    speler  = partijen[i].split("-");
+        Partij      partij  = new Partij();
+        Spelerinfo  speler1 =
+            new Spelerinfo(spelers.get(Integer.valueOf(speler[0])-1));
+        Spelerinfo  speler2 =
+            new Spelerinfo(spelers.get(Integer.valueOf(speler[1])-1));
+        partij.setRonde(rondenummer, partijnummer);
+        partij.setWitspeler(speler1);
+        partij.setZwartspeler(speler2);
+        partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+        schema.add(partij);
+
+        if (!enkel) {
+          partij  = new Partij();
+          partij.setRonde(rondenummer + noSpelers - 1, partijnummer);
+          partij.setWitspeler(speler2);
+          partij.setZwartspeler(speler1);
+          partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+          schema.add(partij);
+        }
+        partijnummer++;
+      }
+      rondenummer++;
+    }
+
+    return schema;
+  }
+
+  public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
+                                                boolean enkel,
+                                                Collection<PGN> partijen) {
+    Set<Partij> schema  = genereerSpeelschema(spelers, enkel);
+
+    partijen.forEach(partij -> {
+      String  uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
+      if (!uitslag.equals(CaissaConstants.PARTIJ_BEZIG)) {
+        Partij  game  =
+            schema.stream()
+                  .filter(ptij -> ptij.getWitspeler().getNaam()
+                                      .equals(partij.getWhite()))
+                  .filter(ptij -> ptij.getZwartspeler().getNaam()
+                                      .equals(partij.getBlack()))
+                  .findFirst().orElse(null);
+        if (null != game) {
+          game.setForfait(!partij.isRated());
+          game.setRanked(partij.isRanked());
+          game.setUitslag(uitslag);
+        }
+      }
+    });
+
+    return schema;
   }
 
   public static char getStuk(int stukcode) {
