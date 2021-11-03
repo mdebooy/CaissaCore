@@ -193,20 +193,16 @@ public final class CaissaUtils {
     Set<Partij> schema  = genereerSpeelschema(spelers, enkel);
 
     partijen.forEach(partij -> {
-      String  uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
-      if (!uitslag.equals(CaissaConstants.PARTIJ_BEZIG)) {
-        Partij  game  =
-            schema.stream()
-                  .filter(ptij -> ptij.getWitspeler().getNaam()
-                                      .equals(partij.getWhite()))
-                  .filter(ptij -> ptij.getZwartspeler().getNaam()
-                                      .equals(partij.getBlack()))
-                  .findFirst().orElse(null);
-        if (null != game) {
-          game.setForfait(!partij.isRated());
-          game.setRanked(partij.isRanked());
-          game.setUitslag(uitslag);
-        }
+      Partij  game  = schema.stream()
+                            .filter(ptij -> ptij.getWitspeler().getNaam()
+                                                .equals(partij.getWhite()))
+                            .filter(ptij -> ptij.getZwartspeler().getNaam()
+                                                .equals(partij.getBlack()))
+                            .findFirst().orElse(null);
+      if (null != game) {
+        game.setForfait(!partij.isRated());
+        game.setRanked(partij.isRanked());
+        game.setUitslag(partij.getTag(CaissaConstants.PGNTAG_RESULT));
       }
     });
 
@@ -386,9 +382,8 @@ public final class CaissaUtils {
     // Zet de KorteNotatie 'niveau' 1 hoger.
     for (List<Zet> lijst: uniekeZetten.values()) {
       if (lijst.size() > 1) {
-        zetten.forEach(zet -> {
-          zet.setKorteNotatieLevel(zet.getKorteNotatieLevel()+1);
-        });
+        zetten.forEach(zet ->
+            zet.setKorteNotatieLevel(zet.getKorteNotatieLevel()+1));
       }
       maakUniek(lijst);
     }
@@ -440,25 +435,25 @@ public final class CaissaUtils {
   public static String vertaalStukken(String zetten,
                                       String vanStukken, String naarStukken)
       throws PgnException {
+    if (vanStukken.length() != naarStukken.length()) {
+      throw new PgnException(resourceBundle.getString(PGN.ERR_STUKKEN));
+    }
+
     char[]  result  = zetten.toCharArray();
 
-    if (vanStukken.length() == naarStukken.length()) {
-      // Voorkom dat de O van de rochade wordt aangezien voor een stuk.
-      if (vanStukken.contains("O")) {
-        zetten  = zetten.replace("O-O-O", "@-@-@").replace("O-O", "@-@");
-      }
-      for (int i = 0; i < vanStukken.length(); i++) {
-        if (vanStukken.charAt(i) != naarStukken.charAt(i)) {
-          int fromIndex = zetten.indexOf(vanStukken.charAt(i), 0);
-          while (fromIndex >= 0) {
-            result[fromIndex] = naarStukken.charAt(i);
-            fromIndex         = zetten.indexOf(vanStukken.charAt(i),
-                                               fromIndex+1);
-          }
+    // Voorkom dat de O van de rochade wordt aangezien voor een stuk.
+    if (vanStukken.contains("O")) {
+      zetten  = zetten.replace("O-O-O", "@-@-@").replace("O-O", "@-@");
+    }
+    for (int i = 0; i < vanStukken.length(); i++) {
+      if (vanStukken.charAt(i) != naarStukken.charAt(i)) {
+        int fromIndex = zetten.indexOf(vanStukken.charAt(i), 0);
+        while (fromIndex >= 0) {
+          result[fromIndex] = naarStukken.charAt(i);
+          fromIndex         = zetten.indexOf(vanStukken.charAt(i),
+                                             fromIndex+1);
         }
       }
-    } else {
-      throw new PgnException(resourceBundle.getString(PGN.ERR_STUKKEN));
     }
 
     return String.valueOf(result);

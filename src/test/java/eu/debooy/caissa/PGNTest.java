@@ -16,14 +16,11 @@
  */
 package eu.debooy.caissa;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.exception.BestandException;
-
+import eu.debooy.doosutils.test.BatchTest;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +30,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
-
+import static junit.framework.TestCase.fail;
+import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,16 +43,31 @@ import org.junit.Test;
 /**
  * @author Marco de Booij
  */
-public class PGNTest {
-  protected static  ResourceBundle  resourceBundle;
+public class PGNTest extends BatchTest {
+  protected static final  ClassLoader CLASSLOADER =
+      PGNTest.class.getClassLoader();
 
-  private PGN pgn; 
+  private PGN pgn;
+
+  @AfterClass
+  public static void afterClass() {
+    verwijderBestanden(TEMP + File.separator,
+                       new String[] {TestConstants.BST_COMMENTAAR_PGN});
+  }
 
   @BeforeClass
   public static void beforeClass() throws BestandException {
     Locale.setDefault(new Locale("nl"));
     resourceBundle   = ResourceBundle.getBundle("CaissaCore",
                                                 Locale.getDefault());
+    try {
+      kopieerBestand(CLASSLOADER,
+                     TestConstants.BST_COMMENTAAR_PGN,
+                     TEMP + File.separator + TestConstants.BST_COMMENTAAR_PGN);
+    } catch (IOException e) {
+      System.out.println(e.getLocalizedMessage());
+      throw new BestandException(e);
+    }
   }
 
   @Before
@@ -123,7 +139,7 @@ public class PGNTest {
 
   @Test
   public void testResultTags() {
-    Map<String, String> tags  = new HashMap<String, String>();
+    Map<String, String> tags  = new HashMap<>();
 
     tags.put(CaissaConstants.PGNTAG_EVENT,  "schaak evenement");
     tags.put(CaissaConstants.PGNTAG_SITE,   "tournooi ruimte");
@@ -150,14 +166,15 @@ public class PGNTest {
 
   @Test
   public void testZuivereZetten() throws PgnException {
-    List<PGN> partijen      = new ArrayList<PGN>();
+    List<PGN> partijen      = new ArrayList<>();
     partijen
         .addAll(
-            CaissaUtils.laadPgnBestand("target/test-classes/commentaar.pgn"));
+            CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                       + TestConstants.BST_COMMENTAAR_PGN));
     int       i             = 0;
-    PGN       partij        = null;
-    String    resultaat     = "";
-    String    zuivereZetten = "";
+    PGN       partij;
+    String    resultaat;
+    String    zuivereZetten;
 
     while (i < partijen.size()) {
       partij        = partijen.get(i);
@@ -189,7 +206,7 @@ public class PGNTest {
 
   @Test
   public void testDefaultSort() throws PgnException {
-    List<PGN> partijen  = new ArrayList<PGN>();
+    List<PGN> partijen  = new ArrayList<>();
     partijen.addAll(CaissaUtils.laadPgnBestand("target/test-classes/test"));
     Collections.sort(partijen);
     PGN[]     partijTabel = partijen.toArray(new PGN[partijen.size()]);
@@ -200,7 +217,7 @@ public class PGNTest {
 
   @Test
   public void testSortByEvent() throws PgnException {
-    Collection<PGN> partijen  = new TreeSet<PGN>(new PGN.byEventComparator());
+    Collection<PGN> partijen  = new TreeSet<>(new PGN.ByEventComparator());
     partijen.addAll(CaissaUtils.laadPgnBestand("target/test-classes/test.pgn"));
     PGN[]     partijTabel = partijen.toArray(new PGN[partijen.size()]);
     for (int i = 0; i < partijen.size()-1; i++) {

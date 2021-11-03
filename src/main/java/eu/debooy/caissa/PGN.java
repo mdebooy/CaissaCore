@@ -103,28 +103,28 @@ public class PGN implements Comparable<PGN>, Serializable {
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
-  private boolean       ranked          = true;
-  private boolean       rated           = true;
+  private boolean         ranked          = true;
+  private boolean         rated           = true;
   private Map<String, String>
-                        tags            =
+                          tags            =
       new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  private String[]      annotaties      = {"+-", "-+", "+--", "--+", "+/-",
+  private final String[]  annotaties      = {"+-", "-+", "+--", "--+", "+/-",
                                            "-/+", "+=", "=+", "~", "?", "!",
                                            " ="};
-  private String[]      uitslagen       = {CaissaConstants.PARTIJ_WIT_WINT,
-                                           CaissaConstants.PARTIJ_ZWART_WINT,
-                                           CaissaConstants.PARTIJ_REMISE,
-                                           CaissaConstants.PARTIJ_BEZIG};
-  private String[]      sevenTagRoster  = {CaissaConstants.PGNTAG_EVENT,
-                                           CaissaConstants.PGNTAG_SITE,
-                                           CaissaConstants.PGNTAG_DATE,
-                                           CaissaConstants.PGNTAG_ROUND,
-                                           CaissaConstants.PGNTAG_WHITE,
-                                           CaissaConstants.PGNTAG_BLACK,
-                                           CaissaConstants.PGNTAG_RESULT};
-  private String        stukken         = CaissaConstants.STUKKEN;
-  private String        zetten          = "";
-  private String        zuivereZetten   = "";
+  private final String[]  uitslagen       = {CaissaConstants.PARTIJ_WIT_WINT,
+                                             CaissaConstants.PARTIJ_ZWART_WINT,
+                                             CaissaConstants.PARTIJ_REMISE,
+                                             CaissaConstants.PARTIJ_BEZIG};
+  private final String[]  sevenTagRoster  = {CaissaConstants.PGNTAG_EVENT,
+                                             CaissaConstants.PGNTAG_SITE,
+                                             CaissaConstants.PGNTAG_DATE,
+                                             CaissaConstants.PGNTAG_ROUND,
+                                             CaissaConstants.PGNTAG_WHITE,
+                                             CaissaConstants.PGNTAG_BLACK,
+                                             CaissaConstants.PGNTAG_RESULT};
+  private String    stukken               = CaissaConstants.STUKKEN;
+  private String    zetten                = "";
+  private String    zuivereZetten         = "";
 
   public PGN() {
     Arrays.sort(sevenTagRoster);
@@ -143,7 +143,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     zetten        = pgn.getZetten();
   }
 
-  public static class byEventComparator
+  public static class ByEventComparator
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
@@ -198,7 +198,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  public static class defaultComparator
+  public static class DefaultComparator
       implements Comparator<PGN>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
@@ -254,7 +254,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  public void addTag(String tag, String value) throws PgnException {
+  public final void addTag(String tag, String value) throws PgnException {
     tags.put(tag, value);
 
     if (CaissaConstants.PGNTAG_RESULT.equals(tag)
@@ -266,7 +266,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   @Override
   public int compareTo(PGN other) {
     return getSevenTagsAsString()
-        .compareTo(((PGN) other).getSevenTagsAsString());
+        .compareTo(other.getSevenTagsAsString());
   }
 
   public void deleteTag(String tag) {
@@ -290,7 +290,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public Date getDate() {
-    Date  datum = null;
+    Date  datum;
 
     try {
       datum = toDate(getTag(CaissaConstants.PGNTAG_DATE));
@@ -298,11 +298,15 @@ public class PGN implements Comparable<PGN>, Serializable {
       return null;
     }
 
-    return datum;
+    if (null == datum) {
+      return null;
+    }
+
+    return new Date(datum.getTime());
   }
 
   public Date getEventDate() {
-    Date  datum = null;
+    Date  datum;
 
     try {
       datum = toDate(getTag(CaissaConstants.PGNTAG_EVENTDATE));
@@ -310,7 +314,11 @@ public class PGN implements Comparable<PGN>, Serializable {
       return null;
     }
 
-    return datum;
+    if (null == datum) {
+      return null;
+    }
+
+    return new Date(datum.getTime());
   }
 
   public String getSevenTagsAsString() {
@@ -355,12 +363,11 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     result.append(getSevenTagsAsString());
 
-    for (String tag: tags.keySet()) {
-      if (Arrays.binarySearch(sevenTagRoster, tag) < 0) {
-        result.append("[").append(tag).append(" \"").append(tags.get(tag))
-              .append(eol);
-      }
-    }
+    tags.entrySet().stream()
+        .filter(map -> Arrays.binarySearch(sevenTagRoster, map.getKey()) < 0)
+        .forEach(map ->
+            result.append("[").append(map.getKey()).append(" \"")
+                  .append(map.getValue()).append(eol));
 
     return result.toString();
   }
@@ -381,71 +388,45 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getZuivereZetten() {
-    if (zuivereZetten.isEmpty()
-        && !zetten.isEmpty()) {
-      zuivereZetten = " " + zetten + " ";
-      // TAB wordt spatie, Verwijder spaties rond de punten (2x),
-      // Verwijder 'diagram', Verwijder 'nieuwtje', Maak van meerdere spaties 1
-      // spatie
-      String[]  teVervangen = {"\t", "  ", ". ", " .", " D ", " N "};
-      String[]  naar        = {" ",  " ",  ".",  ".",  " ",   " "};
-
-      for (int i = 0; i<teVervangen.length; i++) {
-        while (zuivereZetten.contains(teVervangen[i])) {
-          zuivereZetten = zuivereZetten.replace(teVervangen[i], naar[i]);
-        }
-      }
-
-      // Verwijder commentaar en varianten.
-      verwijder('{');
-      verwijder('(');
-
-      for (String annotatie : annotaties) {
-        if (zuivereZetten.contains(annotatie)) {
-          zuivereZetten = zuivereZetten.replace(annotatie, "");
-        }
-      }
-
-      // Verwijder $nn annotaties.
-      while (zuivereZetten.contains("$")) {
-        int start = zuivereZetten.indexOf('$');
-        int eind  = start + 1;
-        while ("0123456789".contains("" + zuivereZetten.charAt(eind))) {
-          eind++;
-        }
-        if (start == 0) {
-          zuivereZetten = zuivereZetten.substring(eind);
-        } else {
-          if (eind == zuivereZetten.length()) {
-            zuivereZetten = zuivereZetten.substring(0, start - 1);
-          } else {
-            zuivereZetten = zuivereZetten.substring(0, start - 1)
-                            + zuivereZetten.substring(eind);
-          }
-        }
-      }
-
-      // Verwijder 'gesplitste' zetten.
-      while (zuivereZetten.contains("...")) {
-        int start = zuivereZetten.indexOf("...") - 1;
-        int eind  = start + 4;
-        while (zuivereZetten.charAt(start) != ' ') {
-          start--;
-        }
-        while (zuivereZetten.charAt(eind) == '.') {
-          eind++;
-        }
-        if (start > 0) {
-          if (eind == zuivereZetten.length()) {
-            zuivereZetten = zuivereZetten.substring(0, start + 1);
-          } else {
-            zuivereZetten = zuivereZetten.substring(0, start + 1)
-                            + zuivereZetten.substring(eind);
-          }
-        }
-      }
-      zuivereZetten = zuivereZetten.trim();
+    if (!zuivereZetten.isEmpty()
+        && zetten.isEmpty()) {
+      return zuivereZetten;
     }
+
+    zuivereZetten = " " + zetten + " ";
+    // TAB wordt spatie, Verwijder spaties rond de punten (2x),
+    // Verwijder 'diagram', Verwijder 'nieuwtje', Maak van meerdere spaties 1
+    // spatie
+    String[]  teVervangen = {"\t", "  ", ". ", " .", " D ", " N "};
+    String[]  naar        = {" ",  " ",  ".",  ".",  " ",   " "};
+
+    for (int i = 0; i<teVervangen.length; i++) {
+      while (zuivereZetten.contains(teVervangen[i])) {
+        zuivereZetten = zuivereZetten.replace(teVervangen[i], naar[i]);
+      }
+    }
+
+    // Verwijder commentaar en varianten.
+    verwijder('{');
+    verwijder('(');
+
+    for (String annotatie : annotaties) {
+      if (zuivereZetten.contains(annotatie)) {
+        zuivereZetten = zuivereZetten.replace(annotatie, "");
+      }
+    }
+
+    // Verwijder $nn annotaties.
+    while (zuivereZetten.contains("$")) {
+      verwijderDollarNotaties();
+    }
+
+    // Verwijder 'gesplitste' zetten.
+    while (zuivereZetten.contains("...")) {
+      verwijderGesplitsteZetten();
+    }
+
+    zuivereZetten = zuivereZetten.trim();
 
     return zuivereZetten;
   }
@@ -504,12 +485,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public void setTag(String tag, String value) throws PgnException {
-    tags.put(tag, value);
-
-    if (CaissaConstants.PGNTAG_RESULT.equals(tag)
-        && Arrays.binarySearch(uitslagen, value) < 0) {
-      throw new PgnException(resourceBundle.getString(ERR_PGN_UITSLAG));
-    }
+    addTag(tag, value);
   }
 
   public void setTags(Map<String, String> tags) throws PgnException {
@@ -521,28 +497,20 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public void setZetten(String zetten) {
-    this.zetten = zetten;
-
     // Zorg ervoor dat de rochade volgens de standaard is.
     // Eerst de lange en dan de korte rochade.
-    if (this.zetten.contains(".0")
-        || this.zetten.contains(" 0")) {
-      this.zetten = this.zetten.replaceAll("\\.0.0.0", ".O-O-O");
-      this.zetten = this.zetten.replaceAll(" 0.0.0",   " O-O-O");
-      this.zetten = this.zetten.replaceAll("\\.0.0",   ".O-O");
-      this.zetten = this.zetten.replaceAll(" 0.0",     " O-O");
+    if (zetten.contains(".0")
+        || zetten.contains(" 0")) {
+      this.zetten = zetten.replaceAll(" 0.0.0",   " O-O-O")
+                          .replaceAll("\\.0.0.0", ".O-O-O")
+                          .replaceAll(" 0.0",     " O-O")
+                          .replaceAll("\\.0.0",   ".O-O");
+    } else {
+      this.zetten = zetten;
     }
 
-    if (this.zetten.contains("unranked")) {
-      ranked  = false;
-    } else {
-      ranked  = true;
-    }
-    if (this.zetten.contains("unrated")) {
-      rated   = false;
-    } else {
-      rated   = true;
-    }
+    ranked  = !this.zetten.contains("unranked");
+    rated   = !this.zetten.contains("unrated");
   }
 
   public void setZetten(String zetten, String vanTaal) throws PgnException {
@@ -582,10 +550,10 @@ public class PGN implements Comparable<PGN>, Serializable {
     result.append(EOL);
     while (teSplitsen.length() > 80) {
       int splits  = teSplitsen.substring(1, 80).lastIndexOf(" ");
-      result.append(teSplitsen.substring(0, splits + 1) + EOL);
+      result.append(teSplitsen.substring(0, splits + 1)).append(EOL);
       teSplitsen  = teSplitsen.substring(splits + 2);
     }
-    result.append(teSplitsen + EOL);
+    result.append(teSplitsen).append(EOL);
 
     return  result.toString();
   }
@@ -625,6 +593,50 @@ public class PGN implements Comparable<PGN>, Serializable {
                           + zuivereZetten.substring(eind);
         }
       }
+    }
+  }
+
+  private void verwijderDollarNotaties() {
+    int start = zuivereZetten.indexOf('$');
+    int eind  = start + 1;
+
+    while ("0123456789".contains("" + zuivereZetten.charAt(eind))) {
+      eind++;
+    }
+
+    if (start == 0) {
+      zuivereZetten = zuivereZetten.substring(eind);
+      return;
+    }
+
+    if (eind == zuivereZetten.length()) {
+      zuivereZetten = zuivereZetten.substring(0, start - 1);
+    } else {
+      zuivereZetten = zuivereZetten.substring(0, start - 1)
+                      + zuivereZetten.substring(eind);
+    }
+  }
+
+  public void verwijderGesplitsteZetten() {
+    int start = zuivereZetten.indexOf("...") - 1;
+    int eind  = start + 4;
+
+    while (zuivereZetten.charAt(start) != ' ') {
+      start--;
+    }
+    while (zuivereZetten.charAt(eind) == '.') {
+      eind++;
+    }
+
+    if (start <= 0) {
+      return;
+    }
+
+    if (eind == zuivereZetten.length()) {
+      zuivereZetten = zuivereZetten.substring(0, start + 1);
+    } else {
+      zuivereZetten = zuivereZetten.substring(0, start + 1)
+                      + zuivereZetten.substring(eind);
     }
   }
 }
