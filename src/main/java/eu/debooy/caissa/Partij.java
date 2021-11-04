@@ -47,7 +47,7 @@ public class Partij implements Comparable<Partij> {
       return true;
     }
 
-    Partij  partij  = (Partij) object;
+    var partij  = (Partij) object;
     return new EqualsBuilder().append(ronde, partij.ronde)
                               .isEquals();
   }
@@ -78,8 +78,8 @@ public class Partij implements Comparable<Partij> {
   }
 
   public boolean isBye() {
-    return ("bye".equalsIgnoreCase(witspeler.getNaam())
-        || "bye".equalsIgnoreCase(zwartspeler.getNaam())
+    return (CaissaConstants.BYE.equalsIgnoreCase(witspeler.getNaam())
+        || CaissaConstants.BYE.equalsIgnoreCase(zwartspeler.getNaam())
         || DoosUtils.isBlankOrNull(witspeler.getNaam())
         || DoosUtils.isBlankOrNull(zwartspeler.getNaam()));
   }
@@ -122,7 +122,7 @@ public class Partij implements Comparable<Partij> {
 
   @Override
   public String toString() {
-    StringBuilder result  = new StringBuilder();
+    var result  = new StringBuilder();
     result.append("Round data (")
           .append("ronde: [").append(ronde.getRound()).append("], ")
           .append("witspeler: ")

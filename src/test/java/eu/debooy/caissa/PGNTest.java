@@ -57,7 +57,7 @@ public class PGNTest extends BatchTest {
 
   @BeforeClass
   public static void beforeClass() throws BestandException {
-    Locale.setDefault(new Locale("nl"));
+    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
     resourceBundle   = ResourceBundle.getBundle("CaissaCore",
                                                 Locale.getDefault());
     try {

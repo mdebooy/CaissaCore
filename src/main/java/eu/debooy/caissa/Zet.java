@@ -18,10 +18,10 @@ package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.ZetException;
 import eu.debooy.doosutils.DoosConstants;
-
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 /**
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  *                     korteNotatie worden meegegeven. De waarde van deze
  *                     attribuut bepaald welke. 1=kolom, 2=rij en 3=kolom en
  *                     rij.
- * 
+ *
  * @author Marco de Booij
  */
 public class Zet implements Comparable<Object>, Serializable {
@@ -92,24 +92,130 @@ public class Zet implements Comparable<Object>, Serializable {
     van               = zet.van;
   }
 
-  public String getChessTheatreZet() {
-    StringBuilder zet   = new StringBuilder();
+  private void addExtraZetinfo(StringBuilder zet) {
+    if (schaak) {
+      zet.append('+');
+    }
+    if (mat) {
+      zet.append('#');
+    }
+    if (ep) {
+      zet.append(CaissaConstants.EN_PASSANT);
+    }
+  }
 
-    if (stuk == 'K'
-      && (van - naar) == -2) {
+  @Override
+  public int compareTo(Object obj) {
+    Zet other = (Zet) obj;
+
+    if (naar < other.getNaar()) {
+      return DoosConstants.BEFORE;
+    }
+    if (naar > other.getNaar()) {
+      return DoosConstants.AFTER;
+    }
+    if (stuk < other.getStuk()) {
+      return DoosConstants.BEFORE;
+    }
+    if (stuk > other.getStuk()) {
+      return DoosConstants.AFTER;
+    }
+    if (van < other.getVan()) {
+      return DoosConstants.BEFORE;
+    }
+    if (van > other.getVan()) {
+      return DoosConstants.AFTER;
+    }
+    if (promotieStuk < other.getPromotieStuk()) {
+      return DoosConstants.BEFORE;
+    }
+    if (promotieStuk > other.getPromotieStuk()) {
+      return DoosConstants.AFTER;
+    }
+
+    return DoosConstants.EQUAL;
+  }
+
+  private String doeChessTheatreRokade() {
+    if ((van - naar) == -2) {
       if (van == 25) {
         return "60.RK.";
       } else {
         return "4.rk.";
       }
     }
-    if (stuk == 'K'
-      && (van - naar) == 2) {
-      if (van == 25) {
-        return "56.1KR.";
+
+    if (van == 25) {
+      return "56.1KR.";
+    } else {
+      return ".1kr.";
+    }
+  }
+
+  private void doeEp(StringBuilder zet, int voor) {
+    if (van < naar) {
+      // Wit
+      if (naar%10 > van%10) {
+        zet.append((voor - 1)).append(" 6..");
       } else {
-        return ".1kr.";
+        zet.append((voor - 1)).append(" 7..");
       }
+    } else {
+      // Zwart
+      if (naar%10 > van%10) {
+        zet.append((voor - 1)).append("..7p");
+      } else {
+        zet.append((voor - 2)).append("..6p");
+      }
+    }
+  }
+
+  private void doeGewoneZet(StringBuilder zet, int voor, int na) {
+    if (voor > 1) {
+      zet.append((voor - 1));
+    }
+    // Eerst veld schoonmaken of eerst veld zetten.
+    if (((9 - naar/10) * 8 + naar%10) < ((9 - van/10) * 8 + van%10)) {
+      zet.append(promotieStuk == ' ' ? stuk : promotieStuk);
+      zet.append((na - voor) == 1 ? "" : (na - voor - 1));
+      zet.append('.');
+    } else {
+      zet.append('.');
+      zet.append((na - voor) == 1 ? "" : (na - voor - 1));
+      zet.append(promotieStuk == ' ' ? stuk : promotieStuk);
+    }
+  }
+
+  private String doeRokade() {
+    if ((van - naar) == -2) {
+      return CaissaConstants.KORTE_ROCHADE;
+    }
+
+    return CaissaConstants.LANGE_ROCHADE;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Zet other = (Zet) obj;
+    return !(van != other.van || naar != other.naar
+             || promotieStuk != other.promotieStuk);
+  }
+
+  public String getChessTheatreZet() {
+    StringBuilder zet   = new StringBuilder();
+
+    if (stuk == 'K'
+        && Math.abs(van - naar) == 2) {
+      return doeChessTheatreRokade();
     }
 
     int na        = (9 - van/10) * 8 + van%10;
@@ -122,37 +228,11 @@ public class Zet implements Comparable<Object>, Serializable {
     }
 
     if (ep) {
-      if (van < naar) {
-        // Wit
-        if (naar%10 > van%10) {
-          zet.append("" + (voor - 1) + " 6..");
-        } else {
-          zet.append("" + (voor - 1) + " 7..");
-        }
-      } else {
-        // Zwart
-        if (naar%10 > van%10) {
-          zet.append("" + (voor - 1) + "..7p");
-        } else {
-          zet.append("" + (voor - 2) + "..6p");
-        }
-      }
+      doeEp(zet, voor);
     } else {
-      if (voor > 1) {
-        zet.append((voor - 1));
-      }
-      // Eerst veld schoonmaken of eerst veld zetten.
-      if (((9 - naar/10) * 8 + naar%10) < ((9 - van/10) * 8 + van%10)) {
-        zet.append(promotieStuk == ' ' ? stuk : promotieStuk);
-        zet.append((na - voor) == 1 ? "" : (na - voor - 1));
-        zet.append('.');
-      } else {
-        zet.append('.');
-        zet.append((na - voor) == 1 ? "" : (na - voor - 1));
-        zet.append(promotieStuk == ' ' ? stuk : promotieStuk);
-      }
+      doeGewoneZet(zet, voor, na);
     }
-    
+
     return zet.toString().replace(' ', 'P');
   }
 
@@ -168,46 +248,35 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getKorteNotatie() {
-    StringBuilder zet = new StringBuilder();
-    
+    return getKorteNotatie(korteNotatieLevel);
+  }
+
+  private String getKorteNotatie(int level) {
+    var zet = new StringBuilder();
+
     if (stuk == 'K'
-      && (van - naar) == -2) {
-        zet.append(CaissaConstants.KORTE_ROCHADE);
+        && Math.abs(van - naar) == 2) {
+      zet.append(doeRokade());
     } else {
-      if (stuk == 'K'
-        && (van - naar) == 2) {
-          zet.append(CaissaConstants.LANGE_ROCHADE);
-      } else {
-        zet.append(stuk);
-        if (korteNotatieLevel == 1
-            || korteNotatieLevel == 3
-            || (stuk == ' '
-              && isSlagzet())) {
-          zet.append(CaissaUtils.internToExtern(van).charAt(0));
-        }
-        if (korteNotatieLevel == 2
-            || korteNotatieLevel == 3) {
-          zet.append(CaissaUtils.internToExtern(van).charAt(1));
-        }
-        if (isSlagzet()) {
-          zet.append('x');
-        }
-        zet.append(CaissaUtils.internToExtern(naar));
+      zet.append(stuk);
+      if (level == 1
+          || level == 3
+          || (stuk == ' '
+            && isSlagzet())) {
+        zet.append(CaissaUtils.internToExtern(van).charAt(0));
+      }
+      if (level > 1) {
+        zet.append(CaissaUtils.internToExtern(van).charAt(1));
+      }
+      if (isSlagzet()) {
+        zet.append('x');
+      }
+      zet.append(CaissaUtils.internToExtern(naar));
+      if (promotieStuk != ' ') {
+        zet.append(promotieStuk);
       }
     }
-
-    if (promotieStuk != ' ') {
-      zet.append(promotieStuk);
-    }
-    if (schaak) {
-      zet.append('+');
-    }
-    if (mat) {
-      zet.append('#');
-    }
-    if (ep) {
-      zet.append(" e.p.");
-    }
+    addExtraZetinfo(zet);
 
     return zet.toString().trim();
   }
@@ -217,7 +286,7 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getLangeNotatie() {
-    StringBuilder zet = new StringBuilder();
+    var zet = new StringBuilder();
 
     if (stuk == 'K'
       && (van - naar) == -2) {
@@ -259,7 +328,7 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getPgnNotatie() {
-    String  zet       = getKorteNotatie();
+    var zet       = getKorteNotatie();
 
     if (zet.endsWith(CaissaConstants.EN_PASSANT)) {
       zet = zet.substring(0, zet.length() - 5);
@@ -268,7 +337,7 @@ public class Zet implements Comparable<Object>, Serializable {
       return zet;
     }
 
-    int     promotie  = zet.indexOf(promotieStuk);
+    var promotie  = zet.indexOf(promotieStuk);
 
     if (promotie >= 0) {
       zet = zet.substring(0, promotie) + '=' + zet.substring(promotie);
@@ -286,7 +355,7 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getUciNotatie() {
-    StringBuilder zet = new StringBuilder();
+    var zet = new StringBuilder();
 
     zet.append((char) (van%10 + 64));
     zet.append((char) (van/10 + 47));
@@ -305,53 +374,17 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getZet() {
-    return getKorteNotatie();
+    return getKorteNotatie(korteNotatieLevel);
   }
 
-  protected String getZet(int notatie) {
-    StringBuilder zet = new StringBuilder();
+  protected String getZet(int level) {
+    return getKorteNotatie(level);
+  }
 
-    if (stuk == 'K') {
-      if ((van - naar) == 2) {
-        if (schaak) {
-          return CaissaConstants.KORTE_ROCHADE + "+";
-        }
-        if (mat) {
-          return CaissaConstants.KORTE_ROCHADE + "#";
-        }
-        return CaissaConstants.KORTE_ROCHADE;
-      }
-      if ((van - naar) == -2) {
-        if (schaak) {
-          return CaissaConstants.LANGE_ROCHADE + "+";
-        }
-        if (mat) {
-          return CaissaConstants.LANGE_ROCHADE + "#";
-        }
-        return CaissaConstants.LANGE_ROCHADE;
-      }
-    }
-
-    zet.append(stuk);
-    if (notatie == 1
-        || notatie == 3) {
-      zet.append(CaissaUtils.internToExtern(van).charAt(0));
-    }
-    if (notatie > 1) {
-      zet.append(CaissaUtils.internToExtern(van).charAt(1));
-    }
-    if (isSlagzet()) {
-      zet.append('x');
-    }
-    zet.append(CaissaUtils.internToExtern(naar));
-    if (schaak) {
-      zet.append('+');
-    }
-    if (mat) {
-      zet.append('#');
-    }
-
-    return zet.toString().trim();
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(van). append(naar).append(promotieStuk)
+                                .toHashCode();
   }
 
   public boolean isEp() {
@@ -387,7 +420,7 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public void setPromotieStuk(char promotieStuk) throws ZetException {
-    if ("NBRQ".indexOf(promotieStuk) < 0) {
+    if (CaissaConstants.PROMOTIE_STUKKEN.indexOf(promotieStuk) < 0) {
       throw new ZetException(MessageFormat.format(
           resourceBundle.getString(ERR_PROMOTIESTUK), promotieStuk));
     }
@@ -416,56 +449,7 @@ public class Zet implements Comparable<Object>, Serializable {
     this.van = van;
   }
 
-  public int compareTo(Object obj) {
-    Zet other = (Zet) obj;
-
-    if (naar < other.getNaar()) {
-      return DoosConstants.BEFORE;
-    }
-    if (naar > other.getNaar()) {
-      return DoosConstants.AFTER;
-    }
-    if (stuk < other.getStuk()) {
-      return DoosConstants.BEFORE;
-    }
-    if (stuk > other.getStuk()) {
-      return DoosConstants.AFTER;
-    }
-    if (van < other.getVan()) {
-      return DoosConstants.BEFORE;
-    }
-    if (van > other.getVan()) {
-      return DoosConstants.AFTER;
-    }
-    if (promotieStuk < other.getPromotieStuk()) {
-      return DoosConstants.BEFORE;
-    }
-    if (promotieStuk > other.getPromotieStuk()) {
-      return DoosConstants.AFTER;
-    }
-
-    return DoosConstants.EQUAL;
-  }
-
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (!super.equals(obj)) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Zet other = (Zet) obj;
-    return !(van != other.van || naar != other.naar
-             || promotieStuk != other.promotieStuk);
-  }
-
-  public int hashCode() {
-    return van * 100000 + naar * 1000 + promotieStuk;
-  }
-
+  @Override
   public String toString() {
     return getLangeNotatie() + "|" + getKorteNotatie();
   }

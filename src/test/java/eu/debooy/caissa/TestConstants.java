@@ -25,5 +25,7 @@ public class TestConstants {
   public static final String  BST_COMMENTAAR_RES    = "commentaar.resultaat";
   public static final String  BST_TEST_PGN          = "test.pgn";
 
+  public static final String  TST_TAAL  = "nl";
+
   private TestConstants() {}
 }

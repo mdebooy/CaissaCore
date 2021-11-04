@@ -19,18 +19,18 @@ package eu.debooy.caissa;
 
 /**
  * Deze class berekend de ELO rating van een speler.
- * 
+ *
  * Volgens Wikipedia:
- * 
+ *
  * Een ELO-rating is een getalsmatige aanduiding van de sterkte van een speler.
  * Het wordt het meest gebruikt in schaken en go, maar kan in principe gebruikt
  * worden bij elke sport waarbij spelers 1 tegen 1 spelen.
- * 
+ *
  * Het wiskundige systeem hiervoor is bedacht door de Amerikaanse (van Hongaarse
  * afkomst) natuurkundige en schaker Árpád Élő.
- * 
+ *
  * Elo-ratings kunnen lopen van ongeveer 1000 tot ongeveer 2800.
- * 
+ *
  * @author Marco de Booij
  */
 public final class ELO {
@@ -38,14 +38,17 @@ public final class ELO {
   public static final int KFACTOR       = 30;
   public static final int KFACTOR1      = 15;
   public static final int KFACTOR2      = 10;
+  public static final int MAX_VERLIES   = -800;
   public static final int MAX_VERSCHIL  = 400;
+  public static final int MAX_WINST     = 800;
   public static final int MIN_PARTIJEN  = 30;
+  public static final int TPR_WAARDE    = -400;
 
   private ELO() {}
 
   /**
    * Deze ELO berekening volgt de recentste FIDE regels.
-   * 
+   *
    * @param elo             - De ELO van de speler.
    * @param uitslag         - De uitslag (2=winst, 1=remise, 0=verlies).
    * @param eloTegenstander - De ELO van de tegenstander.
@@ -69,7 +72,7 @@ public final class ELO {
   /**
    * Deze ELO berekening is gebaseerd op de Engelse Wikipedia pagina:
    * https://en.wikipedia.org/wiki/Elo_rating_system#Mathematical_details
-   * 
+   *
    * @param elo             - De ELO van de speler.
    * @param uitslag         - De uitslag (2=winst, 1=remise, 0=verlies).
    * @param eloTegenstander - De ELO van de tegenstander.
@@ -80,19 +83,19 @@ public final class ELO {
   public static Integer berekenELO(Integer elo, Integer uitslag,
                                    Integer eloTegenstander, Integer kFactor,
                                    Integer maxVerschil) {
-    double  eigen     = Math.pow(10, (double) elo / maxVerschil);
-    double  tegen     = Math.pow(10, (double) eloTegenstander / maxVerschil);
-    Integer verschil  = (int) Math.round(kFactor
-                                         * (((double) uitslag / 2)
-                                             - (eigen / (eigen + tegen))));
+    var eigen     = Math.pow(10, (double) elo / maxVerschil);
+    var tegen     = Math.pow(10, (double) eloTegenstander / maxVerschil);
+    var verschil  = (int) Math.round(kFactor
+                                      * (((double) uitslag / 2)
+                                         - (eigen / (eigen + tegen))));
 
     return elo + verschil;
   }
-  
+
   /**
    * De TPR (Tournament Playing Ratio) geeft de ELO die bepaald wordt door het
    * gescoorde aantal punten in een toernooi.
-   * 
+   *
    * @param toernooiElo - Gemiddelde ELO van de spelers van het toernooi.
    * @param gewonnen    - Aantal gewonnen partijen.
    * @param remise      - Aantal remise partijen.
@@ -105,29 +108,24 @@ public final class ELO {
       return toernooiElo;
     }
 
-    Float   score           = gewonnen.floatValue() + (remise.floatValue() / 2);
-    Integer eloVerandering  = Integer.valueOf(0);
-    Integer partijen        = Integer.valueOf(gewonnen + remise + verloren);
-    Integer tpr             = 0;
+    var     score           = gewonnen.floatValue() + (remise.floatValue() / 2);
+    Integer eloVerandering;
+    var     partijen        = gewonnen + remise + verloren;
+    var     percentage      = score / partijen;
 
-    Float   percentage      = score / partijen;
     if (Math.round(percentage * 100) == 0) {
-      eloVerandering  = -800;
+      eloVerandering  = MAX_VERLIES;
     } else {
       if (Math.round(percentage * 100) == 100) {
-        eloVerandering  = 800;
+        eloVerandering  = MAX_WINST;
       } else {
-        eloVerandering  =
-          Integer.valueOf((int) Math.round(-400
-                          * Math.log10((1 - percentage) / percentage)));
+        eloVerandering  = (int) Math.round(TPR_WAARDE
+                                  * Math.log10((1 - percentage) / percentage));
       }
     }
-    Float correctieFactor = Float.valueOf(-2.0f * percentage * percentage + 2
-                                          * percentage + 0.5f);
-    tpr                   = Integer.valueOf(Math.round(toernooiElo
-                                                       + eloVerandering
-                                                       * correctieFactor));
+    var correctieFactor = -2.0f * percentage * percentage + 2 * percentage
+                            + 0.5f;
 
-    return tpr;
+    return Math.round(toernooiElo + eloVerandering * correctieFactor);
   }
 }

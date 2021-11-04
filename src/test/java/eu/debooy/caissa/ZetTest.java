@@ -16,7 +16,6 @@
 package eu.debooy.caissa;
 
 import junit.framework.TestCase;
-
 import org.junit.Test;
 
 
@@ -155,17 +154,6 @@ public class ZetTest extends TestCase {
   }
 
   @Test
-  public void testOOO() {
-    zet = new Zet('K', 25, 23);
-
-    assertTrue("56.1KR.".equals(zet.getChessTheatreZet()));
-    assertTrue("5131".equals(zet.getCorrespondentieZet()));
-    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getKorteNotatie()));
-    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getLangeNotatie()));
-    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getPgnNotatie()));
-  }
-
-  @Test
   public void testOO() {
     zet = new Zet('K', 95, 97);
 
@@ -177,18 +165,14 @@ public class ZetTest extends TestCase {
   }
 
   @Test
-  public void testOOs() {
-    zet = new Zet('K', 25, 27);
-    zet.setSchaak(true);
+  public void testOOO() {
+    zet = new Zet('K', 25, 23);
 
-    assertTrue("60.RK.".equals(zet.getChessTheatreZet()));
-    assertTrue("5171".equals(zet.getCorrespondentieZet()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getKorteNotatie()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getLangeNotatie()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getPgnNotatie()));
+    assertTrue("56.1KR.".equals(zet.getChessTheatreZet()));
+    assertTrue("5131".equals(zet.getCorrespondentieZet()));
+    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getKorteNotatie()));
+    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getLangeNotatie()));
+    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getPgnNotatie()));
   }
 
   @Test
@@ -204,5 +188,50 @@ public class ZetTest extends TestCase {
         (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getLangeNotatie()));
     assertTrue(
         (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getPgnNotatie()));
+  }
+
+  @Test
+  public void testOOOs() {
+    zet = new Zet('K', 95, 93);
+    zet.setSchaak(true);
+
+    assertTrue(".1kr.".equals(zet.getChessTheatreZet()));
+    assertTrue("5838".equals(zet.getCorrespondentieZet()));
+    assertTrue(
+        (CaissaConstants.LANGE_ROCHADE+"+").equals(zet.getKorteNotatie()));
+    assertTrue(
+        (CaissaConstants.LANGE_ROCHADE+"+").equals(zet.getLangeNotatie()));
+    assertTrue(
+        (CaissaConstants.LANGE_ROCHADE+"+").equals(zet.getPgnNotatie()));
+  }
+
+  @Test
+  public void testOOm() {
+    zet = new Zet('K', 25, 27);
+    zet.setMat(true);
+
+    assertTrue("60.RK.".equals(zet.getChessTheatreZet()));
+    assertTrue("5171".equals(zet.getCorrespondentieZet()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"#").equals(zet.getKorteNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"#").equals(zet.getLangeNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"#").equals(zet.getPgnNotatie()));
+  }
+
+  @Test
+  public void testOOs() {
+    zet = new Zet('K', 25, 27);
+    zet.setSchaak(true);
+
+    assertTrue("60.RK.".equals(zet.getChessTheatreZet()));
+    assertTrue("5171".equals(zet.getCorrespondentieZet()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getKorteNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getLangeNotatie()));
+    assertTrue(
+        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getPgnNotatie()));
   }
 }

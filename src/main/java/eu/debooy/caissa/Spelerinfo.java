@@ -46,8 +46,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Integer spelerId;
   private Double  tieBreakScore = 0.0;
 
-  public Spelerinfo() {
-  }
+  public Spelerinfo() {}
 
   public Spelerinfo(Spelerinfo spelerinfo) {
     alias         = spelerinfo.getAlias();
@@ -69,7 +68,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     tieBreakScore = spelerinfo.getTieBreakScore();
   }
 
-  public static class byNaamComparator
+  public static class ByNaamComparator
       implements Comparator<Spelerinfo>, Serializable {
     private static final  long  serialVersionUID  = 1L;
 
@@ -110,7 +109,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
       return DoosConstants.EQUAL;
     }
 
-    int verschil  = other.punten.compareTo(this.punten);
+    var verschil  = other.punten.compareTo(this.punten);
     if (verschil != 0) {
       return verschil;
     }
@@ -127,14 +126,16 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof Spelerinfo)) {
+  public boolean equals(Object other) {
+    if (!(other instanceof Spelerinfo)) {
       return false;
     }
 
-    final Spelerinfo other = (Spelerinfo) obj;
+    if (this == other) {
+      return true;
+    }
 
-    return spelerId.equals(other.spelerId);
+    return spelerId.equals(((Spelerinfo) other).spelerId);
   }
 
   public Date getEerstePartij() {
@@ -201,6 +202,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     if (null == officieel) {
       return null;
     }
+
     return new Date(officieel.getTime());
   }
 
@@ -221,7 +223,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public String getVolledigenaam() {
-    String[] delen = naam.split(",");
+    var delen = naam.split(",");
     if (delen.length == 1) {
       return naam;
     }

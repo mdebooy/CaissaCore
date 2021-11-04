@@ -24,6 +24,7 @@ public final class CaissaConstants {
   public static final String  PGN_DATUM_FORMAAT = "yyyy.MM.dd";
   public static final String  STUKKEN           = "PNBRQK";
   public static final String  NOTATIE_STUKKEN   = " NBRQK";
+  public static final String  PROMOTIE_STUKKEN  = "NBRQ";
 
   public static final String  DEF_STARTDATUM  = "0000.00.00";
   public static final String  DEF_EINDDATUM   = "9999.99.99";
@@ -69,23 +70,29 @@ public final class CaissaConstants {
   public static final String  LANGE_ROCHADE     = "O-O-O";
   public static final String  EN_PASSANT        = " e.p.";
 
-  public static final String  PARTIJ_WIT_WINT   = "1-0";
-  public static final String  PARTIJ_REMISE     = "1/2-1/2";
-  public static final String  PARTIJ_ZWART_WINT = "0-1";
   public static final String  PARTIJ_BEZIG      = "*";
+  public static final String  PARTIJ_REMISE     = "1/2-1/2";
+  public static final String  PARTIJ_UNRANKED   = "unranked";
+  public static final String  PARTIJ_UNRATED    = "unrated";
+  public static final String  PARTIJ_WIT_WINT   = "1-0";
+  public static final String  PARTIJ_ZWART_WINT = "0-1";
+
+  public static final String  BYE = "bye";
+
+  private static final  String  BSLTDK  = "BSLTDK";
 
   private CaissaConstants() {
   }
 
-  public static enum  Stukcodes {
-    CZ("PJSVDK"), DA("BSLTDK"), DE("BSLTDK"), EN(STUKKEN), ES("PCATDR"),
+  public enum  Stukcodes {
+    CZ("PJSVDK"), DA(BSLTDK)  , DE(BSLTDK)  , EN(STUKKEN) , ES("PCATDR"),
     ET("PROVLK"), FI("PRLTDK"), FR("PCFTDR"), HU("GHFBVK"), IS("PRBHDK"),
-    IT("PCATDR"), NL("OPLTDK"), NO("BSLTDK"), PL("PSGWHK"), PT("PCBTDR"),
-    RO("PCNTDR"), SV("BSLTDK"), UTF8("♙♘♗♖♕♔");
+    IT("PCATDR"), NL("OPLTDK"), NO(BSLTDK)  , PL("PSGWHK"), PT("PCBTDR"),
+    RO("PCNTDR"), SV(BSLTDK)  , UTF8("♙♘♗♖♕♔");
 
-    private Stukcodes(String stukcodes) { this.stukcodes = stukcodes; }
-    public  String getStukcodes() { return stukcodes; }
+    private Stukcodes(String stukcodes) { stukken = stukcodes; }
+    public  String getStukcodes() { return stukken; }
 
-    private String stukcodes;
+    private final String stukken;
   }
 }

@@ -18,7 +18,6 @@ package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.doosutils.DoosConstants;
-
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -26,9 +25,9 @@ import java.util.ResourceBundle;
 
 /**
  * Deze class bevat een stelling in FEN notatie.
- * 
+ *
  * Volgens Wikipedia:
- * 
+ *
  * Een FEN 'record' definieert een partijstelling in één regel met uitsluitend
  * ASCII karakters.
  *
@@ -75,38 +74,109 @@ public class FEN implements Serializable {
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
-  private Boolean witKorteRochade   = true;
-  private Boolean witLangeRochade   = true;
-  private Boolean zwartKorteRochade = true;
-  private Boolean zwartLangeRochade = true;
-  private char    aanZet            = 'w';
-  private int[]   bord              = new int[120];
-  private Integer halvezetten       = 0;
-  private Integer zetnummer         = 1;
-  private String  enPassant         = "-";
-  private String  positie           = BEGINSTELLING;
+  private       Boolean witKorteRochade   = true;
+  private       Boolean witLangeRochade   = true;
+  private       Boolean zwartKorteRochade = true;
+  private       Boolean zwartLangeRochade = true;
+  private       char    aanZet            = 'w';
+  private final int[]   bord              = new int[120];
+  private       Integer halvezetten       = 0;
+  private       Integer zetnummer         = 1;
+  private       String  enPassant         = "-";
+  private       String  positie           = BEGINSTELLING;
 
   public FEN() {
     positieToBord();
   }
 
-  public FEN(String fen) throws FenException {
-    String[]  veld  = fen.split(" ");
+  public FEN(String fen) {
+    var veld    = fen.split(" ");
 
-    this.positie      = veld[0];
+    positie     = veld[0];
     positieToBord();
-    this.aanZet       = veld[1].charAt(0);
+    aanZet      = veld[1].charAt(0);
     setRochade(veld[2]);
-    this.enPassant    = veld[3];
-    this.halvezetten  = Integer.valueOf(veld[4]);
-    this.zetnummer    = Integer.valueOf(veld[5]);
+    enPassant   = veld[3];
+    halvezetten = Integer.valueOf(veld[4]);
+    zetnummer   = Integer.valueOf(veld[5]);
+  }
+
+  private void aanZetWit(int veldVan, int veldNaar, int stukVan) {
+    aanZet  = 'b';
+    if (veldVan == 21
+        && stukVan == CaissaConstants.TOREN) {
+      witLangeRochade = false;
+    }
+    if (veldVan == 25
+        && stukVan == CaissaConstants.KONING) {
+      witKorteRochade = false;
+      witLangeRochade = false;
+    }
+    if (veldVan == 28
+        && stukVan == CaissaConstants.TOREN) {
+      witKorteRochade = false;
+    }
+    // Korte rochade
+    if (stukVan == CaissaConstants.KONING
+        && (veldVan - veldNaar) == -2) {
+      bord[26]  = CaissaConstants.TOREN;
+      bord[28]  = 0;
+    }
+    // Lange rochade
+    if (stukVan == CaissaConstants.KONING
+        && (veldVan - veldNaar) == 2) {
+      bord[24]  = CaissaConstants.TOREN;
+      bord[21]  = 0;
+    }
+    if (stukVan == CaissaConstants.PION
+        && (veldNaar - veldVan) == 20) {
+      enPassant = CaissaUtils.internToExtern(veldNaar-10);
+    } else {
+      enPassant = "-";
+    }
+  }
+
+  private void aanZetZwart(int veldVan, int veldNaar, int stukVan) {
+    aanZet  = 'w';
+    if (veldVan == 91
+        && stukVan == CaissaConstants.ZTOREN) {
+      zwartLangeRochade = false;
+    }
+    if (veldVan == 95
+        && stukVan == CaissaConstants.ZKONING) {
+      zwartKorteRochade = false;
+      zwartLangeRochade = false;
+    }
+    if (veldVan == 98
+        && stukVan == CaissaConstants.ZTOREN) {
+      zwartKorteRochade = false;
+    }
+    // Korte rochade
+    if (stukVan == CaissaConstants.ZKONING
+        && (veldVan - veldNaar) == -2) {
+      bord[96]  = CaissaConstants.ZTOREN;
+      bord[98]  = 0;
+    }
+    // Lange rochade
+    if (stukVan == CaissaConstants.ZKONING
+        && (veldVan - veldNaar) == 2) {
+      bord[94]  = CaissaConstants.ZTOREN;
+      bord[91]  = 0;
+    }
+    if (stukVan == CaissaConstants.ZPION
+        && (veldVan - veldNaar) == 20) {
+      enPassant = CaissaUtils.internToExtern(veldNaar+10);
+    } else {
+      enPassant = "-";
+    }
+    zetnummer++;
   }
 
   private void bordToPositie() {
-    StringBuilder nieuwePositie = new StringBuilder();
-    for (int i = 9; i > 1; i--) {
+    var nieuwePositie = new StringBuilder();
+    for (var i = 9; i > 1; i--) {
       int leeg  = 0;
-      for (int j = 1; j < 9; j++) {
+      for (var j = 1; j < 9; j++) {
         if (bord[i*10+j] == 0) {
           leeg++;
         } else {
@@ -127,11 +197,24 @@ public class FEN implements Serializable {
     positie = nieuwePositie.toString();
   }
 
-  public void doeZet(Zet zet) throws FenException {
-    int veldVan   = zet.getVan();
-    int veldNaar  = zet.getNaar();
-    int stukVan   = bord[veldVan];
-    int stukNaar  = bord[veldNaar];
+  public void doeEnPassant(int veldVan, int veldNaar, int stukVan) {
+    if (!"-".equals(enPassant)
+        && veldNaar == CaissaUtils.externToIntern(enPassant)
+        && Math.abs(stukVan) == CaissaConstants.PION) {
+      if ((veldVan-veldNaar) == -9
+          || (veldVan-veldNaar) == 11) {
+        bord[veldVan-1] = 0;
+      } else {
+        bord[veldVan+1] = 0;
+      }
+    }
+  }
+
+  public void doeZet(Zet zet) {
+    var veldVan   = zet.getVan();
+    var veldNaar  = zet.getNaar();
+    var stukVan   = bord[veldVan];
+    var stukNaar  = bord[veldNaar];
     if (stukNaar != 0
         || Math.abs(stukVan) == CaissaConstants.PION) {
       halvezetten = 0;
@@ -147,91 +230,24 @@ public class FEN implements Serializable {
     }
     bord[veldVan]  = 0;
     bord[veldNaar] = stukVan;
-    if (!"-".equals(enPassant)
-        && veldNaar == CaissaUtils.externToIntern(enPassant)
-        && Math.abs(stukVan) == CaissaConstants.PION) {
-      if ((veldVan-veldNaar) == -9
-          || (veldVan-veldNaar) == 11) {
-        bord[veldVan-1] = 0;
-      } else {
-        bord[veldVan+1] = 0;
-      }
-    }
+    doeEnPassant(veldVan, veldNaar, stukVan);
     bordToPositie();
 
     if (aanZet == 'w') {
-      aanZet  = 'b';
-      if (veldVan == 21
-          && stukVan == CaissaConstants.TOREN) {
-        witLangeRochade = false;
-      }
-      if (veldVan == 25
-          && stukVan == CaissaConstants.KONING) {
-        witKorteRochade = false;
-        witLangeRochade = false;
-      }
-      if (veldVan == 28
-          && stukVan == CaissaConstants.TOREN) {
-        witKorteRochade = false;
-      }
-      // Korte rochade
-      if (stukVan == CaissaConstants.KONING
-          && (veldVan - veldNaar) == -2) {
-        bord[26]  = CaissaConstants.TOREN;
-        bord[28]  = 0;
-      }
-      // Lange rochade
-      if (stukVan == CaissaConstants.KONING
-          && (veldVan - veldNaar) == 2) {
-        bord[24]  = CaissaConstants.TOREN;
-        bord[21]  = 0;
-      }
-      if (stukVan == CaissaConstants.PION
-          && (veldNaar - veldVan) == 20) {
-        enPassant = CaissaUtils.internToExtern(veldNaar-10);
-      } else {
-        enPassant = "-";
-      }
+      aanZetWit(veldVan, veldNaar, stukVan);
     } else {
-      aanZet  = 'w';
-      if (veldVan == 91
-          && stukVan == CaissaConstants.ZTOREN) {
-        zwartLangeRochade = false;
-      }
-      if (veldVan == 95
-          && stukVan == CaissaConstants.ZKONING) {
-        zwartKorteRochade = false;
-        zwartLangeRochade = false;
-      }
-      if (veldVan == 98
-          && stukVan == CaissaConstants.ZTOREN) {
-        zwartKorteRochade = false;
-      }
-      // Korte rochade
-      if (stukVan == CaissaConstants.ZKONING
-          && (veldVan - veldNaar) == -2) {
-        bord[96]  = CaissaConstants.ZTOREN;
-        bord[98]  = 0;
-      }
-      // Lange rochade
-      if (stukVan == CaissaConstants.ZKONING
-          && (veldVan - veldNaar) == 2) {
-        bord[94]  = CaissaConstants.ZTOREN;
-        bord[91]  = 0;
-      }
-      if (stukVan == CaissaConstants.ZPION
-          && (veldVan - veldNaar) == 20) {
-        enPassant = CaissaUtils.internToExtern(veldNaar+10);
-      } else {
-        enPassant = "-";
-      }
-      zetnummer++;
+      aanZetZwart(veldVan, veldNaar, stukVan);
     }
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof FEN)) {
       return false;
+    }
+
+    if (this == obj) {
+      return true;
     }
 
     final FEN other = (FEN) obj;
@@ -240,6 +256,10 @@ public class FEN implements Serializable {
 
   //TODO Werk uit.
   public Zet geefZet(FEN fen) {
+    if (this.equals(fen)) {
+      return new Zet();
+    }
+
     return null;
   }
 
@@ -256,7 +276,7 @@ public class FEN implements Serializable {
   }
 
   public String getFen() {
-    StringBuilder fen = new StringBuilder();
+    var fen = new StringBuilder();
 
     fen.append(getPositie()).append(" ");
     fen.append(getAanZet()).append(" ");
@@ -274,9 +294,9 @@ public class FEN implements Serializable {
 
   public String getKortePositie() {
     StringBuilder kortePositie = new StringBuilder();
-    int leeg  = 0;
-    for (int i = 9; i > 1; i--) {
-      for (int j = 1; j < 9; j++) {
+    var leeg  = 0;
+    for (var i = 9; i > 1; i--) {
+      for (var j = 1; j < 9; j++) {
         if (bord[i*10+j] == 0) {
           leeg++;
         } else {
@@ -302,16 +322,16 @@ public class FEN implements Serializable {
   protected String getRochade() {
     StringBuilder rochade = new StringBuilder();
 
-    if (witKorteRochade) {
+    if (Boolean.TRUE.equals(witKorteRochade)) {
       rochade.append("K");
     }
-    if (witLangeRochade) {
+    if (Boolean.TRUE.equals(witLangeRochade)) {
       rochade.append("Q");
     }
-    if (zwartKorteRochade) {
+    if (Boolean.TRUE.equals(zwartKorteRochade)) {
       rochade.append("k");
     }
-    if (zwartLangeRochade) {
+    if (Boolean.TRUE.equals(zwartLangeRochade)) {
       rochade.append("q");
     }
     if (rochade.length() == 0) {
@@ -341,26 +361,27 @@ public class FEN implements Serializable {
     return zwartLangeRochade;
   }
 
+  @Override
   public int hashCode() {
     return getFen().hashCode();
   }
 
   private void positieToBord() {
-    for (int i = 0; i<120; i++) {
+    for (var i = 0; i<120; i++) {
       bord[i]  = 7;
     }
 
-    for (int i = 2; i < 10; i++) {
-      for (int j = 1; j < 9; j++) {
+    for (var i = 2; i < 10; i++) {
+      for (var j = 1; j < 9; j++) {
         bord[i*10+j]  = 0;
       }
     }
-    
+
     String[]  rij = positie.split("/");
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       int kolom = 1;
-      for (int j = 0; j < rij[i].length(); j++) {
-        char  ch  = rij[i].charAt(j);
+      for (var j = 0; j < rij[i].length(); j++) {
+        var ch  = rij[i].charAt(j);
         if (CaissaConstants.STUKKEN.toLowerCase().indexOf(ch) > -1) {
           bord[(9-i)*10+kolom]  = (CaissaConstants.STUKKEN
                                                   .toLowerCase()
@@ -376,11 +397,11 @@ public class FEN implements Serializable {
   }
 
   public String printBord() {
-    StringBuilder internBord  = new StringBuilder();
+    var internBord  = new StringBuilder();
 
-    for (int i = 9; i > 1; i--) {
+    for (var i = 9; i > 1; i--) {
       internBord.append((i - 1)).append(" ");
-      for (int j = 1; j < 9; j++) {
+      for (var j = 1; j < 9; j++) {
         internBord.append(CaissaUtils.getStuk(bord[(i * 10 + j)]));
       }
       internBord.append(DoosConstants.EOL);
@@ -408,7 +429,7 @@ public class FEN implements Serializable {
 
   public void setEnPassant(String enPassant) throws FenException {
     if ("-".equals(enPassant)) {
-      this.enPassant = enPassant;
+      this.enPassant  = enPassant;
       return;
     }
 
@@ -432,7 +453,7 @@ public class FEN implements Serializable {
   }
 
   public void setFen(String fen) throws FenException {
-    String[]  veld  = fen.split(" ");
+    var veld  = fen.split(" ");
 
     setPositie(veld[0]);
     setAanZet(veld[1]);
@@ -453,26 +474,10 @@ public class FEN implements Serializable {
 
   private void setRochade(String rochade) {
     // TODO Test de juiste volgorde.
-    if (rochade.indexOf('K') != -1) {
-      witKorteRochade   = true;
-    } else {
-      witKorteRochade   = false;
-    }
-    if (rochade.indexOf('Q') != -1) {
-      witLangeRochade   = true;
-    } else {
-      witLangeRochade   = false;
-    }
-    if (rochade.indexOf('k') != -1) {
-      zwartKorteRochade = true;
-    } else {
-      zwartKorteRochade = false;
-    }
-    if (rochade.indexOf('q') != -1) {
-      zwartLangeRochade = true;
-    } else {
-      zwartLangeRochade = false;
-    }
+    witKorteRochade   = rochade.indexOf('K') != -1;
+    witLangeRochade   = rochade.indexOf('Q') != -1;
+    zwartKorteRochade = rochade.indexOf('k') != -1;
+    zwartLangeRochade = rochade.indexOf('q') != -1;
   }
 
   public void setWitKorteRochade(Boolean witKorteRochade) {
@@ -495,6 +500,7 @@ public class FEN implements Serializable {
     this.zwartLangeRochade = zwartLangeRochade;
   }
 
+  @Override
   public String toString() {
     return getFen();
   }

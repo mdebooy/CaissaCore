@@ -18,7 +18,6 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CaissaException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,21 +31,21 @@ import java.util.Map;
  */
 // TODO Rochade aanpassen aan schaak960.
 public class Zettengenerator {
-  private List<Zet>   zetten        = new ArrayList<Zet>();
-  private boolean     korteRochade  = false;
-  private boolean     langeRochade  = false;
-  private FEN         fen           = null;
-  private int[]       bord          = new int[120];
-  private int         enPassant     = 0;
-  private int         koning;
-  private int         schaakDoel;
-  private int[]       loop          = {9, 11, -9, -11, 10, 1, -1, -10,
-                                       19, 21, 12, 8, -21, -19, -12, -8};
+  private final List<Zet>   zetten        = new ArrayList<>();
+  private       boolean     korteRochade  = false;
+  private       boolean     langeRochade  = false;
+  private       FEN         fen           = null;
+  private       int[]       bord          = new int[120];
+  private       int         enPassant     = 0;
+  private       int         koning;
+  private       int         schaakDoel;
+  private final int[]       loop          = {9, 11, -9, -11, 10, 1, -1, -10,
+                                              19, 21, 12, 8, -21, -19, -12, -8};
 
   public Zettengenerator(FEN fen) {
-    this.fen    = fen;
-    bord        = fen.getBord();
-    String  ep  = fen.getEnPassant();
+    this.fen  = fen;
+    bord      = fen.getBord();
+    var ep    = fen.getEnPassant();
     if (!"-".equals(ep)) {
       enPassant = CaissaUtils.externToIntern(ep);
     }
@@ -63,7 +62,7 @@ public class Zettengenerator {
     }
 
     // Zoek de koning.
-    int i       = 21;
+    var i       = 21;
     koning      = 0;
     schaakDoel  = 0;
     while ((koning == 0
@@ -81,11 +80,6 @@ public class Zettengenerator {
     genereerZetten();
   }
 
-  /**
-   * Kijkt of het stuk 'in' (aangevallen) staat.
-   * @param stuk
-   * @return
-   */
   private boolean aangevallen (int stuk) {
     // Aangevallen door pion?
     if (bord[stuk +  9] == -1) {
@@ -95,20 +89,20 @@ public class Zettengenerator {
       return true;
     }
     // Aangevallen door koning?
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       if (bord[stuk + loop[i]] == -6) {
         return true;
       }
     }
     // Aangevallen door paard?
-    for (int i = 8; i < 16; i++) {
+    for (var i = 8; i < 16; i++) {
       if (bord[stuk + loop[i]] == -2) {
         return true;
       }
     }
     int naarVeld;
     // Aangevallen door loper of dame?
-    for (int i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++) {
       naarVeld  = stuk + loop[i];
       while (bord[naarVeld] == 0) {
         naarVeld  = naarVeld + loop[i];
@@ -119,7 +113,7 @@ public class Zettengenerator {
       }
     }
     // Aangevallen door toren of dame?
-    for (int i = 4; i < 8; i++) {
+    for (var i = 4; i < 8; i++) {
       naarVeld  = stuk + loop[i];
       while (bord[naarVeld] == 0) {
         naarVeld  = naarVeld + loop[i];
@@ -132,34 +126,19 @@ public class Zettengenerator {
     return false;
   }
 
-  /**
-   * Voeg de zet toe aan de ArrayList van zetten.
-   * @param stuk
-   * @param vanVeld
-   * @param naarVeld
-   * @param stukNaar
-   */
   private void addZet(char stuk, int vanVeld, int naarVeld, int stukNaar) {
     addZet(stuk, vanVeld, naarVeld, stukNaar, ' ');
   }
 
-  /**
-   * Voeg de zet toe aan de ArrayList van zetten.
-   * @param stuk
-   * @param vanVeld
-   * @param naarVeld
-   * @param stukNaar
-   * @param promotieStuk
-   */
   private void addZet(char stuk, int vanVeld, int naarVeld, int stukNaar,
                       char promotieStuk) {
-    int van   = vanVeld;
-    int naar  = naarVeld;
+    var van   = vanVeld;
+    var naar  = naarVeld;
     if (fen.getAanZet() == 'b') {
       van   = 110 - (vanVeld/10)  * 10 + vanVeld%10;
       naar  = 110 - (naarVeld/10) * 10 + naarVeld%10;
     }
-    Zet zet = new Zet(stuk, van, naar, promotieStuk);
+    var zet = new Zet(stuk, van, naar, promotieStuk);
     if (stukNaar < 0) {
       zet.setSlagzet(true);
     }
@@ -201,15 +180,12 @@ public class Zettengenerator {
     zetten.add(zet);
   }
 
-  /**
-   * Zet het bord onderste boven en verander de stukken van kleur.
-   */
   private void bordwissel() {
-    for (int i = 2; i < 6; i++) {
-      for (int j = 1; j < 9; j++) {
-        int hulp    = i * 10;
-        int van     = hulp + j;
-        int naar    = 110 - hulp + j;
+    for (var i = 2; i < 6; i++) {
+      for (var j = 1; j < 9; j++) {
+        var hulp    = i * 10;
+        var van     = hulp + j;
+        var naar    = 110 - hulp + j;
         hulp        = bord[van];
         bord[van]   = -bord[naar];
         bord[naar]  = -hulp;
@@ -217,21 +193,14 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Doe de zetten voor een dame.
-   * @param veld
-   */
   private void dameZet(int veld) {
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       ltdZet('Q', veld, i);
     }
   }
 
-  /**
-   * Genereer alle mogelijke zetten.
-   */
   private void genereerZetten() {
-    for (int i = 21; i < 99; i++) {
+    for (var i = 21; i < 99; i++) {
       switch (bord[i]) {
       case CaissaConstants.PION:
         pionZet(i);
@@ -261,9 +230,9 @@ public class Zettengenerator {
     }
 
     Collections.sort(zetten);
-    for (int i = 0; i < zetten.size()-1; i++) {
-      Zet zet1  = zetten.get(i);
-      Zet zet2  = zetten.get(i+1);
+    for (var i = 0; i < zetten.size()-1; i++) {
+      var zet1  = zetten.get(i);
+      var zet2  = zetten.get(i+1);
       // Kijk niet naar pion zetten. Enkel bij andere stukken kunnen er 2 naar
       // hetzelfde veld gaan. Uitgezonderd bij een slagzet van een pion maar
       // die zijn door de normale notatie al 'uniek'.
@@ -286,21 +255,12 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Geeft het aantal mogelijke zetten in de stelling.
-   * @return Het aantal mogelijke zetten in de stelling.
-   */
   public int getAantalZetten() {
     return zetten.size();
   }
 
-  /**
-   * Maak een lijst stellingen in 'FEN' notatie.
-   * @return Een lijst stellingen in 'FEN' notatie.
-   * @throws CaissaException 
-   */
   public List<String> getNieuweStellingen() throws CaissaException {
-    List<String>  stellingen  = new ArrayList<String>();
+    List<String>  stellingen  = new ArrayList<>();
 
     for (Zet  zet: zetten) {
       FEN nieuweFen = new FEN(fen.getFen());
@@ -312,22 +272,16 @@ public class Zettengenerator {
   }
 
   public List<Zet> getZetten() {
-    Map<String, Zet>  zetMap  = new HashMap<String, Zet>();
-    for (Zet zet: zetten) {
-      zetMap.put(zet.getZet(), zet);
-    }
+    Map<String, Zet>  zetMap  = new HashMap<>();
+    zetten.forEach(zet -> zetMap.put(zet.getZet(), zet));
 
-    return new LinkedList<Zet>(zetMap.values());
+    return new LinkedList<>(zetMap.values());
   }
 
-  /**
-   * Doe de zetten voor een koning.
-   * @param veld
-   */
   private void koningZet(int veld) {
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       if (bord[veld + loop[i]] < 1) {
-        int stukNaar  = zetHeen(veld, (veld + loop[i]));
+        var stukNaar  = zetHeen(veld, (veld + loop[i]));
         if (!aangevallen(veld + loop[i])) {
           addZet('K', veld, veld + loop[i], stukNaar);
         }
@@ -336,25 +290,14 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Doe de zetten voor een loper.
-   * @param veld
-   */
   private void loperZet(int veld) {
-   for (int i = 0; i < 4; i++) {
+   for (var i = 0; i < 4; i++) {
       ltdZet('B', veld, i);
     }
   }
 
-  /**
-   * Doe alle zetten in dezelfde 'richting'. Dit kan enkel voor loper, toren of
-   * dame.
-   * @param stuk
-   * @param van
-   * @param index
-   */
   private void ltdZet(char stuk, int van, int index) {
-    int naar = van + loop[index];
+    var naar = van + loop[index];
     while (bord[naar] == 0) {
       zetHeen(van, naar);
       if (!aangevallen(koning)) {
@@ -373,12 +316,8 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Doe de zetten voor een paard.
-   * @param veld
-   */
   private void paardZet(int veld) {
-    for (int i = 8; i < 16; i++) {
+    for (var i = 8; i < 16; i++) {
       if (bord[veld + loop[i]] < 1) {
         int stukNaar  = zetHeen(veld, (veld + loop[i]));
         if (!aangevallen(koning)) {
@@ -389,10 +328,6 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Doe de zetten voor een pion.
-   * @param veld
-   */
   private void pionZet(int veld) {
     if (bord[veld + 10] == 0) {
       zetHeen(veld, (veld + 10));
@@ -419,7 +354,7 @@ public class Zettengenerator {
     }
     // Stuk te slaan?
     if (bord[veld + 9] < 0) {
-      int stukNaar  = zetHeen(veld, (veld + 9));
+      var stukNaar  = zetHeen(veld, (veld + 9));
       if (!aangevallen(koning)) {
         if ((veld + 9) > 90) {
           // Promotie
@@ -435,7 +370,7 @@ public class Zettengenerator {
     }
     // Stuk te slaan?
     if (bord[veld + 11] < 0) {
-      int stukNaar  = zetHeen(veld, (veld + 11));
+      var stukNaar  = zetHeen(veld, (veld + 11));
       if (!aangevallen(koning)) {
         if ((veld + 11) > 90) {
           // Promotie
@@ -452,7 +387,7 @@ public class Zettengenerator {
     // Stuk En-Passant te slaan?
     if ((veld + 9) == enPassant
         || (veld + 11) == enPassant) {
-      int stukNaar  = zetHeen(veld, enPassant);
+      var stukNaar  = zetHeen(veld, enPassant);
       // Haal geslagen pion weg.
       bord[enPassant - 10]  = 0;
       if (!aangevallen(koning)) {
@@ -464,9 +399,6 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Doe de mogelijke rochades.
-   */
   private void rochade() {
     if (bord[25] == CaissaConstants.KONING
         && bord[26] == 0
@@ -493,34 +425,20 @@ public class Zettengenerator {
     }
   }
 
-  /**
-   * Doe de zetten voor een toren.
-   * @param veld
-   */
   private void torenZet(int veld) {
-    for (int i = 4; i < 8; i++) {
+    for (var i = 4; i < 8; i++) {
       ltdZet('R', veld, i);
     }
   }
 
-  /**
-   * Doe een zet. Geeft de waarde van het 'naar' veld terug om de zet te kunnen
-   * 'terugdraaien'.
-   * @param van
-   * @param naar
-   * @return De waarde van het stuk op het 'van' veld.
-   */
   private int zetHeen(int van, int naar) {
-    int stukNaar  = bord[naar];
+    var stukNaar  = bord[naar];
     bord[naar]    = bord[van];
     bord[van]     = 0;
 
     return stukNaar;
   }
 
-  /**
-   * @return Staat de 'vijandelijke' koning schaak?
-   */
   private boolean zetSchaak() {
     // Schaak door pion?
     if (bord[schaakDoel -  9] == CaissaConstants.PION) {
@@ -530,14 +448,14 @@ public class Zettengenerator {
       return true;
     }
     // Schaak door paard?
-    for (int i = 8; i < 16; i++) {
+    for (var i = 8; i < 16; i++) {
       if (bord[schaakDoel + loop[i]] == CaissaConstants.PAARD) {
         return true;
       }
     }
     int naarVeld;
     // Schaak door loper of dame?
-    for (int i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++) {
       naarVeld  = schaakDoel + loop[i];
       while (bord[naarVeld] == 0) {
         naarVeld  = naarVeld + loop[i];
@@ -548,7 +466,7 @@ public class Zettengenerator {
       }
     }
     // Schaak door toren of dame?
-    for (int i = 4; i < 8; i++) {
+    for (var i = 4; i < 8; i++) {
       naarVeld  = schaakDoel + loop[i];
       while (bord[naarVeld] == 0) {
         naarVeld  = naarVeld + loop[i];
@@ -561,12 +479,6 @@ public class Zettengenerator {
     return false;
  }
 
-  /**
-   * Neem een zet terug.
-   * @param van
-   * @param naar
-   * @param stukNaar
-   */
   private void zetTerug(int van, int naar, int stukNaar) {
     bord[van]   = bord[naar];
     bord[naar]  = stukNaar;

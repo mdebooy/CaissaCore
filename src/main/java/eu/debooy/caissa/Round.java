@@ -21,69 +21,51 @@ import java.io.Serializable;
 /**
  * Deze class wordt gebruikt voor de PGN Tag Round. Met behulp van deze class
  * kan er op de Round gesorteerd worden.
- * 
+ *
  * De Round Tag geeft de ronde van het toernooi of de match. Als de ronde
  * onbekend is dan wordt een vraagteken gebruikt. Als er geen ronde is dan wordt
  * een streepje gebruikt.
  * Soms bestaat de Round uit meerdere delen. Dit zijn cijfers gescheiden door
  * een punt. Het linkse cijfer is het belangrijkste cijfer.
- * 
+ *
  * Voor het sorteren komt het vraagteken voor het streepje dat dan weer voor de
  * 'echte' ronde.
- * 
+ *
  * @author Marco de Booij
  */
 public class Round implements Comparable<Round>, Serializable {
   private static final  long  serialVersionUID  = 1L;
 
-  private String  round = "";
+  private String  ronde = "";
 
-  /**
-   * Constructor zonder parameter.
-   */
   public Round() {}
 
-  /**
-   * Constructor met round als parameter.
-   * 
-   * @param round
-   */
-  public Round(String round) {
+  public Round(String ronde) {
     super();
-    this.round = round;
+    this.ronde = ronde;
   }
 
-  /**
-   * @return de round
-   */
   public String getRound() {
-    return round;
+    return ronde;
   }
 
-  /**
-   * @param round de waarde van de round
-   */
-  public void setRound(String round) {
-    this.round = round;
+  public void setRound(String ronde) {
+    this.ronde = ronde;
   }
 
+  @Override
   public int compareTo(Round other) {
     if (this.equals(other)) {
       return 0;
     }
 
-    String[]  thisRound   = getRound().split("\\.");
-    String[]  otherRound  = other.getRound().split("\\.");
+    var thisRound   = getRound().split("\\.");
+    var otherRound  = other.getRound().split("\\.");
 
-    int min = 0;
-    if (thisRound.length < otherRound.length) {
-      min = thisRound.length;
-    } else {
-      min = otherRound.length;
-    }
+    int min = Math.min(thisRound.length, otherRound.length);
 
-    for (int i = 0; i < min; i++) {
-      int diff  = Integer.valueOf(thisRound[i].replace("-", "-1")
+    for (var i = 0; i < min; i++) {
+      var diff  = Integer.valueOf(thisRound[i].replace("-", "-1")
                                               .replace("?", "-2"))
                          .compareTo(
                   Integer.valueOf(otherRound[i].replace("-", "-1")
@@ -93,31 +75,34 @@ public class Round implements Comparable<Round>, Serializable {
       }
     }
 
-    return Integer.valueOf(thisRound.length)
-                  .compareTo(Integer.valueOf(otherRound.length));
+    return Integer.valueOf(thisRound.length).compareTo(otherRound.length);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof Round)) {
+  public boolean equals(Object other) {
+    if (!(other instanceof Round)) {
       return false;
     }
-    Round other = (Round) obj;
-    return other.getRound().equals(getRound());
+
+    if (this == other) {
+      return true;
+    }
+
+    return ((Round) other).getRound().equals(getRound());
   }
 
   @Override
   public int hashCode() {
-    return round.hashCode();
+    return ronde.hashCode();
   }
 
   @Override
   public String toString() {
-    StringBuilder result  = new StringBuilder();
+    var result  = new StringBuilder();
     result.append("Round data (");
     result.append("round: ");
     result.append("[").append(getRound()).append("])");
 
     return result.toString();
-  } 
+  }
 }

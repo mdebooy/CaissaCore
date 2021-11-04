@@ -18,7 +18,6 @@ package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
-import eu.debooy.caissa.exceptions.ZetException;
 import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.access.TekstBestand;
 import eu.debooy.doosutils.exception.BestandException;
@@ -51,11 +50,11 @@ public final class CaissaUtils {
 
   private static void berekenSBscore(Spelerinfo[] speler, double[][] matrix,
                                      int toernooiType) {
-    int noSpelers = speler.length;
-    int kolommen  = matrix[0].length;
-    for (int i = 0; i < noSpelers; i++) {
+    var noSpelers = speler.length;
+    var kolommen  = matrix[0].length;
+    for (var i = 0; i < noSpelers; i++) {
       Double  sbScore = 0.0;
-      for (int j = 0; j < kolommen; j++) {
+      for (var j = 0; j < kolommen; j++) {
         if (toernooiType > 0 && matrix[i][j] > 0.0) {
           sbScore += speler[j / toernooiType].getPunten()
                               * matrix[i][j];
@@ -84,11 +83,11 @@ public final class CaissaUtils {
   private static void berekenWeerstandspunten(Spelerinfo[] speler,
                                              double[][] matrix,
                                              int toernooiType) {
-    int noSpelers = speler.length;
-    int kolommen  = matrix[0].length;
-    for (int i = 0; i < noSpelers; i++) {
+    var noSpelers = speler.length;
+    var kolommen  = matrix[0].length;
+    for (var i = 0; i < noSpelers; i++) {
       Double weerstandspunten = 0.0;
-      for (int j = 0; j < kolommen; j++) {
+      for (var j = 0; j < kolommen; j++) {
         if (toernooiType > 0) {
           weerstandspunten += speler[j / toernooiType].getPunten();
         }
@@ -98,14 +97,14 @@ public final class CaissaUtils {
   }
 
   public static String[] bergertabel(int spelers) {
-    int       aantal    = spelers + (spelers%2);
-    int       rondes    = aantal - 1;
-    String[]  resultaat = new String[rondes];
+    var aantal    = spelers + (spelers%2);
+    var rondes    = aantal - 1;
+    var resultaat = new String[rondes];
 
-    int   speler  = 1;
-    int[] paring  = new int[aantal];
-    for (int i = 0; i < rondes; i++) {
-      for (int j = 0; j < rondes; j++) {
+    var speler  = 1;
+    var paring  = new int[aantal];
+    for (var i = 0; i < rondes; i++) {
+      for (var j = 0; j < rondes; j++) {
         paring[j] = speler;
         speler++;
         if (speler > rondes) {
@@ -120,8 +119,8 @@ public final class CaissaUtils {
         paring[0]       = paring[0] - paring[rondes];
       }
 
-      StringBuilder ronde = new StringBuilder();
-      for (int j = 0; j < aantal/2; j++) {
+      var ronde = new StringBuilder();
+      for (var j = 0; j < aantal/2; j++) {
         ronde.append(" ").append(paring[j])
              .append("-").append(paring[rondes-j]);
       }
@@ -138,33 +137,31 @@ public final class CaissaUtils {
 
   public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
                                                 boolean enkel) {
-    int                   noSpelers = spelers.size();
+    var                   noSpelers = spelers.size();
     Map<String, Integer>  spelermap = new HashMap<>();
 
     if (noSpelers%2 == 1) {
-      String  naam  = "bye";
+      var naam  = "bye";
       noSpelers++;
-      Spelerinfo  speler  = new Spelerinfo();
+      var speler  = new Spelerinfo();
       speler.setSpelerId(noSpelers);
       speler.setNaam(naam);
       spelers.add(speler);
       spelermap.put(naam, noSpelers);
     }
 
-    String[]    rondetabel  = CaissaUtils.bergertabel(noSpelers);
+    var         rondetabel  = CaissaUtils.bergertabel(noSpelers);
     Set<Partij> schema      = new TreeSet<>();
     int         rondenummer = 1;
     for (String ronde : rondetabel) {
-      String[]  partijen  = ronde.split(" ");
-      int noPartijen    = partijen.length - 1;
-      int partijnummer  = 1;
-      for (int i = noPartijen; i >= 0; i--) {
-        String[]    speler  = partijen[i].split("-");
-        Partij      partij  = new Partij();
-        Spelerinfo  speler1 =
-            new Spelerinfo(spelers.get(Integer.valueOf(speler[0])-1));
-        Spelerinfo  speler2 =
-            new Spelerinfo(spelers.get(Integer.valueOf(speler[1])-1));
+      var partijen  = ronde.split(" ");
+      var noPartijen    = partijen.length - 1;
+      var partijnummer  = 1;
+      for (var i = noPartijen; i >= 0; i--) {
+        var speler  = partijen[i].split("-");
+        var partij  = new Partij();
+        var speler1 = new Spelerinfo(spelers.get(Integer.valueOf(speler[0])-1));
+        var speler2 = new Spelerinfo(spelers.get(Integer.valueOf(speler[1])-1));
         partij.setRonde(rondenummer, partijnummer);
         partij.setWitspeler(speler1);
         partij.setZwartspeler(speler2);
@@ -190,15 +187,15 @@ public final class CaissaUtils {
   public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
                                                 boolean enkel,
                                                 Collection<PGN> partijen) {
-    Set<Partij> schema  = genereerSpeelschema(spelers, enkel);
+    var schema  = genereerSpeelschema(spelers, enkel);
 
     partijen.forEach(partij -> {
-      Partij  game  = schema.stream()
-                            .filter(ptij -> ptij.getWitspeler().getNaam()
-                                                .equals(partij.getWhite()))
-                            .filter(ptij -> ptij.getZwartspeler().getNaam()
-                                                .equals(partij.getBlack()))
-                            .findFirst().orElse(null);
+      var game  = schema.stream()
+                        .filter(ptij -> ptij.getWitspeler().getNaam()
+                                            .equals(partij.getWhite()))
+                        .filter(ptij -> ptij.getZwartspeler().getNaam()
+                                            .equals(partij.getBlack()))
+                        .findFirst().orElse(null);
       if (null != game) {
         game.setForfait(!partij.isRated());
         game.setRanked(partij.isRanked());
@@ -238,12 +235,21 @@ public final class CaissaUtils {
     return enkel;
   }
 
+  private static void initMatrix(double[][] matrix, int noSpelers) {
+    int kolommen  = matrix[0].length;
+    for (var i = 0; i < noSpelers; i++) {
+      for (var j = 0; j < kolommen; j++) {
+        matrix[i][j]  = -1.0;
+      }
+    }
+  }
+
   public static String internToExtern(int veld) {
     return "" + (char) (veld%10 + 96) + (char) (veld/10 + 47);
   }
 
-  public static boolean isMat(FEN fen) throws ZetException {
-    int zetten  = new Zettengenerator(fen).getAantalZetten();
+  public static boolean isMat(FEN fen) {
+    var zetten  = new Zettengenerator(fen).getAantalZetten();
 
     return (zetten == 0);
   }
@@ -256,7 +262,7 @@ public final class CaissaUtils {
   public static Collection<PGN> laadPgnBestand(String bestand, String charSet)
       throws PgnException {
     TekstBestand    input       = null;
-    int             lijnnummer  = 0;
+    var             lijnnummer  = 0;
     Collection<PGN> partijen    = new ArrayList<>();
 
     try {
@@ -265,8 +271,8 @@ public final class CaissaUtils {
                                   + (bestand.endsWith(".pgn") ? "" : ".pgn"))
                               .setCharset(charSet).build();
 
-      boolean eof   = false;
-      String  lijn  = "";
+      var eof   = false;
+      var lijn  = "";
       if (input.hasNext()) {
         lijn  = input.next();
         lijnnummer++;
@@ -274,7 +280,7 @@ public final class CaissaUtils {
         eof = true;
       }
       while (!eof) {
-        PGN     partij  = new PGN();
+        var partij  = new PGN();
 
         // Zoek naar de eerste TAG
         while (!eof && !lijn.startsWith("[")) {
@@ -298,8 +304,8 @@ public final class CaissaUtils {
         }
 
         // Verwerk de zetten
-        String        uitslag = partij.getTag("Result");
-        StringBuilder zetten  = new StringBuilder();
+        var uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
+        var zetten  = new StringBuilder();
         while (!eof && !lijn.trim().endsWith(uitslag)) {
           if (lijn.startsWith("[")) {
             throw new PgnException(MessageFormat.format(
@@ -323,7 +329,7 @@ public final class CaissaUtils {
         }
 
         if (null != uitslag) {
-          String  resultaat = zetten.toString().trim();
+          var resultaat = zetten.toString().trim();
           partij.setZetten(
               resultaat.substring(0, resultaat.length() - uitslag.length())
                        .trim());
@@ -354,11 +360,10 @@ public final class CaissaUtils {
           input.close();
         }
       } catch (BestandException e) {
-        throw new PgnException(MessageFormat.format(
-            resourceBundle.getString(PGN.ERR_BESTAND_EXCEPTION),
-            e.getLocalizedMessage()));
+        partijen  = new ArrayList<>();
       }
     }
+
     return partijen;
   }
 
@@ -366,7 +371,7 @@ public final class CaissaUtils {
     Map<String, List<Zet>>  uniekeZetten  = new HashMap<>();
 
     zetten.forEach(zet -> {
-      String    korteNotatie  = zet.getZet();
+      var       korteNotatie  = zet.getZet();
       List<Zet> gelijk        = new LinkedList<>();
       if (uniekeZetten.containsKey(korteNotatie)) {
         gelijk  = uniekeZetten.get(korteNotatie);
@@ -396,9 +401,9 @@ public final class CaissaUtils {
 
   public static String pgnZettenToChessTheatre(FEN fen, String pgnZetten)
       throws FenException, PgnException {
-    String        pgnZet        = "";
-    String[]      halveZetten   = pgnZetten.split(" ");
-    StringBuilder chessTheatre  = new StringBuilder();
+    var pgnZet        = "";
+    var halveZetten   = pgnZetten.split(" ");
+    var chessTheatre  = new StringBuilder();
 
     for (String halveZet : halveZetten) {
       if (halveZet.indexOf('.') >= 0) {
@@ -426,9 +431,8 @@ public final class CaissaUtils {
   }
 
   private static void schrijfTag(PGN partij, String line) throws PgnException {
-    String tag    = line.substring(1, line.indexOf(' '));
-    String value  = line.substring(line.indexOf('"') + 1,
-        line.lastIndexOf('"'));
+    var tag   = line.substring(1, line.indexOf(' '));
+    var value = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
     partij.addTag(tag, value);
   }
 
@@ -439,15 +443,15 @@ public final class CaissaUtils {
       throw new PgnException(resourceBundle.getString(PGN.ERR_STUKKEN));
     }
 
-    char[]  result  = zetten.toCharArray();
+    var result  = zetten.toCharArray();
 
     // Voorkom dat de O van de rochade wordt aangezien voor een stuk.
     if (vanStukken.contains("O")) {
       zetten  = zetten.replace("O-O-O", "@-@-@").replace("O-O", "@-@");
     }
-    for (int i = 0; i < vanStukken.length(); i++) {
+    for (var i = 0; i < vanStukken.length(); i++) {
       if (vanStukken.charAt(i) != naarStukken.charAt(i)) {
-        int fromIndex = zetten.indexOf(vanStukken.charAt(i), 0);
+        var fromIndex = zetten.indexOf(vanStukken.charAt(i), 0);
         while (fromIndex >= 0) {
           result[fromIndex] = naarStukken.charAt(i);
           fromIndex         = zetten.indexOf(vanStukken.charAt(i),
@@ -459,12 +463,87 @@ public final class CaissaUtils {
     return String.valueOf(result);
   }
 
+  private static void verwerkPartijInMatrix(PGN partij, double[][] matrix,
+                                            Spelerinfo[] speler, String[] namen,
+                                            String[] halve, int toernooiType,
+                                            int iteratie, int[] stand) {
+    var noSpelers = speler.length;
+    var wit       = partij.getTag(CaissaConstants.PGNTAG_WHITE);
+    var zwart     = partij.getTag(CaissaConstants.PGNTAG_BLACK);
+
+    int ronde;
+    try {
+      ronde =
+          Integer.parseInt(partij.getTag(CaissaConstants.PGNTAG_ROUND));
+    } catch (NumberFormatException e) {
+      ronde = 1;
+    }
+    var uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
+    if (ronde > noSpelers
+        && (Arrays.binarySearch(halve, wit,
+                                String.CASE_INSENSITIVE_ORDER) > -1
+            || Arrays.binarySearch(halve, zwart,
+                                   String.CASE_INSENSITIVE_ORDER) > -1)) {
+      return;
+    }
+    var iWit    =
+        stand[Arrays.binarySearch(namen, wit,
+                                  String.CASE_INSENSITIVE_ORDER)];
+    var iZwart  =
+        stand[Arrays.binarySearch(namen, zwart,
+                                  String.CASE_INSENSITIVE_ORDER)];
+    var kolomW  = ronde - 1;
+    var kolomZ  = ronde - 1;
+    if (toernooiType > 0) {
+      kolomW  = iZwart * toernooiType;
+      kolomZ  = iWit * toernooiType + toernooiType - 1;
+    }
+    if (null != uitslag) {
+      switch (uitslag) {
+        case CaissaConstants.PARTIJ_WIT_WINT:
+          matrix[iWit][kolomW]    =
+              Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
+          matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
+          if (iteratie == 0) {
+            speler[iWit].addPartij();
+            speler[iWit].addPunt(1.0);
+            speler[iZwart].addPartij();
+          }
+          break;
+        case CaissaConstants.PARTIJ_REMISE:
+          matrix[iWit][kolomW]    =
+              Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
+          matrix[iZwart][kolomZ]  =
+              Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
+          if (iteratie == 0) {
+            speler[iWit].addPartij();
+            speler[iWit].addPunt(0.5);
+            speler[iZwart].addPartij();
+            speler[iZwart].addPunt(0.5);
+          }
+          break;
+        case CaissaConstants.PARTIJ_ZWART_WINT:
+          matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
+          matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
+                  + 1.0;
+          if (iteratie == 0) {
+            speler[iWit].addPartij();
+            speler[iZwart].addPartij();
+            speler[iZwart].addPunt(1.0);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   public static Zet vindZet(FEN fen, String pgnZet) throws PgnException {
-    Zettengenerator zettengenerator = new Zettengenerator(fen);
-    List<Zet>       zetten          = zettengenerator.getZetten();
+    var       zettengenerator = new Zettengenerator(fen);
+    List<Zet> zetten          = zettengenerator.getZetten();
     // Mat wordt pas 'bekend' als er een tweede zettengeneratie wordt gedaan.
     // Deze manier vermijdt dit. Mat is tenslotte een 'speciale' schaak.
-    String          teVinden        = pgnZet.replace('#', '+');
+    var       teVinden        = pgnZet.replace('#', '+');
 
     for (Zet zet : zetten) {
       if (teVinden.equals(zet.getPgnNotatie())) {
@@ -481,9 +560,9 @@ public final class CaissaUtils {
                                        double[][] matrix, int toernooiType,
                                        boolean sorteerOpStand,
                                        String tieBreakType) {
-    int       aantalIteraties = sorteerOpStand ? 2 : 1;
-    int       noSpelers       = speler.length;
-    String[]  namen           = new String[noSpelers];
+    var aantalIteraties = sorteerOpStand ? 2 : 1;
+    var noSpelers       = speler.length;
+    var namen           = new String[noSpelers];
 
     // Vul een array op metde namen en sorteer deze zodat er een binary search
     // op gedaan kan worden.
@@ -492,14 +571,9 @@ public final class CaissaUtils {
     }
     Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);
 
-    for (int i = 0; i < aantalIteraties; i++) {
+    for (var i = 0; i < aantalIteraties; i++) {
       // Initialiseer de matrix.
-      int kolommen  = matrix[0].length;
-      for (int j = 0; j < noSpelers; j++) {
-        for (int k = 0; k < kolommen; k++) {
-          matrix[j][k]  = -1.0;
-        }
-      }
+      initMatrix(matrix, noSpelers);
 
       // Sorteer de speler array op plaats in de stand. Dit enkel in de 2e
       // iteratie.
@@ -508,82 +582,17 @@ public final class CaissaUtils {
       }
 
       // Zet positie in de matrix.
-      int[] stand = new int[noSpelers];
-      for (int j = 0; j < noSpelers; j++) {
+      var stand = new int[noSpelers];
+      for (var j = 0; j < noSpelers; j++) {
         stand[Arrays.binarySearch(namen, speler[j].getNaam(),
                                   String.CASE_INSENSITIVE_ORDER)] = j;
       }
 
       for (PGN partij: partijen) {
-        String  wit     = partij.getTag(CaissaConstants.PGNTAG_WHITE);
-        String  zwart   = partij.getTag(CaissaConstants.PGNTAG_BLACK);
         if (partij.isRanked()
             && !partij.isBye()) {
-          int   ronde;
-          try {
-            ronde =
-                Integer.parseInt(partij.getTag(CaissaConstants.PGNTAG_ROUND));
-          } catch (NumberFormatException e) {
-            ronde = 1;
-          }
-          String  uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
-          if (ronde > noSpelers
-              && (Arrays.binarySearch(halve, wit,
-                                      String.CASE_INSENSITIVE_ORDER) > -1
-                  || Arrays.binarySearch(halve, zwart,
-                                         String.CASE_INSENSITIVE_ORDER) > -1)) {
-            continue;
-          }
-          int   iWit    =
-              stand[Arrays.binarySearch(namen, wit,
-                                        String.CASE_INSENSITIVE_ORDER)];
-          int   iZwart  =
-              stand[Arrays.binarySearch(namen, zwart,
-                                        String.CASE_INSENSITIVE_ORDER)];
-          int   kolomW  = ronde - 1;
-          int   kolomZ  = ronde - 1;
-          if (toernooiType > 0) {
-            kolomW  = iZwart * toernooiType;
-            kolomZ  = iWit * toernooiType + toernooiType - 1;
-          }
-          if (null != uitslag) {
-            switch (uitslag) {
-              case CaissaConstants.PARTIJ_WIT_WINT:
-                matrix[iWit][kolomW]    =
-                    Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
-                matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
-                if (i == 0) {
-                  speler[iWit].addPartij();
-                  speler[iWit].addPunt(1.0);
-                  speler[iZwart].addPartij();
-                }
-                break;
-              case CaissaConstants.PARTIJ_REMISE:
-                matrix[iWit][kolomW]    =
-                    Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
-                matrix[iZwart][kolomZ]  =
-                    Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
-                if (i == 0) {
-                  speler[iWit].addPartij();
-                  speler[iWit].addPunt(0.5);
-                  speler[iZwart].addPartij();
-                  speler[iZwart].addPunt(0.5);
-                }
-                break;
-              case CaissaConstants.PARTIJ_ZWART_WINT:
-                matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
-                matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
-                        + 1.0;
-                if (i == 0) {
-                  speler[iWit].addPartij();
-                  speler[iZwart].addPartij();
-                  speler[iZwart].addPunt(1.0);
-                }
-                break;
-              default:
-                break;
-            }
-          }
+          verwerkPartijInMatrix(partij, matrix, speler, namen, halve,
+                                toernooiType, i, stand);
         }
       }
 
@@ -595,7 +604,7 @@ public final class CaissaUtils {
   }
 
   public static int zoekStuk(char stukcode) {
-    for (int i = 0; i < stuk.length; i++) {
+    for (var i = 0; i < stuk.length; i++) {
       if (stuk[i] == stukcode) {
         return i - 6;
       }

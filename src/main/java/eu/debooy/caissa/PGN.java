@@ -88,8 +88,6 @@ import java.util.TreeMap;
  */
 public class PGN implements Comparable<PGN>, Serializable {
   private static final  long    serialVersionUID  = 1L;
-  private static final  String  EOL               =
-      System.getProperty("line.separator");
 
   public static final String  ERR_BESTAND           = "pgn.bestand.incorrect";
   public static final String  ERR_BESTAND_EXCEPTION = "pgn.bestand.exception";
@@ -103,6 +101,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
+  private String          endOfLine       = null;
   private boolean         ranked          = true;
   private boolean         rated           = true;
   private Map<String, String>
@@ -150,8 +149,8 @@ public class PGN implements Comparable<PGN>, Serializable {
     @Override
     public int compare(PGN pgn1, PGN pgn2) {
       // 1e sleutel
-      int diff  = pgn1.getTag(CaissaConstants.PGNTAG_EVENT)
-                      .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_EVENT));
+      var diff    = pgn1.getTag(CaissaConstants.PGNTAG_EVENT)
+                        .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_EVENT));
       if (diff != 0) {
         return diff;
       }
@@ -162,8 +161,8 @@ public class PGN implements Comparable<PGN>, Serializable {
         return diff;
       }
       // 3e sleutel
-      Round round1  = new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND));
-      Round round2  = new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND));
+      var round1  = new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND));
+      var round2  = new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND));
       diff  = round1.compareTo(round2);
       if (diff != 0) {
         return diff;
@@ -205,10 +204,10 @@ public class PGN implements Comparable<PGN>, Serializable {
     @Override
     public int compare(PGN pgn1, PGN pgn2) {
       // 1e sleutel
-      int   diff    = pgn1.getTag(CaissaConstants.PGNTAG_DATE)
-                          .replace('?', '0')
-                          .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_DATE)
-                                         .replace('?', '0'));
+      var diff    = pgn1.getTag(CaissaConstants.PGNTAG_DATE)
+                        .replace('?', '0')
+                        .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_DATE)
+                                       .replace('?', '0'));
       if (diff != 0) {
         return diff;
       }
@@ -225,8 +224,8 @@ public class PGN implements Comparable<PGN>, Serializable {
         return diff;
       }
       // 4e sleutel
-      Round round1  = new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND));
-      Round round2  = new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND));
+      var round1  = new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND));
+      var round2  = new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND));
       diff  = round1.compareTo(round2);
       if (diff != 0) {
         return diff;
@@ -265,8 +264,7 @@ public class PGN implements Comparable<PGN>, Serializable {
 
   @Override
   public int compareTo(PGN other) {
-    return getSevenTagsAsString()
-        .compareTo(other.getSevenTagsAsString());
+    return getSevenTagsAsString().compareTo(other.getSevenTagsAsString());
   }
 
   public void deleteTag(String tag) {
@@ -279,6 +277,10 @@ public class PGN implements Comparable<PGN>, Serializable {
   public boolean equals(Object other) {
     if (!(other instanceof PGN)) {
       return false;
+    }
+
+    if (this == other) {
+      return true;
     }
 
     return getSevenTagsAsString()
@@ -305,6 +307,14 @@ public class PGN implements Comparable<PGN>, Serializable {
     return new Date(datum.getTime());
   }
 
+  private String  getEol() {
+    if (null == endOfLine) {
+      endOfLine = System.lineSeparator();
+    }
+
+    return endOfLine;
+  }
+
   public Date getEventDate() {
     Date  datum;
 
@@ -322,8 +332,8 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getSevenTagsAsString() {
-    String        eol     = "\"]" + EOL;
-    StringBuilder result  = new StringBuilder();
+    var eol     = "\"]" + getEol();
+    var result  = new StringBuilder();
 
     result.append("[Event \"")
           .append(tags.get(CaissaConstants.PGNTAG_EVENT)).append(eol)
@@ -358,8 +368,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getTagsAsString() {
-    String        eol     = "\"]" + EOL;
-    StringBuilder result  = new StringBuilder();
+    var result  = new StringBuilder();
 
     result.append(getSevenTagsAsString());
 
@@ -367,7 +376,7 @@ public class PGN implements Comparable<PGN>, Serializable {
         .filter(map -> Arrays.binarySearch(sevenTagRoster, map.getKey()) < 0)
         .forEach(map ->
             result.append("[").append(map.getKey()).append(" \"")
-                  .append(map.getValue()).append(eol));
+                  .append(map.getValue()).append(getEol()));
 
     return result.toString();
   }
@@ -400,7 +409,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     String[]  teVervangen = {"\t", "  ", ". ", " .", " D ", " N "};
     String[]  naar        = {" ",  " ",  ".",  ".",  " ",   " "};
 
-    for (int i = 0; i<teVervangen.length; i++) {
+    for (var i = 0; i<teVervangen.length; i++) {
       while (zuivereZetten.contains(teVervangen[i])) {
         zuivereZetten = zuivereZetten.replace(teVervangen[i], naar[i]);
       }
@@ -441,11 +450,11 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public boolean isBye() {
-    String  wit   = getWhite();
-    String  zwart = getBlack();
+    var wit   = getWhite();
+    var zwart = getBlack();
 
-    return ("bye".equalsIgnoreCase(wit)
-        || "bye".equalsIgnoreCase(zwart)
+    return (CaissaConstants.BYE.equalsIgnoreCase(wit)
+        || CaissaConstants.BYE.equalsIgnoreCase(zwart)
         || DoosUtils.isBlankOrNull(wit)
         || DoosUtils.isBlankOrNull(zwart));
   }
@@ -509,8 +518,8 @@ public class PGN implements Comparable<PGN>, Serializable {
       this.zetten = zetten;
     }
 
-    ranked  = !this.zetten.contains("unranked");
-    rated   = !this.zetten.contains("unrated");
+    ranked  = !this.zetten.contains(CaissaConstants.PARTIJ_UNRANKED);
+    rated   = !this.zetten.contains(CaissaConstants.PARTIJ_UNRATED);
   }
 
   public void setZetten(String zetten, String vanTaal) throws PgnException {
@@ -542,18 +551,17 @@ public class PGN implements Comparable<PGN>, Serializable {
 
   @Override
   public String toString() {
-    StringBuilder result      = new StringBuilder();
-    String        teSplitsen  = zetten + " "
-                                + tags.get(CaissaConstants.PGNTAG_RESULT);
+    var result      = new StringBuilder();
+    var teSplitsen  = zetten + " " + tags.get(CaissaConstants.PGNTAG_RESULT);
 
     result.append(getTagsAsString());
-    result.append(EOL);
+    result.append(getEol());
     while (teSplitsen.length() > 80) {
-      int splits  = teSplitsen.substring(1, 80).lastIndexOf(" ");
-      result.append(teSplitsen.substring(0, splits + 1)).append(EOL);
+      var splits  = teSplitsen.substring(1, 80).lastIndexOf(" ");
+      result.append(teSplitsen.substring(0, splits + 1)).append(getEol());
       teSplitsen  = teSplitsen.substring(splits + 2);
     }
-    result.append(teSplitsen).append(EOL);
+    result.append(teSplitsen).append(getEol());
 
     return  result.toString();
   }
@@ -565,9 +573,9 @@ public class PGN implements Comparable<PGN>, Serializable {
 
   private void verwijder(char open) {
     while (zuivereZetten.contains("" + open)) {
-      int niveau  = 1;
-      int start   = zuivereZetten.indexOf(open);
-      int eind    = start + 1;
+      var niveau  = 1;
+      var start   = zuivereZetten.indexOf(open);
+      var eind    = start + 1;
       while (niveau > 0) {
         switch (zuivereZetten.charAt(eind)) {
           case '{': niveau++;
@@ -597,8 +605,8 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   private void verwijderDollarNotaties() {
-    int start = zuivereZetten.indexOf('$');
-    int eind  = start + 1;
+    var start = zuivereZetten.indexOf('$');
+    var eind  = start + 1;
 
     while ("0123456789".contains("" + zuivereZetten.charAt(eind))) {
       eind++;
@@ -618,8 +626,8 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public void verwijderGesplitsteZetten() {
-    int start = zuivereZetten.indexOf("...") - 1;
-    int eind  = start + 4;
+    var start = zuivereZetten.indexOf("...") - 1;
+    var eind  = start + 4;
 
     while (zuivereZetten.charAt(start) != ' ') {
       start--;
