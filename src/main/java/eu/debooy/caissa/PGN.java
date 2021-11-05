@@ -406,8 +406,8 @@ public class PGN implements Comparable<PGN>, Serializable {
     // TAB wordt spatie, Verwijder spaties rond de punten (2x),
     // Verwijder 'diagram', Verwijder 'nieuwtje', Maak van meerdere spaties 1
     // spatie
-    String[]  teVervangen = {"\t", "  ", ". ", " .", " D ", " N "};
-    String[]  naar        = {" ",  " ",  ".",  ".",  " ",   " "};
+    var teVervangen = new String[]{"\t", "  ", ". ", " .", " D ", " N "};
+    var naar        = new String[]{" ",  " ",  ".",  ".",  " ",   " "};
 
     for (var i = 0; i<teVervangen.length; i++) {
       while (zuivereZetten.contains(teVervangen[i])) {
@@ -438,6 +438,13 @@ public class PGN implements Comparable<PGN>, Serializable {
     zuivereZetten = zuivereZetten.trim();
 
     return zuivereZetten;
+  }
+
+  public String getZuivereZetten(String naarTaal) throws PgnException {
+    return translateStukken(getZuivereZetten(),
+                            CaissaConstants.Stukcodes
+                                           .valueOf(naarTaal.toUpperCase())
+                                           .getStukcodes());
   }
 
   @Override

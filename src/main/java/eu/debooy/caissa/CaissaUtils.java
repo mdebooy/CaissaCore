@@ -152,7 +152,7 @@ public final class CaissaUtils {
 
     var         rondetabel  = CaissaUtils.bergertabel(noSpelers);
     Set<Partij> schema      = new TreeSet<>();
-    int         rondenummer = 1;
+    var         rondenummer = 1;
     for (String ronde : rondetabel) {
       var partijen  = ronde.split(" ");
       var noPartijen    = partijen.length - 1;
@@ -400,7 +400,7 @@ public final class CaissaUtils {
   }
 
   public static String pgnZettenToChessTheatre(FEN fen, String pgnZetten)
-      throws FenException, PgnException {
+      throws PgnException {
     var pgnZet        = "";
     var halveZetten   = pgnZetten.split(" ");
     var chessTheatre  = new StringBuilder();
@@ -416,7 +416,7 @@ public final class CaissaUtils {
       } else {
         pgnZet  = halveZet;
       }
-      Zet juisteZet = vindZet(fen, pgnZet);
+      var juisteZet = vindZet(fen, pgnZet);
       // Zwart moet in lowercase.
       if (halveZet.indexOf('.') >= 0) {
         chessTheatre.append(juisteZet.getChessTheatreZet()).append(" ");
@@ -498,43 +498,46 @@ public final class CaissaUtils {
       kolomW  = iZwart * toernooiType;
       kolomZ  = iWit * toernooiType + toernooiType - 1;
     }
-    if (null != uitslag) {
-      switch (uitslag) {
-        case CaissaConstants.PARTIJ_WIT_WINT:
-          matrix[iWit][kolomW]    =
-              Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
-          matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
-          if (iteratie == 0) {
-            speler[iWit].addPartij();
-            speler[iWit].addPunt(1.0);
-            speler[iZwart].addPartij();
-          }
-          break;
-        case CaissaConstants.PARTIJ_REMISE:
-          matrix[iWit][kolomW]    =
-              Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
-          matrix[iZwart][kolomZ]  =
-              Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
-          if (iteratie == 0) {
-            speler[iWit].addPartij();
-            speler[iWit].addPunt(0.5);
-            speler[iZwart].addPartij();
-            speler[iZwart].addPunt(0.5);
-          }
-          break;
-        case CaissaConstants.PARTIJ_ZWART_WINT:
-          matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
-          matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
-                  + 1.0;
-          if (iteratie == 0) {
-            speler[iWit].addPartij();
-            speler[iZwart].addPartij();
-            speler[iZwart].addPunt(1.0);
-          }
-          break;
-        default:
-          break;
-      }
+
+    if (null == uitslag) {
+      return;
+    }
+
+    switch (uitslag) {
+      case CaissaConstants.PARTIJ_WIT_WINT:
+        matrix[iWit][kolomW]    =
+            Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
+        matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
+        if (iteratie == 0) {
+          speler[iWit].addPartij();
+          speler[iWit].addPunt(1.0);
+          speler[iZwart].addPartij();
+        }
+        break;
+      case CaissaConstants.PARTIJ_REMISE:
+        matrix[iWit][kolomW]    =
+            Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
+        matrix[iZwart][kolomZ]  =
+            Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
+        if (iteratie == 0) {
+          speler[iWit].addPartij();
+          speler[iWit].addPunt(0.5);
+          speler[iZwart].addPartij();
+          speler[iZwart].addPunt(0.5);
+        }
+        break;
+      case CaissaConstants.PARTIJ_ZWART_WINT:
+        matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
+        matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
+                + 1.0;
+        if (iteratie == 0) {
+          speler[iWit].addPartij();
+          speler[iZwart].addPartij();
+          speler[iZwart].addPunt(1.0);
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -564,9 +567,9 @@ public final class CaissaUtils {
     var noSpelers       = speler.length;
     var namen           = new String[noSpelers];
 
-    // Vul een array op metde namen en sorteer deze zodat er een binary search
+    // Vul een array op met de namen en sorteer deze zodat er een binary search
     // op gedaan kan worden.
-    for (int i = 0; i < noSpelers; i++) {
+    for (var i = 0; i < noSpelers; i++) {
       namen[i]  = speler[i].getNaam();
     }
     Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);

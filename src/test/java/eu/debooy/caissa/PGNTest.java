@@ -52,7 +52,8 @@ public class PGNTest extends BatchTest {
   @AfterClass
   public static void afterClass() {
     verwijderBestanden(TEMP + File.separator,
-                       new String[] {TestConstants.BST_COMMENTAAR_PGN});
+                       new String[] {TestConstants.BST_COMMENTAAR_PGN,
+                                     TestConstants.BST_TEST_PGN});
   }
 
   @BeforeClass
@@ -64,6 +65,9 @@ public class PGNTest extends BatchTest {
       kopieerBestand(CLASSLOADER,
                      TestConstants.BST_COMMENTAAR_PGN,
                      TEMP + File.separator + TestConstants.BST_COMMENTAAR_PGN);
+      kopieerBestand(CLASSLOADER,
+                     TestConstants.BST_TEST_PGN,
+                     TEMP + File.separator + TestConstants.BST_TEST_PGN);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
       throw new BestandException(e);
@@ -131,8 +135,7 @@ public class PGNTest extends BatchTest {
       pgn.addTag(CaissaConstants.PGNTAG_RESULT, "fout");
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-      assertEquals("testResultTags",
-                   resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
+      assertEquals(resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
                    e.getMessage());
     }
   }
@@ -153,8 +156,7 @@ public class PGNTest extends BatchTest {
       pgn.setTags(tags);
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-      assertEquals("testResultTags",
-                   resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
+      assertEquals(resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
                    e.getMessage());
     }
   }
@@ -171,7 +173,7 @@ public class PGNTest extends BatchTest {
         .addAll(
             CaissaUtils.laadPgnBestand(TEMP + File.separator
                                        + TestConstants.BST_COMMENTAAR_PGN));
-    int       i             = 0;
+    var       i             = 0;
     PGN       partij;
     String    resultaat;
     String    zuivereZetten;
@@ -179,14 +181,14 @@ public class PGNTest extends BatchTest {
     while (i < partijen.size()) {
       partij        = partijen.get(i);
       if (partij.hasTag("Vertaal")) {
-        resultaat   = partij.getZetten(partij.getTag("Vertaal"));
+        resultaat   = partij.getZuivereZetten(partij.getTag("Vertaal"));
       } else {
         resultaat   = partij.getZuivereZetten();
       }
       partij        = partijen.get(i+1);
       zuivereZetten = partij.getZetten();
-      assertTrue("Verkeerd bij partij " + (i+1),
-                 resultaat.equals(zuivereZetten));
+      assertEquals("Verkeerd bij partij " + (i+1),
+                   zuivereZetten, resultaat);
       i += 2;
     }
   }
@@ -197,7 +199,8 @@ public class PGNTest extends BatchTest {
     assertTrue(pgn.isRanked());
     assertTrue(pgn.isRated());
 
-    pgn.setZetten("{unranked, unrated}");
+    pgn.setZetten("{" + CaissaConstants.PARTIJ_UNRANKED + ","
+                    + CaissaConstants.PARTIJ_UNRATED + "}");
 
     assertTrue(pgn.isValid());
     assertFalse(pgn.isRanked());
@@ -206,21 +209,23 @@ public class PGNTest extends BatchTest {
 
   @Test
   public void testDefaultSort() throws PgnException {
-    List<PGN> partijen  = new ArrayList<>();
-    partijen.addAll(CaissaUtils.laadPgnBestand("target/test-classes/test"));
+    List<PGN> partijen    = new ArrayList<>();
+    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                                + TestConstants.BST_TEST_PGN));
     Collections.sort(partijen);
-    PGN[]     partijTabel = partijen.toArray(new PGN[partijen.size()]);
-    for (int i = 0; i < partijen.size()-1; i++) {
+    var       partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    for (var i = 0; i < partijen.size()-1; i++) {
       assertTrue(partijTabel[i].compareTo(partijTabel[i+1]) < 0);
     }
   }
 
   @Test
   public void testSortByEvent() throws PgnException {
-    Collection<PGN> partijen  = new TreeSet<>(new PGN.ByEventComparator());
-    partijen.addAll(CaissaUtils.laadPgnBestand("target/test-classes/test.pgn"));
-    PGN[]     partijTabel = partijen.toArray(new PGN[partijen.size()]);
-    for (int i = 0; i < partijen.size()-1; i++) {
+    Collection<PGN> partijen    = new TreeSet<>(new PGN.ByEventComparator());
+    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                                + TestConstants.BST_TEST_PGN));
+    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    for (var i = 0; i < partijen.size()-1; i++) {
       assertTrue(partijTabel[i].compareTo(partijTabel[i+1]) < 0);
     }
   }

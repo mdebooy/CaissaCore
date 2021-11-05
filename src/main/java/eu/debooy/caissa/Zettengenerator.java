@@ -17,7 +17,6 @@
  */
 package eu.debooy.caissa;
 
-import eu.debooy.caissa.exceptions.CaissaException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -259,11 +258,11 @@ public class Zettengenerator {
     return zetten.size();
   }
 
-  public List<String> getNieuweStellingen() throws CaissaException {
+  public List<String> getNieuweStellingen() {
     List<String>  stellingen  = new ArrayList<>();
 
     for (Zet  zet: zetten) {
-      FEN nieuweFen = new FEN(fen.getFen());
+      var nieuweFen = new FEN(fen.getFen());
       nieuweFen.doeZet(zet);
       stellingen.add(nieuweFen.getFen());
     }

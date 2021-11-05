@@ -175,20 +175,20 @@ public class FEN implements Serializable {
   private void bordToPositie() {
     var nieuwePositie = new StringBuilder();
     for (var i = 9; i > 1; i--) {
-      int leeg  = 0;
+      var leeg  = 0;
       for (var j = 1; j < 9; j++) {
         if (bord[i*10+j] == 0) {
           leeg++;
         } else {
           if (leeg > 0) {
-            nieuwePositie.append("").append(leeg);
+            nieuwePositie.append(leeg);
             leeg  = 0;
           }
           nieuwePositie.append(CaissaUtils.getStuk(bord[i*10+j]));
         }
       }
       if (leeg > 0) {
-        nieuwePositie.append("").append(leeg);
+        nieuwePositie.append(leeg);
       }
       if (i > 2) {
         nieuwePositie.append("/");
@@ -293,7 +293,7 @@ public class FEN implements Serializable {
   }
 
   public String getKortePositie() {
-    StringBuilder kortePositie = new StringBuilder();
+    var kortePositie = new StringBuilder();
     var leeg  = 0;
     for (var i = 9; i > 1; i--) {
       for (var j = 1; j < 9; j++) {
@@ -301,7 +301,7 @@ public class FEN implements Serializable {
           leeg++;
         } else {
           if (leeg > 0) {
-            kortePositie.append("").append(leeg);
+            kortePositie.append(leeg);
             leeg  = 0;
           }
           kortePositie.append(CaissaUtils.getStuk(bord[i*10+j]));
@@ -309,7 +309,7 @@ public class FEN implements Serializable {
       }
     }
     if (leeg > 0) {
-      kortePositie.append("").append(leeg);
+      kortePositie.append(leeg);
     }
 
     return kortePositie.toString();
@@ -320,7 +320,7 @@ public class FEN implements Serializable {
   }
 
   protected String getRochade() {
-    StringBuilder rochade = new StringBuilder();
+    var rochade = new StringBuilder();
 
     if (Boolean.TRUE.equals(witKorteRochade)) {
       rochade.append("K");
@@ -379,7 +379,7 @@ public class FEN implements Serializable {
 
     String[]  rij = positie.split("/");
     for (var i = 0; i < 8; i++) {
-      int kolom = 1;
+      var kolom = 1;
       for (var j = 0; j < rij[i].length(); j++) {
         var ch  = rij[i].charAt(j);
         if (CaissaConstants.STUKKEN.toLowerCase().indexOf(ch) > -1) {

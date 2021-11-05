@@ -16,9 +16,7 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
-
 import junit.framework.TestCase;
-
 import org.junit.Test;
 
 
@@ -28,6 +26,14 @@ import org.junit.Test;
 public class FENTest extends TestCase {
   public static final String  FEN_1E2E4  =
       "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+  public static final String  FEN_1E7E5  =
+      "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2";
+  public static final String  FEN_2KE1E2 =
+      "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR b kq - 1 2";
+  public static final String  FEN_2KE8E7 =
+      "rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3";
+  public static final String  FEN_3D2D4  =
+      "rnbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3 0 3";
 
   private FEN fen;
 
@@ -45,77 +51,86 @@ public class FENTest extends TestCase {
   public void testSetFEN() throws FenException {
     fen = new FEN();
     fen.setFen(FEN_1E2E4);
-    assertTrue(fen.getAanZet() == 'b');
-    assertTrue(fen.getEnPassant().equals("e3"));
-    assertTrue(fen.getHalvezetten() == 0);
-    assertTrue("KQkq".equals(fen.getRochade()));
-    assertTrue("rnbqkbnrpppppppp20P11PPPP1PPPRNBQKBNR".equals(fen.getKortePositie()));
-    assertTrue(fen.getZetnummer() == 1);
-  }
-
-  @Test
-  public void testZetInfo() throws FenException {
-    fen = new FEN(FEN_1E2E4);
-    assertTrue(fen.getAanZet() == 'b');
-    assertTrue(fen.getEnPassant().equals("e3"));
-    assertTrue(fen.getHalvezetten() == 0);
-    assertTrue("KQkq".equals(fen.getRochade()));
-    assertTrue("rnbqkbnrpppppppp20P11PPPP1PPPRNBQKBNR".equals(fen.getKortePositie()));
-    assertTrue(fen.getZetnummer() == 1);
+    assertEquals('b', fen.getAanZet());
+    assertEquals("e3", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("KQkq", fen.getRochade());
+    assertEquals("rnbqkbnrpppppppp20P11PPPP1PPPRNBQKBNR", fen.getKortePositie());
+    assertEquals(Integer.valueOf(1), fen.getZetnummer());
   }
 
   @Test
   public void testDoeE2e4() throws FenException {
     fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
-    assertTrue(fen.getAanZet() == 'b');
-    assertTrue(fen.getEnPassant().equals("e3"));
-    assertTrue(fen.getHalvezetten() == 0);
-    assertTrue("KQkq".equals(fen.getRochade()));
-    assertTrue(fen.getZetnummer() == 1);
+    assertEquals('b', fen.getAanZet());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("KQkq", fen.getRochade());
+    assertEquals(Integer.valueOf(1), fen.getZetnummer());
+    assertEquals(FEN_1E2E4, fen.getFen());
   }
 
   @Test
   public void testDoeE7e5() throws FenException {
     fen = new FEN(FEN_1E2E4);
     fen.doeZet(new Zet(' ', 85, 65));
-    assertTrue(fen.getAanZet() == 'w');
-    assertTrue(fen.getEnPassant().equals("e6"));
-    assertTrue(fen.getHalvezetten() == 0);
-    assertTrue("KQkq".equals(fen.getRochade()));
-    assertTrue(fen.getZetnummer() == 2);
+    assertEquals('w', fen.getAanZet());
+    assertEquals("e6", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("KQkq", fen.getRochade());
+    assertEquals(Integer.valueOf(2), fen.getZetnummer());
+    assertEquals(FEN_1E7E5, fen.getFen());
   }
 
   @Test
   public void testDoeKe1e2() throws FenException {
-    fen = new FEN("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2");
+    fen = new FEN(FEN_1E7E5);
     fen.doeZet(new Zet('K', 25, 35));
-    assertTrue(fen.getAanZet() == 'b');
-    assertTrue(fen.getEnPassant().equals("-"));
-    assertTrue(fen.getHalvezetten() == 1);
-    assertTrue("kq".equals(fen.getRochade()));
-    assertTrue(fen.getZetnummer() == 2);
+    assertEquals('b', fen.getAanZet());
+    assertEquals("-", fen.getEnPassant());
+    assertEquals(Integer.valueOf(1), fen.getHalvezetten());
+    assertEquals("kq", fen.getRochade());
+    assertEquals(Integer.valueOf(2), fen.getZetnummer());
+    assertEquals(FEN_2KE1E2, fen.getFen());
   }
 
   @Test
   public void testDoeKe8e7() throws FenException {
-    fen = new FEN("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR b kq - 1 2");
+    fen = new FEN(FEN_2KE1E2);
     fen.doeZet(new Zet('K', 95, 85));
-    assertTrue(fen.getAanZet() == 'w');
-    assertTrue(fen.getEnPassant().equals("-"));
-    assertTrue(fen.getHalvezetten() == 2);
-    assertTrue("-".equals(fen.getRochade()));
-    assertTrue(fen.getZetnummer() == 3);
+    assertEquals('w', fen.getAanZet());
+    assertEquals("-", fen.getEnPassant());
+    assertEquals(Integer.valueOf(2), fen.getHalvezetten());
+    assertEquals("-", fen.getRochade());
+    assertEquals(Integer.valueOf(3), fen.getZetnummer());
+    assertEquals(FEN_2KE8E7, fen.getFen());
   }
 
   @Test
   public void testDoeD2d4() throws FenException {
-    fen = new FEN("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3");
+    fen = new FEN(FEN_2KE8E7);
     fen.doeZet(new Zet(' ', 34, 54));
-    assertTrue(fen.getAanZet() == 'b');
-    assertTrue(fen.getEnPassant().equals("d3"));
-    assertTrue(fen.getHalvezetten() == 0);
-    assertTrue("-".equals(fen.getRochade()));
-    assertTrue(fen.getZetnummer() == 3);
+    assertEquals('b', fen.getAanZet());
+    assertEquals("d3", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("-", fen.getRochade());
+    assertEquals(Integer.valueOf(3), fen.getZetnummer());
+    assertEquals(FEN_3D2D4, fen.getFen());
+  }
+
+  @Test
+  public void testDoeZetten() throws FenException {
+    fen = new FEN();
+    fen.doeZet(new Zet(' ', 35, 55));
+    fen.doeZet(new Zet(' ', 85, 65));
+    fen.doeZet(new Zet('K', 25, 35));
+    fen.doeZet(new Zet('K', 95, 85));
+    fen.doeZet(new Zet(' ', 34, 54));
+    assertEquals('b', fen.getAanZet());
+    assertEquals("d3", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("-", fen.getRochade());
+    assertEquals(Integer.valueOf(3), fen.getZetnummer());
+    assertEquals(FEN_3D2D4, fen.getFen());
   }
 }

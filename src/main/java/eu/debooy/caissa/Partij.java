@@ -123,7 +123,7 @@ public class Partij implements Comparable<Partij> {
   @Override
   public String toString() {
     var result  = new StringBuilder();
-    result.append("Round data (")
+    result.append("Partij data (")
           .append("ronde: [").append(ronde.getRound()).append("], ")
           .append("witspeler: ")
           .append(witspeler.getVolledigenaam()).append(", ")

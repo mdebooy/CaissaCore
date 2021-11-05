@@ -93,6 +93,9 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   private void addExtraZetinfo(StringBuilder zet) {
+    if (promotieStuk != ' ') {
+      zet.append(promotieStuk);
+    }
     if (schaak) {
       zet.append('+');
     }
@@ -211,7 +214,7 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getChessTheatreZet() {
-    StringBuilder zet   = new StringBuilder();
+    var zet   = new StringBuilder();
 
     if (stuk == 'K'
         && Math.abs(van - naar) == 2) {
@@ -237,7 +240,7 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public String getCorrespondentieZet() {
-    StringBuilder zet = new StringBuilder();
+    var zet = new StringBuilder();
 
     zet.append((char) (van%10 + 48));
     zet.append((char) (van/10 + 47));
@@ -272,9 +275,6 @@ public class Zet implements Comparable<Object>, Serializable {
         zet.append('x');
       }
       zet.append(CaissaUtils.internToExtern(naar));
-      if (promotieStuk != ' ') {
-        zet.append(promotieStuk);
-      }
     }
     addExtraZetinfo(zet);
 
@@ -306,19 +306,7 @@ public class Zet implements Comparable<Object>, Serializable {
         zet.append(CaissaUtils.internToExtern(naar));
       }
     }
-
-    if (promotieStuk != ' ') {
-      zet.append(promotieStuk);
-    }
-    if (schaak) {
-      zet.append('+');
-    }
-    if (mat) {
-      zet.append('#');
-    }
-    if (ep) {
-      zet.append(CaissaConstants.EN_PASSANT);
-    }
+    addExtraZetinfo(zet);
 
     return zet.toString().trim();
   }

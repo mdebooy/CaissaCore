@@ -29,22 +29,22 @@ public class ZetTest extends TestCase {
   public void testE2e4() {
     zet = new Zet(' ', 35, 55);
 
-    assertTrue("36P15.".equals(zet.getChessTheatreZet()));
-    assertTrue("5254".equals(zet.getCorrespondentieZet()));
-    assertTrue("e4".equals(zet.getKorteNotatie()));
-    assertTrue("e2-e4".equals(zet.getLangeNotatie()));
-    assertTrue("e4".equals(zet.getPgnNotatie()));
+    assertEquals("36P15.", zet.getChessTheatreZet());
+    assertEquals("5254", zet.getCorrespondentieZet());
+    assertEquals("e4", zet.getKorteNotatie());
+    assertEquals("e2-e4", zet.getLangeNotatie());
+    assertEquals("e4", zet.getPgnNotatie());
   }
 
   @Test
   public void testE7e8R() {
     zet = new Zet(' ', 85, 95, 'R');
 
-    assertTrue("4R7.".equals(zet.getChessTheatreZet()));
-    assertTrue("5758".equals(zet.getCorrespondentieZet()));
-    assertTrue("e8R".equals(zet.getKorteNotatie()));
-    assertTrue("e7-e8R".equals(zet.getLangeNotatie()));
-    assertTrue("e8=R".equals(zet.getPgnNotatie()));
+    assertEquals("4R7.", zet.getChessTheatreZet());
+    assertEquals("5758", zet.getCorrespondentieZet());
+    assertEquals("e8R", zet.getKorteNotatie());
+    assertEquals("e7-e8R", zet.getLangeNotatie());
+    assertEquals("e8=R", zet.getPgnNotatie());
   }
 
   @Test
@@ -52,11 +52,11 @@ public class ZetTest extends TestCase {
     zet = new Zet(' ', 65, 74);
     zet.setEp(true);
 
-    assertTrue("19P7..".equals(zet.getChessTheatreZet()));
-    assertTrue("5546".equals(zet.getCorrespondentieZet()));
-    assertTrue("exd6 e.p.".equals(zet.getKorteNotatie()));
-    assertTrue("e5xd6 e.p.".equals(zet.getLangeNotatie()));
-    assertTrue("exd6".equals(zet.getPgnNotatie()));
+    assertEquals("19P7..", zet.getChessTheatreZet());
+    assertEquals("5546", zet.getCorrespondentieZet());
+    assertEquals("exd6 e.p.", zet.getKorteNotatie());
+    assertEquals("e5xd6 e.p.", zet.getLangeNotatie());
+    assertEquals("exd6", zet.getPgnNotatie());
   }
 
   @Test
@@ -64,11 +64,11 @@ public class ZetTest extends TestCase {
     zet = new Zet(' ', 65, 76);
     zet.setEp(true);
 
-    assertTrue("21P6..".equals(zet.getChessTheatreZet()));
-    assertTrue("5566".equals(zet.getCorrespondentieZet()));
-    assertTrue("exf6 e.p.".equals(zet.getKorteNotatie()));
-    assertTrue("e5xf6 e.p.".equals(zet.getLangeNotatie()));
-    assertTrue("exf6".equals(zet.getPgnNotatie()));
+    assertEquals("21P6..", zet.getChessTheatreZet());
+    assertEquals("5566", zet.getCorrespondentieZet());
+    assertEquals("exf6 e.p.", zet.getKorteNotatie());
+    assertEquals("e5xf6 e.p.", zet.getLangeNotatie());
+    assertEquals("exf6", zet.getPgnNotatie());
   }
 
   @Test
@@ -76,11 +76,11 @@ public class ZetTest extends TestCase {
     zet = new Zet(' ', 55, 44);
     zet.setEp(true);
 
-    assertTrue("35..6p".equals(zet.getChessTheatreZet()));
-    assertTrue("5443".equals(zet.getCorrespondentieZet()));
-    assertTrue("exd3 e.p.".equals(zet.getKorteNotatie()));
-    assertTrue("e4xd3 e.p.".equals(zet.getLangeNotatie()));
-    assertTrue("exd3".equals(zet.getPgnNotatie()));
+    assertEquals("35..6p", zet.getChessTheatreZet());
+    assertEquals("5443", zet.getCorrespondentieZet());
+    assertEquals("exd3 e.p.", zet.getKorteNotatie());
+    assertEquals("e4xd3 e.p.", zet.getLangeNotatie());
+    assertEquals("exd3", zet.getPgnNotatie());
   }
 
   @Test
@@ -88,22 +88,22 @@ public class ZetTest extends TestCase {
     zet = new Zet(' ', 55, 46);
     zet.setEp(true);
 
-    assertTrue("36..7p".equals(zet.getChessTheatreZet()));
-    assertTrue("5463".equals(zet.getCorrespondentieZet()));
-    assertTrue("exf3 e.p.".equals(zet.getKorteNotatie()));
-    assertTrue("e4xf3 e.p.".equals(zet.getLangeNotatie()));
-    assertTrue("exf3".equals(zet.getPgnNotatie()));
+    assertEquals("36..7p", zet.getChessTheatreZet());
+    assertEquals("5463", zet.getCorrespondentieZet());
+    assertEquals("exf3 e.p.", zet.getKorteNotatie());
+    assertEquals("e4xf3 e.p.", zet.getLangeNotatie());
+    assertEquals("exf3", zet.getPgnNotatie());
   }
 
   @Test
   public void testKe1e2() {
     zet = new Zet('K', 25, 35);
 
-    assertTrue("52K7.".equals(zet.getChessTheatreZet()));
-    assertTrue("5152".equals(zet.getCorrespondentieZet()));
-    assertTrue("Ke2".equals(zet.getKorteNotatie()));
-    assertTrue("Ke1-e2".equals(zet.getLangeNotatie()));
-    assertTrue("Ke2".equals(zet.getPgnNotatie()));
+    assertEquals("52K7.", zet.getChessTheatreZet());
+    assertEquals("5152", zet.getCorrespondentieZet());
+    assertEquals("Ke2", zet.getKorteNotatie());
+    assertEquals("Ke1-e2", zet.getLangeNotatie());
+    assertEquals("Ke2", zet.getPgnNotatie());
   }
 
   @Test
@@ -111,11 +111,11 @@ public class ZetTest extends TestCase {
     zet = new Zet('N', 27, 46);
     zet.setMat(true);
 
-    assertTrue("45N16.".equals(zet.getChessTheatreZet()));
-    assertTrue("7163".equals(zet.getCorrespondentieZet()));
-    assertTrue("Nf3#".equals(zet.getKorteNotatie()));
-    assertTrue("Ng1-f3#".equals(zet.getLangeNotatie()));
-    assertTrue("Nf3#".equals(zet.getPgnNotatie()));
+    assertEquals("45N16.", zet.getChessTheatreZet());
+    assertEquals("7163", zet.getCorrespondentieZet());
+    assertEquals("Nf3#", zet.getKorteNotatie());
+    assertEquals("Ng1-f3#", zet.getLangeNotatie());
+    assertEquals("Nf3#", zet.getPgnNotatie());
   }
 
   @Test
@@ -123,22 +123,22 @@ public class ZetTest extends TestCase {
     zet = new Zet('N', 27, 46);
     zet.setSlagzet(true);
 
-    assertTrue("45N16.".equals(zet.getChessTheatreZet()));
-    assertTrue("7163".equals(zet.getCorrespondentieZet()));
-    assertTrue("Nxf3".equals(zet.getKorteNotatie()));
-    assertTrue("Ng1xf3".equals(zet.getLangeNotatie()));
-    assertTrue("Nxf3".equals(zet.getPgnNotatie()));
+    assertEquals("45N16.", zet.getChessTheatreZet());
+    assertEquals("7163", zet.getCorrespondentieZet());
+    assertEquals("Nxf3", zet.getKorteNotatie());
+    assertEquals("Ng1xf3", zet.getLangeNotatie());
+    assertEquals("Nxf3", zet.getPgnNotatie());
   }
 
   @Test
   public void testPg8f6() {
     zet = new Zet('N', 97, 76);
 
-    assertTrue("6.14N".equals(zet.getChessTheatreZet()));
-    assertTrue("7866".equals(zet.getCorrespondentieZet()));
-    assertTrue("Nf6".equals(zet.getKorteNotatie()));
-    assertTrue("Ng8-f6".equals(zet.getLangeNotatie()));
-    assertTrue("Nf6".equals(zet.getPgnNotatie()));
+    assertEquals("6.14N", zet.getChessTheatreZet());
+    assertEquals("7866", zet.getCorrespondentieZet());
+    assertEquals("Nf6", zet.getKorteNotatie());
+    assertEquals("Ng8-f6", zet.getLangeNotatie());
+    assertEquals("Nf6", zet.getPgnNotatie());
   }
 
   @Test
@@ -146,33 +146,33 @@ public class ZetTest extends TestCase {
     zet = new Zet('N', 97, 76);
     zet.setSchaak(true);
 
-    assertTrue("6.14N".equals(zet.getChessTheatreZet()));
-    assertTrue("7866".equals(zet.getCorrespondentieZet()));
-    assertTrue("Nf6+".equals(zet.getKorteNotatie()));
-    assertTrue("Ng8-f6+".equals(zet.getLangeNotatie()));
-    assertTrue("Nf6+".equals(zet.getPgnNotatie()));
+    assertEquals("6.14N", zet.getChessTheatreZet());
+    assertEquals("7866", zet.getCorrespondentieZet());
+    assertEquals("Nf6+", zet.getKorteNotatie());
+    assertEquals("Ng8-f6+", zet.getLangeNotatie());
+    assertEquals("Nf6+", zet.getPgnNotatie());
   }
 
   @Test
   public void testOO() {
     zet = new Zet('K', 95, 97);
 
-    assertTrue("4.rk.".equals(zet.getChessTheatreZet()));
-    assertTrue("5878".equals(zet.getCorrespondentieZet()));
-    assertTrue(CaissaConstants.KORTE_ROCHADE.equals(zet.getKorteNotatie()));
-    assertTrue(CaissaConstants.KORTE_ROCHADE.equals(zet.getLangeNotatie()));
-    assertTrue(CaissaConstants.KORTE_ROCHADE.equals(zet.getPgnNotatie()));
+    assertEquals("4.rk.", zet.getChessTheatreZet());
+    assertEquals("5878", zet.getCorrespondentieZet());
+    assertEquals(CaissaConstants.KORTE_ROCHADE, zet.getKorteNotatie());
+    assertEquals(CaissaConstants.KORTE_ROCHADE, zet.getLangeNotatie());
+    assertEquals(CaissaConstants.KORTE_ROCHADE, zet.getPgnNotatie());
   }
 
   @Test
   public void testOOO() {
     zet = new Zet('K', 25, 23);
 
-    assertTrue("56.1KR.".equals(zet.getChessTheatreZet()));
-    assertTrue("5131".equals(zet.getCorrespondentieZet()));
-    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getKorteNotatie()));
-    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getLangeNotatie()));
-    assertTrue(CaissaConstants.LANGE_ROCHADE.equals(zet.getPgnNotatie()));
+    assertEquals("56.1KR.", zet.getChessTheatreZet());
+    assertEquals("5131", zet.getCorrespondentieZet());
+    assertEquals(CaissaConstants.LANGE_ROCHADE, zet.getKorteNotatie());
+    assertEquals(CaissaConstants.LANGE_ROCHADE, zet.getLangeNotatie());
+    assertEquals(CaissaConstants.LANGE_ROCHADE, zet.getPgnNotatie());
   }
 
   @Test
@@ -180,14 +180,14 @@ public class ZetTest extends TestCase {
     zet = new Zet('K', 95, 93);
     zet.setMat(true);
 
-    assertTrue(".1kr.".equals(zet.getChessTheatreZet()));
-    assertTrue("5838".equals(zet.getCorrespondentieZet()));
-    assertTrue(
-        (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getKorteNotatie()));
-    assertTrue(
-        (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getLangeNotatie()));
-    assertTrue(
-        (CaissaConstants.LANGE_ROCHADE+"#").equals(zet.getPgnNotatie()));
+    assertEquals(".1kr.", zet.getChessTheatreZet());
+    assertEquals("5838", zet.getCorrespondentieZet());
+    assertEquals(
+        (CaissaConstants.LANGE_ROCHADE+"#"), zet.getKorteNotatie());
+    assertEquals(
+        (CaissaConstants.LANGE_ROCHADE+"#"), zet.getLangeNotatie());
+    assertEquals(
+        (CaissaConstants.LANGE_ROCHADE+"#"), zet.getPgnNotatie());
   }
 
   @Test
@@ -195,14 +195,14 @@ public class ZetTest extends TestCase {
     zet = new Zet('K', 95, 93);
     zet.setSchaak(true);
 
-    assertTrue(".1kr.".equals(zet.getChessTheatreZet()));
-    assertTrue("5838".equals(zet.getCorrespondentieZet()));
-    assertTrue(
-        (CaissaConstants.LANGE_ROCHADE+"+").equals(zet.getKorteNotatie()));
-    assertTrue(
-        (CaissaConstants.LANGE_ROCHADE+"+").equals(zet.getLangeNotatie()));
-    assertTrue(
-        (CaissaConstants.LANGE_ROCHADE+"+").equals(zet.getPgnNotatie()));
+    assertEquals(".1kr.", zet.getChessTheatreZet());
+    assertEquals("5838", zet.getCorrespondentieZet());
+    assertEquals(
+        (CaissaConstants.LANGE_ROCHADE+"+"), zet.getKorteNotatie());
+    assertEquals(
+        (CaissaConstants.LANGE_ROCHADE+"+"), zet.getLangeNotatie());
+    assertEquals(
+        (CaissaConstants.LANGE_ROCHADE+"+"), zet.getPgnNotatie());
   }
 
   @Test
@@ -210,14 +210,14 @@ public class ZetTest extends TestCase {
     zet = new Zet('K', 25, 27);
     zet.setMat(true);
 
-    assertTrue("60.RK.".equals(zet.getChessTheatreZet()));
-    assertTrue("5171".equals(zet.getCorrespondentieZet()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"#").equals(zet.getKorteNotatie()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"#").equals(zet.getLangeNotatie()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"#").equals(zet.getPgnNotatie()));
+    assertEquals("60.RK.", zet.getChessTheatreZet());
+    assertEquals("5171", zet.getCorrespondentieZet());
+    assertEquals(
+        (CaissaConstants.KORTE_ROCHADE+"#"), zet.getKorteNotatie());
+    assertEquals(
+        (CaissaConstants.KORTE_ROCHADE+"#"), zet.getLangeNotatie());
+    assertEquals(
+        (CaissaConstants.KORTE_ROCHADE+"#"), zet.getPgnNotatie());
   }
 
   @Test
@@ -225,13 +225,13 @@ public class ZetTest extends TestCase {
     zet = new Zet('K', 25, 27);
     zet.setSchaak(true);
 
-    assertTrue("60.RK.".equals(zet.getChessTheatreZet()));
-    assertTrue("5171".equals(zet.getCorrespondentieZet()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getKorteNotatie()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getLangeNotatie()));
-    assertTrue(
-        (CaissaConstants.KORTE_ROCHADE+"+").equals(zet.getPgnNotatie()));
+    assertEquals("60.RK.", zet.getChessTheatreZet());
+    assertEquals("5171", zet.getCorrespondentieZet());
+    assertEquals(
+        (CaissaConstants.KORTE_ROCHADE+"+"), zet.getKorteNotatie());
+    assertEquals(
+        (CaissaConstants.KORTE_ROCHADE+"+"), zet.getLangeNotatie());
+    assertEquals(
+        (CaissaConstants.KORTE_ROCHADE+"+"), zet.getPgnNotatie());
   }
 }

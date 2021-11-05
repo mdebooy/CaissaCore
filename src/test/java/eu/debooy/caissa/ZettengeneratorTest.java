@@ -16,32 +16,42 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CaissaException;
-
-import org.junit.Test;
-
 import junit.framework.TestCase;
+import org.junit.Test;
 
 
 /**
  * @author Marco de Booij
  */
 public class ZettengeneratorTest extends TestCase {
-  
+
   @Test
   public void testBeginstand() throws CaissaException {
-    Zettengenerator zetten  = new Zettengenerator(new FEN());
-    assertTrue((zetten.getAantalZetten() == 20));
+    var zetten  = new Zettengenerator(new FEN());
+    assertEquals(20, zetten.getAantalZetten());
   }
-  
+
   @Test
   public void testPromotie() throws CaissaException {
-    Zettengenerator zetten  = new Zettengenerator(new FEN("4k3/P7/8/8/8/8/8/4K3 w - - 0 1"));
-    assertTrue((zetten.getAantalZetten() == 9));
+    var zetten  = new Zettengenerator(new FEN("4k3/P7/8/8/8/8/8/4K3 w - - 0 1"));
+    assertEquals(9, zetten.getAantalZetten());
   }
-  
+
   @Test
-  public void testRochade() throws CaissaException {
-    Zettengenerator zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b KQkq - 0 1"));
-    assertTrue((zetten.getAantalZetten() == 28));
+  public void testRochade1() throws CaissaException {
+    var zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b KQkq - 0 1"));
+    assertEquals(28, zetten.getAantalZetten());
+  }
+
+  @Test
+  public void testRochade2() throws CaissaException {
+    var zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b kq - 0 1"));
+    assertEquals(28, zetten.getAantalZetten());
+  }
+
+  @Test
+  public void testRochade3() throws CaissaException {
+    var zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b - - 0 1"));
+    assertEquals(26, zetten.getAantalZetten());
   }
 }

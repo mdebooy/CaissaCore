@@ -16,7 +16,6 @@
 package eu.debooy.caissa;
 
 import junit.framework.TestCase;
-
 import org.junit.Test;
 
 
@@ -26,93 +25,107 @@ import org.junit.Test;
 public class ELOTest extends TestCase {
   @Test
   public void testBerekenTPR01() {
-    Integer tpr = ELO.berekenTPR(0, 0, 0, 0);
-    assertTrue(0 == tpr);
+    var tpr = ELO.berekenTPR(0, 0, 0, 0);
+    assertEquals(Integer.valueOf(0), tpr);
     tpr = ELO.berekenTPR(1668, 0, 0, 0);
-    assertTrue(1668 == tpr);
+    assertEquals(Integer.valueOf(1668), tpr);
   }
 
   @Test
   public void testBerekenTPR02() {
-    Integer tpr = ELO.berekenTPR(1668, 13, 5, 4);
-    
-    assertTrue(1806 == tpr);
+    var tpr = ELO.berekenTPR(1668, 13, 5, 4);
+
+    assertEquals(Integer.valueOf(1806), tpr);
   }
 
   @Test
   public void testBerekenTPR03() {
-    Integer tpr = ELO.berekenTPR(1668, 22, 0, 0);
-    
-    assertTrue(2068 == tpr);
+    var tpr = ELO.berekenTPR(1668, 22, 0, 0);
+
+    assertEquals(Integer.valueOf(2068), tpr);
   }
 
   @Test
   public void testBerekenTPR04() {
-    Integer tpr = ELO.berekenTPR(1668, 0, 0, 22);
-    
-    assertTrue(1268 == tpr);
+    var tpr = ELO.berekenTPR(1668, 0, 0, 22);
+
+    assertEquals(Integer.valueOf(1268), tpr);
   }
 
   @Test
   public void testBerekenELO01() {
-    Integer elo = ELO.berekenELO(1500, CaissaConstants.WINST, 1700, 1);
+    var elo = ELO.berekenELO(1500, CaissaConstants.WINST, 1700, 1);
 
-    assertTrue(1523 == elo);
+    assertEquals(Integer.valueOf(1523), elo);
   }
 
   @Test
   public void testBerekenELO02() {
-    Integer elo = ELO.berekenELO(1500, CaissaConstants.REMISE, 1700, 1);
+    var elo = ELO.berekenELO(1500, CaissaConstants.REMISE, 1700, 1);
 
-    assertTrue(1508 == elo);
+    assertEquals(Integer.valueOf(1508), elo);
   }
 
   @Test
   public void testBerekenELO03() {
-    Integer elo = ELO.berekenELO(1500, CaissaConstants.VERLIES, 1700, 1);
+    var elo = ELO.berekenELO(1500, CaissaConstants.VERLIES, 1700, 1);
 
-    assertTrue(1493 == elo);
+    assertEquals(Integer.valueOf(1493), elo);
   }
 
   @Test
   public void testBerekenELO04() {
-    Integer elo = ELO.berekenELO(1600, CaissaConstants.WINST, 1600, 32, 400);
+    var elo = ELO.berekenELO(1600, CaissaConstants.WINST, 1600, 32, 400);
 
-    assertTrue(1616 == elo);
+    assertEquals(Integer.valueOf(1616), elo);
   }
 
   @Test
   public void testBerekenELO05() {
-    Integer elo = ELO.berekenELO(1600, CaissaConstants.REMISE, 1600, 32, 400);
+    var elo = ELO.berekenELO(1600, CaissaConstants.REMISE, 1600, 32, 400);
 
-    assertTrue(1600 == elo);
+    assertEquals(Integer.valueOf(1600), elo);
   }
 
   @Test
   public void testBerekenELO06() {
-    Integer elo = ELO.berekenELO(1600, CaissaConstants.VERLIES, 1600, 32, 400);
+    var elo = ELO.berekenELO(1600, CaissaConstants.VERLIES, 1600, 32, 400);
 
-    assertTrue(1584 == elo);
+    assertEquals(Integer.valueOf(1584), elo);
   }
 
   @Test
   public void testBerekenELO07() {
-    Integer elo = ELO.berekenELO(1700, CaissaConstants.WINST, 1500, 32, 400);
+    var elo = ELO.berekenELO(1700, CaissaConstants.WINST, 1500, 32, 400);
 
-    assertTrue(1708 == elo);
+    assertEquals(Integer.valueOf(1708), elo);
   }
 
   @Test
   public void testBerekenELO08() {
-    Integer elo = ELO.berekenELO(1700, CaissaConstants.REMISE, 1500, 32, 400);
+    var elo = ELO.berekenELO(1700, CaissaConstants.REMISE, 1500, 32, 400);
 
-    assertTrue(1692 == elo);
+    assertEquals(Integer.valueOf(1692), elo);
   }
 
   @Test
   public void testBerekenELO09() {
-    Integer elo = ELO.berekenELO(1700, CaissaConstants.VERLIES, 1500, 32, 400);
+    var elo = ELO.berekenELO(1700, CaissaConstants.VERLIES, 1500, 32, 400);
 
     assertTrue(1676 == elo);
+  }
+
+  @Test
+  public void testBerekenELO10() {
+    var elo = ELO.berekenELO(1600, CaissaConstants.WINST, 1600, 30);
+
+    assertEquals(Integer.valueOf(1608), elo);
+  }
+
+  @Test
+  public void testBerekenELO11() {
+    var elo = ELO.berekenELO(2600, CaissaConstants.WINST, 2600, 32);
+
+    assertEquals(Integer.valueOf(2605), elo);
   }
 }

@@ -17,7 +17,6 @@
 package eu.debooy.caissa;
 
 import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,9 +38,10 @@ public class SpelerinfoTest extends TestCase {
   private Spelerinfo  spelerinfo6;
   private Spelerinfo  spelerinfo7;
   private Spelerinfo  spelerinfo8;
-  
+
   @Before
-  public void setUp() { 
+  @Override
+  public void setUp() {
     spelerinfo0 = new Spelerinfo();
     spelerinfo1 = new Spelerinfo();
     spelerinfo2 = new Spelerinfo();
@@ -94,36 +94,22 @@ public class SpelerinfoTest extends TestCase {
 
   @Test
   public void testCompareGelijk() {
-    assertTrue(velden(spelerinfo0) + " = " + velden(spelerinfo7),
-               spelerinfo0.compareTo(spelerinfo7) == 0);
-    assertTrue(velden(spelerinfo1) + " = " + velden(spelerinfo1),
-               spelerinfo1.compareTo(spelerinfo1) == 0);
-    assertTrue(velden(spelerinfo1) + " = " + velden(spelerinfo8),
-               spelerinfo1.compareTo(spelerinfo8) == 0);
+    assertEquals(0, spelerinfo0.compareTo(spelerinfo7));
+    assertEquals(0, spelerinfo1.compareTo(spelerinfo1));
+    assertEquals(0, spelerinfo1.compareTo(spelerinfo8));
   }
 
   @Test
   public void testCompareGroter() {
-    assertTrue(velden(spelerinfo1) + " > " + velden(spelerinfo2),
-               spelerinfo1.compareTo(spelerinfo2) > 0);
-    assertTrue(velden(spelerinfo1) + " > " + velden(spelerinfo3),
-               spelerinfo1.compareTo(spelerinfo3) > 0);
-    assertTrue(velden(spelerinfo1) + " > " + velden(spelerinfo4),
-               spelerinfo1.compareTo(spelerinfo4) > 0);
+    assertTrue(spelerinfo1.compareTo(spelerinfo2) > 0);
+    assertTrue(spelerinfo1.compareTo(spelerinfo3) > 0);
+    assertTrue(spelerinfo1.compareTo(spelerinfo4) > 0);
   }
 
   @Test
   public void testCompareKleiner() {
-    assertTrue(velden(spelerinfo1) + " < " + velden(spelerinfo0),
-               spelerinfo1.compareTo(spelerinfo0) < 0);
-    assertTrue(velden(spelerinfo1) + " < " + velden(spelerinfo5),
-               spelerinfo1.compareTo(spelerinfo5) < 0);
-    assertTrue(velden(spelerinfo1) + " < " + velden(spelerinfo6),
-               spelerinfo1.compareTo(spelerinfo6) < 0);
-  }
-
-  private String velden(Spelerinfo speler) {
-    return speler.getPunten() + " - " + speler.getPartijen() + " - "
-           + speler.getTieBreakScore() + " - " + speler.getNaam();
+    assertTrue(spelerinfo1.compareTo(spelerinfo0) < 0);
+    assertTrue(spelerinfo1.compareTo(spelerinfo5) < 0);
+    assertTrue(spelerinfo1.compareTo(spelerinfo6) < 0);
   }
 }
