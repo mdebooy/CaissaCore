@@ -112,7 +112,7 @@ public class ELOTest extends TestCase {
   public void testBerekenELO09() {
     var elo = ELO.berekenELO(1700, CaissaConstants.VERLIES, 1500, 32, 400);
 
-    assertTrue(1676 == elo);
+    assertEquals(Integer.valueOf(1676), elo);
   }
 
   @Test

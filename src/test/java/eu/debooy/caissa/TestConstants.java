@@ -23,6 +23,8 @@ public class TestConstants {
   public static final String  BST_CHESSTHEATRE_PGN  = "chessTheatre.pgn";
   public static final String  BST_COMMENTAAR_PGN    = "commentaar.pgn";
   public static final String  BST_COMMENTAAR_RES    = "commentaar.resultaat";
+  public static final String  BST_DEFAULT_PGN       = "default.pgn";
+  public static final String  BST_EVENT_PGN         = "event.pgn";
   public static final String  BST_TEST_PGN          = "test.pgn";
 
   public static final String  TST_TAAL  = "nl";

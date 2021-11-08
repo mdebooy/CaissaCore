@@ -16,7 +16,6 @@
  */
 package eu.debooy.caissa;
 
-import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.access.TekstBestand;
@@ -395,7 +394,7 @@ public final class CaissaUtils {
   }
 
   public static String pgnZettenToChessTheatre(String pgnZetten)
-      throws FenException, PgnException {
+      throws PgnException {
     return pgnZettenToChessTheatre(new FEN(), pgnZetten);
   }
 

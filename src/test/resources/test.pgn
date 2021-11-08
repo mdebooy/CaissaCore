@@ -7,9 +7,9 @@
 [Result "0-1"]
 [ECO "D00l"]
 
-1.e4 e5 2.d4 d5 3.f3 Nc6 4.Ne2 Nf6 5.Qd3 Nb4 6.Qb3 dxe4 7.dxe5 Be6 8.Qc3 
-Nbd5 9.Qd2 Nd7 10.fxe4 N5b6 11.b3 f6 12.Nd4 Qe7 13.Qc3 fxe5 14.Nb5 Qh4+ 
-15.Kd2 Qf4+ 16.Kd1 Bg4+ 17.Ke1 Qxe4+ 18.Qe3 Qxc2 19.Bd3 Qd1+ 20.Kf2 Qxh1 
+1.e4 e5 2.d4 d5 3.f3 Nc6 4.Ne2 Nf6 5.Qd3 Nb4 6.Qb3 dxe4 7.dxe5 Be6 8.Qc3
+Nbd5 9.Qd2 Nd7 10.fxe4 N5b6 11.b3 f6 12.Nd4 Qe7 13.Qc3 fxe5 14.Nb5 Qh4+
+15.Kd2 Qf4+ 16.Kd1 Bg4+ 17.Ke1 Qxe4+ 18.Qe3 Qxc2 19.Bd3 Qd1+ 20.Kf2 Qxh1
 21.Kg3 Bd6 22.Qf2 e4+ 23.Bf4 O-O 24.Qf1 Qxf1 25.Bxf1 Bxf4+ 26.Kh4 Bxh2 27.
 Nd2 Rf4 28.g3 Rf6 29.Kxg4 Rg6+ 30.Kh3 Bxg3 31.Nc4 Rf8 32.Kg2 Be5+ 0-1
 
@@ -23,7 +23,7 @@ Nd2 Rf4 28.g3 Rf6 29.Kxg4 Rg6+ 30.Kh3 Bxg3 31.Nc4 Rf8 32.Kg2 Be5+ 0-1
 [ECO "C59g"]
 
 1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.Ng5 d5 5.exd5 Na5 6.Bb5+ c6 7.dxc6 bxc6 8.
-Be2 h6 9.Nf3 e4 10.Ne5 Bd6 11.Nc4 Nxc4 12.Bxc4 Ng4 13.Qe2 O-O 14.h3 Qh4 
+Be2 h6 9.Nf3 e4 10.Ne5 Bd6 11.Nc4 Nxc4 12.Bxc4 Ng4 13.Qe2 O-O 14.h3 Qh4
 15.Nc3 Nxf2 16.O-O Qg3 17.Nxe4 Nxh3+ 18.Kh1 Qh2# 0-1
 
 [Event "2a"]
@@ -37,8 +37,8 @@ Be2 h6 9.Nf3 e4 10.Ne5 Bd6 11.Nc4 Nxc4 12.Bxc4 Ng4 13.Qe2 O-O 14.h3 Qh4
 
 1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.Ng5 d5 5.exd5 Nxd5 6.Nxf7 Kxf7 7.Qf3+ Ke6 8.
 Nc3 Nb4 9.Kd1 c6 10.a3 b5 11.axb4 bxc4 12.Qg4+ Kd6 13.Qxc4 Be7 14.Qc5+ Kd7
-15.Rxa7+ Rxa7 16.Qxa7+ Qc7 17.Qxc7+ Nxc7 18.Na2 Rf8 19.f3 Nd5 20.c3 Bh4 
-21.d3 Bf2 22.Ke2 Bb6 23.c4 Nc7 24.c5 Ba7 25.Bd2 h6 26.Bc3 Ke6 27.Kd2 Kd5 
+15.Rxa7+ Rxa7 16.Qxa7+ Qc7 17.Qxc7+ Nxc7 18.Na2 Rf8 19.f3 Nd5 20.c3 Bh4
+21.d3 Bf2 22.Ke2 Bb6 23.c4 Nc7 24.c5 Ba7 25.Bd2 h6 26.Bc3 Ke6 27.Kd2 Kd5
 28.Re1 Re8 29.Nc1 Nb5 30.Na2 Nxc3 31.Nxc3+ Kd4 32.Re4# 1-0
 
 [Event "SF-2009-0-00044"]
@@ -53,7 +53,7 @@ Nc3 Nb4 9.Kd1 c6 10.a3 b5 11.axb4 bxc4 12.Qg4+ Kd6 13.Qxc4 Be7 14.Qc5+ Kd7
 [ECO "C55a"]
 [EventDate "2009.12.06"]
 
-1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.c3 Nxe4 5.Qe2 d5 6.Bb3 Bg4 7.Qe3 Bc5 8.d4 
+1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.c3 Nxe4 5.Qe2 d5 6.Bb3 Bg4 7.Qe3 Bc5 8.d4
 Bb6 9.Nbd2 O-O 10.O-O exd4 11.Nxd4 Re8 12.Qf4 h5 13.Nxc6 bxc6 14.Nxe4 Rxe4
 15.Qd2 Qf6 16.Qg5 Qxf2+ 0-1
 
@@ -79,11 +79,11 @@ Bb6 9.Nbd2 O-O 10.O-O exd4 11.Nxd4 Re8 12.Qf4 h5 13.Nxc6 bxc6 14.Nxe4 Rxe4
 [ECO "A00k"]
 
 1.e3 d5 2.Bd3 Bg4 3.Qxg4 Nf6 4.Qf3 e6 5.e4 dxe4 6.Bxe4 Nc6 7.Nc3 Nd4 8.Qe3
-e5 9.f4 Nc6 10.fxe5 Nxe5 11.Bxb7 Rb8 12.Qxe5+ Be7 13.Bc6+ Nd7 14.Qxg7 Rf8 
+e5 9.f4 Nc6 10.fxe5 Nxe5 11.Bxb7 Rb8 12.Qxe5+ Be7 13.Bc6+ Nd7 14.Qxg7 Rf8
 15.Bd5 Bh4+ 16.g3 Bf6 17.Bxf7+ Rxf7 18.Qg8+ Nf8 19.Qg4 Qe7+ 20.Ne4 Rg7 21.
-Qh5+ Ng6 22.d3 Rb7 23.Bh6 Rf7 24.Nh3 Rxb2 25.Rf1 Qb4+ 26.c3 Qe7 27.Rxf6 
-Rxf6 28.Ng5 Rc6 29.Qf3 Rxc3 30.Qd1 Qb4 31.Nf6+ Ke7 32.Nd5+ Kd6 33.Nxb4 
-Rxb4 34.Qd2 Rc6 35.Qxb4+ Kd7 36.Nxh7 Ne5 37.Qd4+ Ke6 38.Ng5+ Kf5 39.g4+ 
+Qh5+ Ng6 22.d3 Rb7 23.Bh6 Rf7 24.Nh3 Rxb2 25.Rf1 Qb4+ 26.c3 Qe7 27.Rxf6
+Rxf6 28.Ng5 Rc6 29.Qf3 Rxc3 30.Qd1 Qb4 31.Nf6+ Ke7 32.Nd5+ Kd6 33.Nxb4
+Rxb4 34.Qd2 Rc6 35.Qxb4+ Kd7 36.Nxh7 Ne5 37.Qd4+ Ke6 38.Ng5+ Kf5 39.g4+
 Nxg4 40.Qd5+ Kg6 41.Qxc6+ Kh5 42.Nf3 Nxh2 43.Rc1 Nxf3+ 44.Qxf3+ Kxh6 45.
 Rc5 Kg6 46.Qc6+ Kg7 47.Rd5 Kf7 48.Rd7+ Ke8 49.Qxc7 Kf8 50.Qd8# 1-0
 
@@ -110,7 +110,7 @@ Rc5 Kg6 46.Qc6+ Kg7 47.Rd5 Kf7 48.Rd7+ Ke8 49.Qxc7 Kf8 50.Qd8# 1-0
 [EventDate "1997.09.23"]
 
 1.e4 e6 2.d4 d5 3.Nd2 Nf6 4.e5 Nfd7 5.Bd3 c5 6.c3 cxd4 7.cxd4 Bb4 8.Qc2 f5
-9.exf6 Nxf6 10.a3 Ba5 11.b4 Bb6 12.Ndf3 h6 13.Bg6+ Ke7 14.Ne2 Nc6 15.b5 
+9.exf6 Nxf6 10.a3 Ba5 11.b4 Bb6 12.Ndf3 h6 13.Bg6+ Ke7 14.Ne2 Nc6 15.b5
 Na5 16.a4 Bd7 17.Ba3+ Bc5 18.Bxc5# 1-0
 
 [Event "-"]
@@ -122,9 +122,9 @@ Na5 16.a4 Bd7 17.Ba3+ Bc5 18.Bxc5# 1-0
 [Result "1-0"]
 [ECO "A09n"]
 
-1.Nf3 d5 2.c4 dxc4 3.Qa4+ Bd7 4.Qxc4 b5 5.Qc2 Nf6 6.d3 Nc6 7.a3 e5 8.e4 
-Bc5 9.Qxc5 a6 10.Nxe5 Qe7 11.Qxe7+ Nxe7 12.Nxd7 Nxd7 13.Bf4 c5 14.Nd2 O-O 
+1.Nf3 d5 2.c4 dxc4 3.Qa4+ Bd7 4.Qxc4 b5 5.Qc2 Nf6 6.d3 Nc6 7.a3 e5 8.e4
+Bc5 9.Qxc5 a6 10.Nxe5 Qe7 11.Qxe7+ Nxe7 12.Nxd7 Nxd7 13.Bf4 c5 14.Nd2 O-O
 15.Rc1 Rac8 16.g3 Ng6 17.Bd6 Rfe8 18.Bh3 Red8 19.Rc3 Rc6 20.e5 Ngxe5 21.
-Bxd7 Nxd7 22.Bf4 f5 23.O-O Nf6 24.Re1 Nd5 25.Bg5 Rd7 26.Rc2 h6 27.Be3 Re7 
+Bxd7 Nxd7 22.Bf4 f5 23.O-O Nf6 24.Re1 Nd5 25.Bg5 Rd7 26.Rc2 h6 27.Be3 Re7
 28.Nf3 c4 29.dxc4 bxc4 30.Nd4 Rf6 31.Rxc4 f4 32.Bd2 g5 33.Rxe7 Nxe7 34.Ba5
 Nd5 35.Rc8+ Kg7 36.Rd8 Ne7 37.Rd7 Rf7 38.Bb4 Ng8 39.Rxf7+ 1-0
