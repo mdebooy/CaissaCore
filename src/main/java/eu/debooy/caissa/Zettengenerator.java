@@ -31,12 +31,14 @@ import java.util.Map;
 // TODO Rochade aanpassen aan schaak960.
 public class Zettengenerator {
   private final List<Zet>   zetten        = new ArrayList<>();
-  private       boolean     korteRochade  = false;
-  private       boolean     langeRochade  = false;
+  private       boolean     korteRokade   = false;
+  private       boolean     langeRokade   = false;
   private       FEN         fen           = null;
   private       int[]       bord          = new int[120];
   private       int         enPassant     = 0;
   private       int         koning;
+  private       int         kortetoren;
+  private       int         langetoren;
   private       int         schaakDoel;
   private final int[]       loop          = {9, 11, -9, -11, 10, 1, -1, -10,
                                               19, 21, 12, 8, -21, -19, -12, -8};
@@ -49,11 +51,16 @@ public class Zettengenerator {
       enPassant = CaissaUtils.externToIntern(ep);
     }
     if (fen.getAanZet() == 'w') {
-      korteRochade  = fen.getWitKorteRochade();
-      langeRochade  = fen.getWitLangeRochade();
+      korteRokade = fen.getWitKorteRochade();
+      kortetoren  = CaissaUtils.externToIntern(fen.getWitKorteToren());
+      langeRokade = fen.getWitLangeRochade();
+      langetoren  = CaissaUtils.externToIntern(fen.getWitLangeToren());
     } else {
-      korteRochade  = fen.getZwartKorteRochade();
-      langeRochade  = fen.getZwartLangeRochade();
+      // Verminder de torenpositie met 70 ivm bordwissel.
+      korteRokade = fen.getZwartKorteRochade();
+      kortetoren  = CaissaUtils.externToIntern(fen.getZwartKorteToren()) - 70;
+      langeRokade = fen.getZwartLangeRochade();
+      langetoren  = CaissaUtils.externToIntern(fen.getZwartLangeToren()) - 70;
       bordwissel();
       if (enPassant != 0) {
         enPassant = 110 - (enPassant/10) * 10 + enPassant%10;
@@ -198,60 +205,41 @@ public class Zettengenerator {
     }
   }
 
-  private void genereerZetten() {
+  private void genereerGewoneZetten() {
     for (var i = 21; i < 99; i++) {
       switch (bord[i]) {
-      case CaissaConstants.PION:
-        pionZet(i);
-        break;
-      case CaissaConstants.PAARD:
-        paardZet(i);
-        break;
-      case CaissaConstants.LOPER:
-        loperZet(i);
-        break;
-      case CaissaConstants.TOREN:
-        torenZet(i);
-        break;
-      case CaissaConstants.DAME:
-        dameZet(i);
-        break;
-      case CaissaConstants.KONING:
-        koningZet(i);
-        break;
-      default:
-        break;
+        case CaissaConstants.PION:
+          pionZet(i);
+          break;
+        case CaissaConstants.PAARD:
+          paardZet(i);
+          break;
+        case CaissaConstants.LOPER:
+          loperZet(i);
+          break;
+        case CaissaConstants.TOREN:
+          torenZet(i);
+          break;
+        case CaissaConstants.DAME:
+          dameZet(i);
+          break;
+        case CaissaConstants.KONING:
+          koningZet(i);
+          break;
+        default:
+          break;
       }
     }
+  }
 
-    if (korteRochade || langeRochade) {
-      rochade();
+  private void genereerZetten() {
+    genereerGewoneZetten();
+
+    if (korteRokade || langeRokade) {
+      rokade();
     }
 
-    Collections.sort(zetten);
-    for (var i = 0; i < zetten.size()-1; i++) {
-      var zet1  = zetten.get(i);
-      var zet2  = zetten.get(i+1);
-      // Kijk niet naar pion zetten. Enkel bij andere stukken kunnen er 2 naar
-      // hetzelfde veld gaan. Uitgezonderd bij een slagzet van een pion maar
-      // die zijn door de normale notatie al 'uniek'.
-      if (zet1.getStuk() != ' '
-          && zet1.getNaar() == zet2.getNaar()
-          && zet1.getStuk() == zet2.getStuk()) {
-        if (CaissaUtils.internToExtern(zet1.getVan()).charAt(0) !=
-            CaissaUtils.internToExtern(zet2.getVan()).charAt(0)) {
-          zet1.setKorteNotatieLevel(1);
-          zet2.setKorteNotatieLevel(1);
-        } else {
-          zet1.setKorteNotatieLevel(2);
-          zet2.setKorteNotatieLevel(2);
-        }
-        zetten.remove(i);
-        zetten.add(i, zet1);
-        zetten.remove(i+1);
-        zetten.add(i+1, zet2);
-      }
-    }
+    maakUniekeKorteNotatie();
   }
 
   public int getAantalZetten() {
@@ -275,6 +263,36 @@ public class Zettengenerator {
     zetten.forEach(zet -> zetMap.put(zet.getZet(), zet));
 
     return new LinkedList<>(zetMap.values());
+  }
+
+  private boolean kanRokeren(int koning, int toren) {
+    if (aangevallen(koning)) {
+      return false;
+    }
+
+    var max     = Math.max(koning, toren);
+    var min     = Math.min(koning, toren);
+    var rokade  = true;
+
+    for (var i = min+1; i < max; i++) {
+      if (bord[i] != 0) {
+        rokade  = false;
+      }
+    }
+
+    if (min == koning) {
+      max = 27;
+    } else {
+      max = koning;
+      min = 23;
+    }
+    for (var i = min; i < max+1; i++) {
+      if (aangevallen(i)) {
+        rokade  = false;
+      }
+    }
+
+    return rokade;
   }
 
   private void koningZet(int veld) {
@@ -312,6 +330,31 @@ public class Zettengenerator {
         addZet(stuk, van, naar, stukNaar);
       }
       zetTerug(van, naar, stukNaar);
+    }
+  }
+
+  private void maakUniekeKorteNotatie() {
+    Collections.sort(zetten);
+    for (var i = 0; i < zetten.size()-1; i++) {
+      var zet1  = zetten.get(i);
+      var zet2  = zetten.get(i+1);
+      // Kijk niet naar pion zetten. Enkel bij andere stukken kunnen er 2 naar
+      // hetzelfde veld gaan. Uitgezonderd bij een slagzet van een pion maar
+      // die zijn door de normale notatie al 'uniek'.
+      if (zet1.getStuk() != ' '
+          && zet1.getNaar() == zet2.getNaar()
+          && zet1.getStuk() == zet2.getStuk()) {
+        if (CaissaUtils.internToExtern(zet1.getVan()).charAt(0) !=
+            CaissaUtils.internToExtern(zet2.getVan()).charAt(0)) {
+          zet1.setKorteNotatieLevel(1);
+          zet2.setKorteNotatieLevel(1);
+        } else {
+          zet1.setKorteNotatieLevel(2);
+          zet2.setKorteNotatieLevel(2);
+        }
+        zetten.set(i, zet1);
+        zetten.set(i+1, zet2);
+      }
     }
   }
 
@@ -398,29 +441,20 @@ public class Zettengenerator {
     }
   }
 
-  private void rochade() {
-    if (bord[25] == CaissaConstants.KONING
-        && bord[26] == 0
-        && bord[27] == 0
-        && bord[28] == CaissaConstants.TOREN
-        && korteRochade) {
-      if (!aangevallen(25)
-          && !aangevallen(26)
-          && !aangevallen(27)) {
-        addZet('K', 25, 27, 0);
-      }
+  private void rokade() {
+    if (!korteRokade
+        && !langeRokade) {
+      return;
     }
-    if (bord[25] == CaissaConstants.KONING
-        && bord[24] == 0
-        && bord[23] == 0
-        && bord[22] == 0
-        && bord[21] == CaissaConstants.TOREN
-        && langeRochade) {
-      if (!aangevallen(25)
-          && !aangevallen(24)
-          && !aangevallen(23)) {
-        addZet('K', 25, 23, 0);
-      }
+
+    if (korteRokade
+        && kanRokeren(koning, kortetoren)) {
+        addZet('K', koning, 27, 0);
+    }
+
+    if (langeRokade
+        && kanRokeren(koning, langetoren)) {
+        addZet('K', koning, 23, 0);
     }
   }
 

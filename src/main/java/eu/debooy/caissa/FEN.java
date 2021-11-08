@@ -17,7 +17,6 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
-import eu.debooy.doosutils.DoosConstants;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -74,18 +73,23 @@ public class FEN implements Serializable {
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
-  private       Boolean witKorteRochade   = true;
-  private       Boolean witLangeRochade   = true;
-  private       Boolean zwartKorteRochade = true;
-  private       Boolean zwartLangeRochade = true;
   private       char    aanZet            = 'w';
   private final int[]   bord              = new int[120];
-  private       Integer halvezetten       = 0;
-  private       Integer zetnummer         = 1;
   private       String  enPassant         = "-";
+  private final String  eol               = System.lineSeparator();
+  private       Integer halvezetten       = 0;
+  private       char    kortetoren;
+  private       char    langetoren;
   private       String  positie           = BEGINSTELLING;
+  private       Boolean witKorteRochade   = true;
+  private       Boolean witLangeRochade   = true;
+  private       Integer zetnummer         = 1;
+  private       Boolean zwartKorteRochade = true;
+  private       Boolean zwartLangeRochade = true;
 
   public FEN() {
+    kortetoren  = 'h';
+    langetoren  = 'a';
     positieToBord();
   }
 
@@ -99,6 +103,9 @@ public class FEN implements Serializable {
     enPassant   = veld[3];
     halvezetten = Integer.valueOf(veld[4]);
     zetnummer   = Integer.valueOf(veld[5]);
+
+    kortetoren  = 'h';
+    langetoren  = 'a';
   }
 
   private void aanZetWit(int veldVan, int veldNaar, int stukVan) {
@@ -345,8 +352,16 @@ public class FEN implements Serializable {
     return witKorteRochade;
   }
 
+  public String getWitKorteToren() {
+    return kortetoren + "1";
+  }
+
   public Boolean getWitLangeRochade() {
     return witLangeRochade;
+  }
+
+  public String getWitLangeToren() {
+    return langetoren + "1";
   }
 
   public Integer getZetnummer() {
@@ -357,8 +372,16 @@ public class FEN implements Serializable {
     return zwartKorteRochade;
   }
 
+  public String getZwartKorteToren() {
+    return kortetoren + "8";
+  }
+
   public Boolean getZwartLangeRochade() {
     return zwartLangeRochade;
+  }
+
+  public String getZwartLangeToren() {
+    return langetoren + "8";
   }
 
   @Override
@@ -404,9 +427,9 @@ public class FEN implements Serializable {
       for (var j = 1; j < 9; j++) {
         internBord.append(CaissaUtils.getStuk(bord[(i * 10 + j)]));
       }
-      internBord.append(DoosConstants.EOL);
+      internBord.append(eol);
     }
-    internBord.append("  ABCDEFGH").append(DoosConstants.EOL);
+    internBord.append("  ABCDEFGH").append(eol);
 
     return internBord.toString();
   }

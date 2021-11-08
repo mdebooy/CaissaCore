@@ -28,30 +28,48 @@ public class ZettengeneratorTest extends TestCase {
   @Test
   public void testBeginstand() throws CaissaException {
     var zetten  = new Zettengenerator(new FEN());
+
     assertEquals(20, zetten.getAantalZetten());
+    assertEquals(20, zetten.getZetten().size());
   }
 
   @Test
   public void testPromotie() throws CaissaException {
     var zetten  = new Zettengenerator(new FEN("4k3/P7/8/8/8/8/8/4K3 w - - 0 1"));
+
     assertEquals(9, zetten.getAantalZetten());
+    assertEquals(9, zetten.getZetten().size());
   }
 
   @Test
   public void testRochade1() throws CaissaException {
     var zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b KQkq - 0 1"));
+
     assertEquals(28, zetten.getAantalZetten());
+    assertEquals(28, zetten.getZetten().size());
   }
 
   @Test
   public void testRochade2() throws CaissaException {
     var zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b kq - 0 1"));
+
     assertEquals(28, zetten.getAantalZetten());
+    assertEquals(28, zetten.getZetten().size());
   }
 
   @Test
   public void testRochade3() throws CaissaException {
     var zetten  = new Zettengenerator(new FEN("r3k2r/8/8/1p6/2P5/8/8/R3K2R b - - 0 1"));
+
     assertEquals(26, zetten.getAantalZetten());
+    assertEquals(26, zetten.getZetten().size());
+  }
+
+  @Test
+  public void testNotatielevel() throws CaissaException {
+    var zetten    = new Zettengenerator(new FEN("k3b3/1n5p/3N1N2/2N1R1N1/1R1R1R2/2N1R1N1/3N1N2/K3R3 w - - 0 1"));
+
+    assertEquals(93, zetten.getAantalZetten());
+    assertEquals(88, zetten.getZetten().size());
   }
 }
