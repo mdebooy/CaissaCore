@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +52,8 @@ public class PGNTest extends BatchTest {
   public static void afterClass() {
     verwijderBestanden(TEMP + File.separator,
                        new String[] {TestConstants.BST_COMMENTAAR_PGN,
+                                     TestConstants.BST_DEFAULT_PGN,
+                                     TestConstants.BST_EVENT_PGN,
                                      TestConstants.BST_TEST_PGN});
   }
 
@@ -65,6 +66,12 @@ public class PGNTest extends BatchTest {
       kopieerBestand(CLASSLOADER,
                      TestConstants.BST_COMMENTAAR_PGN,
                      TEMP + File.separator + TestConstants.BST_COMMENTAAR_PGN);
+      kopieerBestand(CLASSLOADER,
+                     TestConstants.BST_DEFAULT_PGN,
+                     TEMP + File.separator + TestConstants.BST_DEFAULT_PGN);
+      kopieerBestand(CLASSLOADER,
+                     TestConstants.BST_EVENT_PGN,
+                     TEMP + File.separator + TestConstants.BST_EVENT_PGN);
       kopieerBestand(CLASSLOADER,
                      TestConstants.BST_TEST_PGN,
                      TEMP + File.separator + TestConstants.BST_TEST_PGN);
@@ -208,25 +215,34 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
-  public void testDefaultSort() throws PgnException {
-    List<PGN> partijen    = new ArrayList<>();
-    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
-                                                + TestConstants.BST_TEST_PGN));
-    Collections.sort(partijen);
-    var       partijTabel = partijen.toArray(new PGN[partijen.size()]);
-    for (var i = 0; i < partijen.size()-1; i++) {
-      assertTrue(partijTabel[i].compareTo(partijTabel[i+1]) < 0);
-    }
-  }
-
-  @Test
   public void testSortByEvent() throws PgnException {
     Collection<PGN> partijen    = new TreeSet<>(new PGN.ByEventComparator());
     partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
                                                 + TestConstants.BST_TEST_PGN));
     var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
-    for (var i = 0; i < partijen.size()-1; i++) {
-      assertTrue(partijTabel[i].compareTo(partijTabel[i+1]) < 0);
+    var             controle    =
+        CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                    + TestConstants.BST_EVENT_PGN);
+    var             i           = 0;
+    for (var partij : controle) {
+      assertEquals(partij.toString(), partijTabel[i].toString());
+      i++;
+    }
+  }
+
+  @Test
+  public void testSortDefault() throws PgnException {
+    Collection<PGN> partijen    = new TreeSet<>(new PGN.DefaultComparator());
+    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                                + TestConstants.BST_TEST_PGN));
+    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    var             controle    =
+        CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                    + TestConstants.BST_DEFAULT_PGN);
+    var             i           = 0;
+    for (var partij : controle) {
+      assertEquals(partij.toString(), partijTabel[i].toString());
+      i++;
     }
   }
 }

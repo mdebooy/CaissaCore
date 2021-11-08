@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -148,52 +149,25 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     @Override
     public int compare(PGN pgn1, PGN pgn2) {
-      // 1e sleutel
-      var diff    = pgn1.getTag(CaissaConstants.PGNTAG_EVENT)
-                        .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_EVENT));
-      if (diff != 0) {
-        return diff;
-      }
-      // 2e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_SITE)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_SITE));
-      if (diff != 0) {
-        return diff;
-      }
-      // 3e sleutel
-      var round1  = new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND));
-      var round2  = new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND));
-      diff  = round1.compareTo(round2);
-      if (diff != 0) {
-        return diff;
-      }
-      // 4e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_DATE).replace('?', '0')
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_DATE)
-                                 .replace('?', '0'));
-      if (diff != 0) {
-        return diff;
-      }
-      // 5e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_WHITE)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_WHITE));
-      if (diff != 0) {
-        return diff;
-      }
-      // 6e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_BLACK)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_BLACK));
-      if (diff != 0) {
-        return diff;
-      }
-      // 7e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_RESULT)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_RESULT));
-      if (diff != 0) {
-        return diff;
-      }
-      // 8e sleutel
-      return pgn1.getZetten().compareTo(pgn2.getZetten());
+      return new CompareToBuilder()
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_EVENT),
+                            pgn2.getTag(CaissaConstants.PGNTAG_EVENT))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_SITE),
+                            pgn2.getTag(CaissaConstants.PGNTAG_SITE))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_ROUND),
+                            pgn2.getTag(CaissaConstants.PGNTAG_ROUND))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_DATE)
+                                .replace('?', '0'),
+                            pgn2.getTag(CaissaConstants.PGNTAG_DATE)
+                                .replace('?', '0'))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_WHITE),
+                            pgn2.getTag(CaissaConstants.PGNTAG_WHITE))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_BLACK),
+                            pgn2.getTag(CaissaConstants.PGNTAG_BLACK))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_RESULT),
+                            pgn2.getTag(CaissaConstants.PGNTAG_RESULT))
+                    .append(pgn1.getZetten(), pgn2.getZetten())
+                              .toComparison();
     }
   }
 
@@ -203,53 +177,25 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     @Override
     public int compare(PGN pgn1, PGN pgn2) {
-      // 1e sleutel
-      var diff    = pgn1.getTag(CaissaConstants.PGNTAG_DATE)
-                        .replace('?', '0')
-                        .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_DATE)
-                                       .replace('?', '0'));
-      if (diff != 0) {
-        return diff;
-      }
-      // 2e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_EVENT)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_EVENT));
-      if (diff != 0) {
-        return diff;
-      }
-      // 3e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_SITE)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_SITE));
-      if (diff != 0) {
-        return diff;
-      }
-      // 4e sleutel
-      var round1  = new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND));
-      var round2  = new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND));
-      diff  = round1.compareTo(round2);
-      if (diff != 0) {
-        return diff;
-      }
-      // 5e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_WHITE)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_WHITE));
-      if (diff != 0) {
-        return diff;
-      }
-      // 6e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_BLACK)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_BLACK));
-      if (diff != 0) {
-        return diff;
-      }
-      // 7e sleutel
-      diff  = pgn1.getTag(CaissaConstants.PGNTAG_RESULT)
-                  .compareTo(pgn2.getTag(CaissaConstants.PGNTAG_RESULT));
-      if (diff != 0) {
-        return diff;
-      }
-      // 8e sleutel
-      return pgn1.getZetten().compareTo(pgn2.getZetten());
+      return new CompareToBuilder()
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_DATE)
+                                .replace('?', '0'),
+                            pgn2.getTag(CaissaConstants.PGNTAG_DATE)
+                                .replace('?', '0'))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_EVENT),
+                            pgn2.getTag(CaissaConstants.PGNTAG_EVENT))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_SITE),
+                            pgn2.getTag(CaissaConstants.PGNTAG_SITE))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_ROUND),
+                            pgn2.getTag(CaissaConstants.PGNTAG_ROUND))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_WHITE),
+                            pgn2.getTag(CaissaConstants.PGNTAG_WHITE))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_BLACK),
+                            pgn2.getTag(CaissaConstants.PGNTAG_BLACK))
+                    .append(pgn1.getTag(CaissaConstants.PGNTAG_RESULT),
+                            pgn2.getTag(CaissaConstants.PGNTAG_RESULT))
+                    .append(pgn1.getZetten(), pgn2.getZetten())
+                              .toComparison();
     }
   }
 
