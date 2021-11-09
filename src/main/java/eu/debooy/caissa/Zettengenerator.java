@@ -18,7 +18,6 @@
 package eu.debooy.caissa;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -239,7 +238,7 @@ public class Zettengenerator {
       rokade();
     }
 
-    maakUniekeKorteNotatie();
+    CaissaUtils.maakUniek(zetten);
   }
 
   public int getAantalZetten() {
@@ -330,31 +329,6 @@ public class Zettengenerator {
         addZet(stuk, van, naar, stukNaar);
       }
       zetTerug(van, naar, stukNaar);
-    }
-  }
-
-  private void maakUniekeKorteNotatie() {
-    Collections.sort(zetten);
-    for (var i = 0; i < zetten.size()-1; i++) {
-      var zet1  = zetten.get(i);
-      var zet2  = zetten.get(i+1);
-      // Kijk niet naar pion zetten. Enkel bij andere stukken kunnen er 2 naar
-      // hetzelfde veld gaan. Uitgezonderd bij een slagzet van een pion maar
-      // die zijn door de normale notatie al 'uniek'.
-      if (zet1.getStuk() != ' '
-          && zet1.getNaar() == zet2.getNaar()
-          && zet1.getStuk() == zet2.getStuk()) {
-        if (CaissaUtils.internToExtern(zet1.getVan()).charAt(0) !=
-            CaissaUtils.internToExtern(zet2.getVan()).charAt(0)) {
-          zet1.setKorteNotatieLevel(1);
-          zet2.setKorteNotatieLevel(1);
-        } else {
-          zet1.setKorteNotatieLevel(2);
-          zet2.setKorteNotatieLevel(2);
-        }
-        zetten.set(i, zet1);
-        zetten.set(i+1, zet2);
-      }
     }
   }
 

@@ -368,29 +368,32 @@ public final class CaissaUtils {
 
   public static void maakUniek(List<Zet> zetten) {
     Map<String, List<Zet>>  uniekeZetten  = new HashMap<>();
+    List<Zet>               gelijk;
 
-    zetten.forEach(zet -> {
+    for (var zet : zetten) {
       var       korteNotatie  = zet.getZet();
-      List<Zet> gelijk        = new LinkedList<>();
       if (uniekeZetten.containsKey(korteNotatie)) {
         gelijk  = uniekeZetten.get(korteNotatie);
+      } else {
+        gelijk        = new LinkedList<>();
       }
       gelijk.add(zet);
       uniekeZetten.put(korteNotatie, gelijk);
-    });
+    }
 
     if (zetten.size() == uniekeZetten.size()) {
       return;
     }
 
     // Zet de KorteNotatie 'niveau' 1 hoger.
-    for (List<Zet> lijst: uniekeZetten.values()) {
-      if (lijst.size() > 1) {
-        zetten.forEach(zet ->
-            zet.setKorteNotatieLevel(zet.getKorteNotatieLevel()+1));
-      }
-      maakUniek(lijst);
-    }
+    uniekeZetten.values()
+                .stream()
+                .filter(lijst -> (lijst.size() > 1))
+                .forEachOrdered(lijst ->
+      lijst.forEach(zet ->
+          zet.setKorteNotatieLevel(zet.getKorteNotatieLevel()+1)));
+
+    maakUniek(zetten);
   }
 
   public static String pgnZettenToChessTheatre(String pgnZetten)

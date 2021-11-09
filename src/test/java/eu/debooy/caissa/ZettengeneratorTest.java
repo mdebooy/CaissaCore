@@ -70,6 +70,6 @@ public class ZettengeneratorTest extends TestCase {
     var zetten    = new Zettengenerator(new FEN("k3b3/1n5p/3N1N2/2N1R1N1/1R1R1R2/2N1R1N1/3N1N2/K3R3 w - - 0 1"));
 
     assertEquals(93, zetten.getAantalZetten());
-    assertEquals(88, zetten.getZetten().size());
+    assertEquals(93, zetten.getZetten().size());
   }
 }
