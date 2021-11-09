@@ -122,18 +122,17 @@ public class Partij implements Comparable<Partij> {
 
   @Override
   public String toString() {
-    var result  = new StringBuilder();
-    result.append("Partij data (")
-          .append("ronde: [").append(ronde.getRound()).append("], ")
-          .append("witspeler: ")
-          .append(witspeler.getVolledigenaam()).append(", ")
-          .append("zwartspeler: ")
-          .append(zwartspeler.getVolledigenaam()).append(", ")
-          .append("uitslag: ").append(getUitslag()).append(", ")
-          .append("bye: ").append(isBye()).append(", ")
-          .append("forfait: ").append(isForfait()).append(", ")
-          .append("ranked: ").append(isRanked()).append(")");
-
-    return result.toString();
+    return new StringBuilder()
+        .append("Partij data (")
+        .append("ronde: [")
+        .append(ronde.getRound()).append("], ")
+        .append("witspeler: ")
+        .append(witspeler.getVolledigenaam()).append(", ")
+        .append("zwartspeler: ")
+        .append(zwartspeler.getVolledigenaam()).append(", ")
+        .append("uitslag: ").append(getUitslag()).append(", ")
+        .append("bye: ").append(isBye()).append(", ")
+        .append("forfait: ").append(isForfait()).append(", ")
+        .append("ranked: ").append(isRanked()).append(")").toString();
   }
 }
