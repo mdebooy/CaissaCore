@@ -17,6 +17,7 @@
 package eu.debooy.caissa;
 
 import eu.debooy.doosutils.DoosConstants;
+import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
@@ -33,6 +34,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Integer elo;
   private Integer elogroei;
   private String  email;
+  private Boolean heenronde     = true;
   private Date    laatstePartij;
   private String  landKode;
   private Date    maxDatum;
@@ -44,6 +46,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Integer partijen      = 0;
   private Double  punten        = 0.0;
   private Integer spelerId;
+  private Boolean terugronde    = true;
   private Double  tieBreakScore = 0.0;
 
   public Spelerinfo() {}
@@ -242,6 +245,14 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return spelerId.hashCode();
   }
 
+  public Boolean inHeenronde() {
+    return heenronde;
+  }
+
+  public Boolean inTerugronde() {
+    return terugronde;
+  }
+
   public void setAlias(String alias) {
     this.alias = alias;
   }
@@ -264,6 +275,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public void setHeenronde(Boolean heenronde) {
+    this.heenronde  = heenronde;
   }
 
   public void setLaatstePartij(Date laatstePartij) {
@@ -303,7 +318,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public void setNaam(String naam) {
-    this.naam = naam;
+    this.naam = DoosUtils.nullToEmpty(naam);
   }
 
   public void setOfficieel(Date officieel) {
@@ -315,31 +330,49 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public void setPartijen(Integer partijen) {
-    this.partijen = partijen;
+    if (null == partijen) {
+      this.partijen = 0;
+    } else {
+      this.partijen = partijen;
+    }
   }
 
   public void setPunten(Double punten) {
-    this.punten = punten;
+    if (null == punten) {
+      this.punten = 0.0d;
+    } else {
+      this.punten = punten;
+    }
   }
 
   public void setSpelerId(Integer spelerId) {
     this.spelerId = spelerId;
   }
 
+  public void setTerugronde(Boolean terugronde) {
+    this.terugronde  = terugronde;
+  }
+
   public void setTieBreakScore(Double tieBreakScore) {
-    this.tieBreakScore  = tieBreakScore;
+    if (null == tieBreakScore) {
+      this.tieBreakScore  = 0.0d;
+    } else {
+      this.tieBreakScore  = tieBreakScore;
+    }
   }
 
   @Override
   public String toString() {
-    return new StringBuilder().append(spelerId).append(" - ")
-                              .append(naam).append(" - ")
-                              .append(landKode).append(" - ")
-                              .append(elo).append(" - ")
-                              .append(punten).append(" - ")
-                              .append(partijen).append(" - ")
-                              .append(tieBreakScore).append(" - ")
-                              .append(alias).append(" - ")
-                              .append(email).toString();
+    return new StringBuilder()
+        .append("Spelerinfo data (")
+        .append("SpelerID: ").append(spelerId).append(", ")
+        .append("naam: [").append(naam).append("], ")
+        .append("landkode: ").append(landKode).append(", ")
+        .append("ELO: ").append(elo).append(", ")
+        .append("punten: ").append(punten).append(", ")
+        .append("partijen: ").append(partijen).append(", ")
+        .append("tieBreakScore: ").append(tieBreakScore).append(", ")
+        .append("alias: ").append(alias).append(", ")
+        .append("email: ").append(email).append(")").toString();
   }
 }
