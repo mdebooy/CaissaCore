@@ -199,15 +199,14 @@ public class Zet implements Comparable<Object>, Serializable {
 
   @Override
   public boolean equals(Object obj) {
+    if (!(obj instanceof Zet)) {
+      return false;
+    }
+
     if (this == obj) {
       return true;
     }
-    if (!super.equals(obj)) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
+
     final Zet other = (Zet) obj;
     return !(van != other.van || naar != other.naar
              || promotieStuk != other.promotieStuk);
