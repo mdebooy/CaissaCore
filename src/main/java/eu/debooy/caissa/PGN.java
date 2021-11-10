@@ -154,8 +154,9 @@ public class PGN implements Comparable<PGN>, Serializable {
                             pgn2.getTag(CaissaConstants.PGNTAG_EVENT))
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_SITE),
                             pgn2.getTag(CaissaConstants.PGNTAG_SITE))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_ROUND),
-                            pgn2.getTag(CaissaConstants.PGNTAG_ROUND))
+                    .append(
+                        new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND)),
+                        new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND)))
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_DATE)
                                 .replace('?', '0'),
                             pgn2.getTag(CaissaConstants.PGNTAG_DATE)
@@ -167,7 +168,7 @@ public class PGN implements Comparable<PGN>, Serializable {
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_RESULT),
                             pgn2.getTag(CaissaConstants.PGNTAG_RESULT))
                     .append(pgn1.getZetten(), pgn2.getZetten())
-                              .toComparison();
+                    .toComparison();
     }
   }
 
@@ -186,8 +187,9 @@ public class PGN implements Comparable<PGN>, Serializable {
                             pgn2.getTag(CaissaConstants.PGNTAG_EVENT))
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_SITE),
                             pgn2.getTag(CaissaConstants.PGNTAG_SITE))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_ROUND),
-                            pgn2.getTag(CaissaConstants.PGNTAG_ROUND))
+                    .append(
+                        new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND)),
+                        new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND)))
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_WHITE),
                             pgn2.getTag(CaissaConstants.PGNTAG_WHITE))
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_BLACK),
@@ -195,7 +197,7 @@ public class PGN implements Comparable<PGN>, Serializable {
                     .append(pgn1.getTag(CaissaConstants.PGNTAG_RESULT),
                             pgn2.getTag(CaissaConstants.PGNTAG_RESULT))
                     .append(pgn1.getZetten(), pgn2.getZetten())
-                              .toComparison();
+                    .toComparison();
     }
   }
 
