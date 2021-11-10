@@ -16,14 +16,21 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
-import junit.framework.TestCase;
+import eu.debooy.doosutils.exception.BestandException;
+import eu.debooy.doosutils.test.BatchTest;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 /**
  * @author Marco de Booij
  */
-public class FENTest extends TestCase {
+public class FENTest extends BatchTest {
   public static final String  FEN_1E2E4  =
       "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
   public static final String  FEN_1E7E5  =
@@ -34,11 +41,92 @@ public class FENTest extends TestCase {
       "rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3";
   public static final String  FEN_3D2D4  =
       "rnbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3 0 3";
+  public static final String  FEN_FOUT   =
+      "1nbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3 0 3";
 
   private FEN fen;
 
+  @BeforeClass
+  public static void beforeClass() throws BestandException {
+    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
+    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+                                                Locale.getDefault());
+  }
+
   @Test
-  public void testRochade() {
+  public void testGeefZet1() {
+    fen = new FEN();
+    Zet e2e4    = new Zet(' ', 35, 55);
+    FEN fenE2e4 = new FEN(FEN_1E2E4);
+
+    Zet zet;
+    try {
+      zet = fen.geefZet(fenE2e4);
+      assertEquals(e2e4, zet);
+    } catch (FenException e) {
+      fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testGeefZet2() {
+    fen = new FEN();
+    Zet e2e4    = new Zet(' ', 35, 55);
+    FEN fenE2e4 = new FEN(FEN_1E2E4);
+
+    Zet zet;
+    try {
+      zet = fenE2e4.geefZet(fen);
+      assertEquals(e2e4, zet);
+    } catch (FenException e) {
+      fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testGeefZet3() {
+    fen = new FEN();
+    FEN fen2Ke8e7 = new FEN(FEN_2KE8E7);
+
+    try {
+      var zet = fen2Ke8e7.geefZet(fen);
+      fail("Er had een FenException moeten wezen.");
+    } catch (FenException e) {
+      assertEquals(resourceBundle.getString(FEN.ERR_ZET),
+                   e.getMessage());
+    }
+  }
+
+  @Test
+  public void testGeefZet4() {
+    fen = new FEN();
+    FEN fen3d2d4 = new FEN(FEN_3D2D4);
+
+    try {
+      var zet = fen3d2d4.geefZet(fen);
+      fail("Er had een FenException moeten wezen.");
+    } catch (FenException e) {
+      assertEquals(resourceBundle.getString(FEN.ERR_ZET),
+                   e.getMessage());
+    }
+  }
+
+  @Test
+  public void testGeefZet5() {
+    fen = new FEN();
+    FEN fenFout = new FEN(FEN_FOUT);
+
+    try {
+      var zet = fenFout.geefZet(fen);
+      fail("Er had een FenException moeten wezen.");
+    } catch (FenException e) {
+      assertEquals(resourceBundle.getString(FEN.ERR_ZET),
+                   e.getMessage());
+    }
+  }
+
+  @Test
+  public void testRokade() {
     fen = new FEN();
 
     assertTrue(fen.getWitKorteRochade());

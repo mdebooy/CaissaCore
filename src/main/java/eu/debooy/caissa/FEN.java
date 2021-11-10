@@ -19,6 +19,7 @@ package eu.debooy.caissa;
 import eu.debooy.caissa.exceptions.FenException;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -67,8 +68,9 @@ public class FEN implements Serializable {
   private static final String  BEGINSTELLING  =
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-  private static final String  ERR_AANZET     = "fen.aanzet.incorrect";
-  private static final String  ERR_ENPASSANT  = "fen.ep.incorrect";
+  public  static final String  ERR_AANZET     = "fen.aanzet.incorrect";
+  public  static final String  ERR_ENPASSANT  = "fen.ep.incorrect";
+  public  static final String  ERR_ZET        = "fen.zet.incorrect";
 
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
@@ -78,8 +80,8 @@ public class FEN implements Serializable {
   private       String  enPassant         = "-";
   private final String  eol               = System.lineSeparator();
   private       Integer halvezetten       = 0;
-  private       char    kortetoren;
-  private       char    langetoren;
+  private final char    kortetoren;
+  private final char    langetoren;
   private       String  positie           = BEGINSTELLING;
   private       Boolean witKorteRochade   = true;
   private       Boolean witLangeRochade   = true;
@@ -261,13 +263,39 @@ public class FEN implements Serializable {
     return getFen().equals(other.getFen());
   }
 
-  //TODO Werk uit.
-  public Zet geefZet(FEN fen) {
-    if (this.equals(fen)) {
-      return new Zet();
+  public Zet geefZet(FEN fen) throws FenException {
+    if (aanZet == fen.getAanZet()) {
+      throw new FenException(resourceBundle.getString(ERR_ZET));
     }
 
-    return null;
+    String    beginstelling;
+    String    eindstelling;
+    List<Zet> zetten;
+    if (aanZet == 'w'
+        && zetnummer.equals(fen.zetnummer)) {
+      zetten  = new Zettengenerator(new FEN(getFen())).getZetten();
+      beginstelling = getFen();
+      eindstelling  = fen.getFen();
+    } else {
+      zetten  = new Zettengenerator(fen).getZetten();
+      beginstelling = fen.getFen();
+      eindstelling  = getFen();
+    }
+
+    Zet gevondenzet = null;
+    for (var zet: zetten) {
+      var stelling  = new FEN(beginstelling);
+      stelling.doeZet(zet);
+      if (eindstelling.equals(stelling.getFen())) {
+        gevondenzet = zet;
+      }
+    }
+
+    if (null == gevondenzet) {
+      throw new FenException(resourceBundle.getString(ERR_ZET));
+    }
+
+    return gevondenzet;
   }
 
   public char getAanZet() {
