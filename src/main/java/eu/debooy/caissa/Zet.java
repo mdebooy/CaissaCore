@@ -21,6 +21,7 @@ import eu.debooy.doosutils.DoosConstants;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
@@ -208,8 +209,10 @@ public class Zet implements Comparable<Object>, Serializable {
     }
 
     final Zet other = (Zet) obj;
-    return !(van != other.van || naar != other.naar
-             || promotieStuk != other.promotieStuk);
+    return new EqualsBuilder().append(van, other.van)
+                              .append(naar, other.naar)
+                              .append(promotieStuk, other.promotieStuk)
+                              .isEquals();
   }
 
   public String getChessTheatreZet() {
