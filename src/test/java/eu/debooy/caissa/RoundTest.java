@@ -78,7 +78,7 @@ public class RoundTest extends TestCase {
   }
 
   @Test
-  public void testGet() {
+  public void testGetRound() {
     var round = new Round("1");
 
     assertEquals("1", round.getRound());
@@ -92,119 +92,7 @@ public class RoundTest extends TestCase {
   }
 
   @Test
-  public void testSort1() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1");
-    round2.setRound("2");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort2() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1.1");
-    round2.setRound("1.2");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort3() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1.1");
-    round2.setRound("1.1.1");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort4() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1.0.1");
-    round2.setRound("1.1");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort5() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("-");
-    round2.setRound("?");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort6() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1");
-    round2.setRound("?");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort7() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1");
-    round2.setRound("-");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSort8() {
-    var round1  = new Round();
-    var round2  = new Round();
-
-    round1.setRound("1.-");
-    round2.setRound("1.?");
-    var rounds  = new Round[]{round2, round1};
-
-    Arrays.sort(rounds);
-
-    assertTrue(rounds[0].compareTo(rounds[1]) <= 0);
-  }
-
-  @Test
-  public void testSet() {
+  public void testSetRound() {
     var round = new Round();
 
     round.setRound("1");
@@ -212,6 +100,55 @@ public class RoundTest extends TestCase {
 
     round.setRound("?");
     assertEquals("?", round.getRound());
+  }
+
+  public void testSort(String round1, String round2) {
+    var rounds  = new Round[]{new Round(round2), new Round(round1)};
+
+    Arrays.sort(rounds);
+
+    assertEquals(round1, rounds[0].getRound());
+    assertEquals(round2, rounds[1].getRound());
+  }
+
+  @Test
+  public void testSort1() {
+    testSort("1", "2");
+  }
+
+  @Test
+  public void testSort2() {
+    testSort("1.1", "1.2");
+  }
+
+  @Test
+  public void testSort3() {
+    testSort("1.1", "1.1.1");
+  }
+
+  @Test
+  public void testSort4() {
+    testSort("1.0.1", "1.1");
+  }
+
+  @Test
+  public void testSort5() {
+    testSort("?", "-");
+  }
+
+  @Test
+  public void testSort6() {
+    testSort("?", "1");
+  }
+
+  @Test
+  public void testSort7() {
+    testSort("-", "1");
+  }
+
+  @Test
+  public void testSort8() {
+    testSort("1.?", "1.-");
   }
 
   @Test
