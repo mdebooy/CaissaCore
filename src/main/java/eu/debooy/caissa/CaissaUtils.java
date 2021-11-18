@@ -134,26 +134,26 @@ public final class CaissaUtils {
     return (veld.charAt(0) - 96) + (veld.charAt(1) - 47) * 10;
   }
 
-  public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
-                                                boolean enkel) {
+  private static void genereerRonde(List<Spelerinfo> spelers,
+                                    Set<Partij> schema,
+                                    List<String> heenronde,
+                                    int rondenummer) {
     var                   noSpelers = spelers.size();
     Map<String, Integer>  spelermap = new HashMap<>();
 
     if (noSpelers%2 == 1) {
       var naam  = "bye";
-      noSpelers++;
       var speler  = new Spelerinfo();
       speler.setSpelerId(noSpelers);
       speler.setNaam(naam);
       spelers.add(speler);
-      spelermap.put(naam, noSpelers);
+      spelermap.put(naam, Integer.valueOf(999999));
+      noSpelers++;
     }
 
-    var         rondetabel  = CaissaUtils.bergertabel(noSpelers);
-    Set<Partij> schema      = new TreeSet<>();
-    var         rondenummer = 1;
-    for (String ronde : rondetabel) {
-      var partijen  = ronde.split(" ");
+    var rondetabel  = CaissaUtils.bergertabel(noSpelers);
+    for (var ronde : rondetabel) {
+      var partijen      = ronde.split(" ");
       var noPartijen    = partijen.length - 1;
       var partijnummer  = 1;
       for (var i = noPartijen; i >= 0; i--) {
@@ -161,24 +161,45 @@ public final class CaissaUtils {
         var partij  = new Partij();
         var speler1 = new Spelerinfo(spelers.get(Integer.valueOf(speler[0])-1));
         var speler2 = new Spelerinfo(spelers.get(Integer.valueOf(speler[1])-1));
+        var info    = speler1.getSpelerId() + "-" + speler2.getSpelerId();
         partij.setRonde(rondenummer, partijnummer);
-        partij.setWitspeler(speler1);
-        partij.setZwartspeler(speler2);
-        partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
-        schema.add(partij);
-
-        if (!enkel) {
-          partij  = new Partij();
-          partij.setRonde(rondenummer + noSpelers - 1, partijnummer);
+        if (heenronde.contains(info)) {
           partij.setWitspeler(speler2);
           partij.setZwartspeler(speler1);
-          partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
-          schema.add(partij);
+        } else {
+          partij.setWitspeler(speler1);
+          partij.setZwartspeler(speler2);
+          heenronde.add(info);
         }
+        partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+        schema.add(partij);
         partijnummer++;
       }
       rondenummer++;
     }
+  }
+
+  public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
+                                                boolean enkel) {
+    List<Spelerinfo>  dezeronde = new ArrayList<>();
+    List<String>      heenronde = new ArrayList<>();
+    Set<Partij>       schema    = new TreeSet<>();
+
+    spelers.stream()
+           .filter(speler -> speler.inHeenronde())
+           .forEach(speler -> dezeronde.add(speler));
+    genereerRonde(dezeronde, schema, heenronde, 1);
+
+    if (enkel) {
+      return schema;
+    }
+
+    var rondenummer = dezeronde.size();
+    dezeronde.clear();
+    spelers.stream()
+           .filter(speler -> speler.inTerugronde())
+           .forEach(speler -> dezeronde.add(speler));
+    genereerRonde(dezeronde, schema, heenronde, rondenummer);
 
     return schema;
   }
