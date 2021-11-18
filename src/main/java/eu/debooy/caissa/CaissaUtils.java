@@ -467,11 +467,18 @@ public final class CaissaUtils {
 
   private static void verwerkPartijInMatrix(PGN partij, double[][] matrix,
                                             Spelerinfo[] speler, String[] namen,
-                                            String[] halve, int toernooiType,
-                                            int iteratie, int[] stand) {
+                                            int toernooiType, int iteratie,
+                                            int[] stand) {
     var noSpelers = speler.length;
+    var rondes    = matrix[0].length;
     var wit       = partij.getTag(CaissaConstants.PGNTAG_WHITE);
     var zwart     = partij.getTag(CaissaConstants.PGNTAG_BLACK);
+    var iWit      =
+        stand[Arrays.binarySearch(namen, wit,
+                                  String.CASE_INSENSITIVE_ORDER)];
+    var iZwart    =
+        stand[Arrays.binarySearch(namen, zwart,
+                                  String.CASE_INSENSITIVE_ORDER)];
 
     int ronde;
     try {
@@ -482,18 +489,10 @@ public final class CaissaUtils {
     }
     var uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
     if (ronde > noSpelers
-        && (Arrays.binarySearch(halve, wit,
-                                String.CASE_INSENSITIVE_ORDER) > -1
-            || Arrays.binarySearch(halve, zwart,
-                                   String.CASE_INSENSITIVE_ORDER) > -1)) {
+        && (!speler[iWit].inRonde(ronde, rondes, toernooiType)
+            || !speler[iZwart].inRonde(ronde, rondes, toernooiType))) {
       return;
     }
-    var iWit    =
-        stand[Arrays.binarySearch(namen, wit,
-                                  String.CASE_INSENSITIVE_ORDER)];
-    var iZwart  =
-        stand[Arrays.binarySearch(namen, zwart,
-                                  String.CASE_INSENSITIVE_ORDER)];
     var kolomW  = ronde - 1;
     var kolomZ  = ronde - 1;
     if (toernooiType > 0) {
@@ -510,36 +509,34 @@ public final class CaissaUtils {
         matrix[iWit][kolomW]    =
             Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
         matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
-        if (iteratie == 0) {
-          speler[iWit].addPartij();
-          speler[iWit].addPunt(1.0);
-          speler[iZwart].addPartij();
-        }
+        telPunten(iteratie, speler, iWit, 1.0, iZwart, 0.0);
         break;
       case CaissaConstants.PARTIJ_REMISE:
         matrix[iWit][kolomW]    =
             Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
         matrix[iZwart][kolomZ]  =
             Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
-        if (iteratie == 0) {
-          speler[iWit].addPartij();
-          speler[iWit].addPunt(0.5);
-          speler[iZwart].addPartij();
-          speler[iZwart].addPunt(0.5);
-        }
+        telPunten(iteratie, speler, iWit, 0.5, iZwart, 0.5);
         break;
       case CaissaConstants.PARTIJ_ZWART_WINT:
         matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
         matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
                 + 1.0;
-        if (iteratie == 0) {
-          speler[iWit].addPartij();
-          speler[iZwart].addPartij();
-          speler[iZwart].addPunt(1.0);
-        }
+        telPunten(iteratie, speler, iWit, 0.0, iZwart, 1.0);
         break;
       default:
         break;
+    }
+  }
+
+  private static void telPunten(int iteratie, Spelerinfo[] speler,
+                                int iWit, double pWit,
+                                int iZwart, double pZwart) {
+    if (iteratie == 0) {
+      speler[iWit].addPartij();
+      speler[iWit].addPunt(pWit);
+      speler[iZwart].addPartij();
+      speler[iZwart].addPunt(pZwart);
     }
   }
 
@@ -596,8 +593,8 @@ public final class CaissaUtils {
       for (PGN partij: partijen) {
         if (partij.isRanked()
             && !partij.isBye()) {
-          verwerkPartijInMatrix(partij, matrix, speler, namen, halve,
-                                toernooiType, i, stand);
+          verwerkPartijInMatrix(partij, matrix, speler, namen, toernooiType, i,
+                                stand);
         }
       }
 

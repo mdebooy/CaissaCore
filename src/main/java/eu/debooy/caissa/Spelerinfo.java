@@ -81,10 +81,6 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     }
   }
 
-  /**
-   * Add punt to punten.
-   * @param punt
-   */
   public void addPunt(Double punt) {
     punten += punt;
   }
@@ -247,6 +243,34 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Boolean inHeenronde() {
     return heenronde;
+  }
+
+  /**
+   * De heenronde en terugronde worden genegeerd voor een match.
+   *
+   * @param ronde
+   * @param rondes
+   * @param toernooiType
+   * @return
+   */
+  public boolean inRonde(int ronde, int rondes, int toernooiType) {
+    if (ronde > rondes) {
+      return false;
+    }
+
+    switch (toernooiType) {
+      case CaissaConstants.TOERNOOI_MATCH:
+        return true;
+      case CaissaConstants.TOERNOOI_ENKEL:
+        return inHeenronde();
+      case CaissaConstants.TOERNOOI_DUBBEL:
+        if (ronde*2 > rondes) {
+          return inTerugronde();
+        }
+        return inHeenronde();
+      default:
+        return false;
+    }
   }
 
   public Boolean inTerugronde() {

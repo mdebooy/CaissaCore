@@ -129,10 +129,10 @@ public class FENTest extends BatchTest {
   public void testRokade() {
     fen = new FEN();
 
-    assertTrue(fen.getWitKorteRochade());
-    assertTrue(fen.getWitLangeRochade());
-    assertTrue(fen.getZwartKorteRochade());
-    assertTrue(fen.getZwartLangeRochade());
+    assertTrue(fen.getWitKorteRokade());
+    assertTrue(fen.getWitLangeRokade());
+    assertTrue(fen.getZwartKorteRokade());
+    assertTrue(fen.getZwartLangeRokade());
   }
 
   @Test
@@ -142,8 +142,9 @@ public class FENTest extends BatchTest {
     assertEquals('b', fen.getAanZet());
     assertEquals("e3", fen.getEnPassant());
     assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("KQkq", fen.getRochade());
-    assertEquals("rnbqkbnrpppppppp20P11PPPP1PPPRNBQKBNR", fen.getKortePositie());
+    assertEquals("KQkq", fen.getRokade());
+    assertEquals("rnbqkbnrpppppppp20P11PPPP1PPPRNBQKBNR",
+                 fen.getKortePositie());
     assertEquals(Integer.valueOf(1), fen.getZetnummer());
   }
 
@@ -153,7 +154,7 @@ public class FENTest extends BatchTest {
     fen.doeZet(new Zet(' ', 35, 55));
     assertEquals('b', fen.getAanZet());
     assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("KQkq", fen.getRochade());
+    assertEquals("KQkq", fen.getRokade());
     assertEquals(Integer.valueOf(1), fen.getZetnummer());
     assertEquals(FEN_1E2E4, fen.getFen());
   }
@@ -165,7 +166,7 @@ public class FENTest extends BatchTest {
     assertEquals('w', fen.getAanZet());
     assertEquals("e6", fen.getEnPassant());
     assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("KQkq", fen.getRochade());
+    assertEquals("KQkq", fen.getRokade());
     assertEquals(Integer.valueOf(2), fen.getZetnummer());
     assertEquals(FEN_1E7E5, fen.getFen());
   }
@@ -177,7 +178,7 @@ public class FENTest extends BatchTest {
     assertEquals('b', fen.getAanZet());
     assertEquals("-", fen.getEnPassant());
     assertEquals(Integer.valueOf(1), fen.getHalvezetten());
-    assertEquals("kq", fen.getRochade());
+    assertEquals("kq", fen.getRokade());
     assertEquals(Integer.valueOf(2), fen.getZetnummer());
     assertEquals(FEN_2KE1E2, fen.getFen());
   }
@@ -189,7 +190,7 @@ public class FENTest extends BatchTest {
     assertEquals('w', fen.getAanZet());
     assertEquals("-", fen.getEnPassant());
     assertEquals(Integer.valueOf(2), fen.getHalvezetten());
-    assertEquals("-", fen.getRochade());
+    assertEquals("-", fen.getRokade());
     assertEquals(Integer.valueOf(3), fen.getZetnummer());
     assertEquals(FEN_2KE8E7, fen.getFen());
   }
@@ -201,7 +202,7 @@ public class FENTest extends BatchTest {
     assertEquals('b', fen.getAanZet());
     assertEquals("d3", fen.getEnPassant());
     assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("-", fen.getRochade());
+    assertEquals("-", fen.getRokade());
     assertEquals(Integer.valueOf(3), fen.getZetnummer());
     assertEquals(FEN_3D2D4, fen.getFen());
   }
@@ -217,7 +218,7 @@ public class FENTest extends BatchTest {
     assertEquals('b', fen.getAanZet());
     assertEquals("d3", fen.getEnPassant());
     assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("-", fen.getRochade());
+    assertEquals("-", fen.getRokade());
     assertEquals(Integer.valueOf(3), fen.getZetnummer());
     assertEquals(FEN_3D2D4, fen.getFen());
   }

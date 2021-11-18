@@ -83,11 +83,11 @@ public class FEN implements Serializable {
   private final char    kortetoren;
   private final char    langetoren;
   private       String  positie           = BEGINSTELLING;
-  private       Boolean witKorteRochade   = true;
-  private       Boolean witLangeRochade   = true;
+  private       Boolean witKorteRokade    = true;
+  private       Boolean witLangeRokade    = true;
   private       Integer zetnummer         = 1;
-  private       Boolean zwartKorteRochade = true;
-  private       Boolean zwartLangeRochade = true;
+  private       Boolean zwartKorteRokade  = true;
+  private       Boolean zwartLangeRokade  = true;
 
   public FEN() {
     kortetoren  = 'h';
@@ -101,7 +101,7 @@ public class FEN implements Serializable {
     positie     = veld[0];
     positieToBord();
     aanZet      = veld[1].charAt(0);
-    setRochade(veld[2]);
+    setRokade(veld[2]);
     enPassant   = veld[3];
     halvezetten = Integer.valueOf(veld[4]);
     zetnummer   = Integer.valueOf(veld[5]);
@@ -114,16 +114,16 @@ public class FEN implements Serializable {
     aanZet  = 'b';
     if (veldVan == 21
         && stukVan == CaissaConstants.TOREN) {
-      witLangeRochade = false;
+      witLangeRokade  = false;
     }
     if (veldVan == 25
         && stukVan == CaissaConstants.KONING) {
-      witKorteRochade = false;
-      witLangeRochade = false;
+      witKorteRokade  = false;
+      witLangeRokade  = false;
     }
     if (veldVan == 28
         && stukVan == CaissaConstants.TOREN) {
-      witKorteRochade = false;
+      witKorteRokade  = false;
     }
     // Korte rochade
     if (stukVan == CaissaConstants.KONING
@@ -149,16 +149,16 @@ public class FEN implements Serializable {
     aanZet  = 'w';
     if (veldVan == 91
         && stukVan == CaissaConstants.ZTOREN) {
-      zwartLangeRochade = false;
+      zwartLangeRokade  = false;
     }
     if (veldVan == 95
         && stukVan == CaissaConstants.ZKONING) {
-      zwartKorteRochade = false;
-      zwartLangeRochade = false;
+      zwartKorteRokade  = false;
+      zwartLangeRokade  = false;
     }
     if (veldVan == 98
         && stukVan == CaissaConstants.ZTOREN) {
-      zwartKorteRochade = false;
+      zwartKorteRokade  = false;
     }
     // Korte rochade
     if (stukVan == CaissaConstants.ZKONING
@@ -204,6 +204,19 @@ public class FEN implements Serializable {
       }
     }
     positie = nieuwePositie.toString();
+  }
+
+  private boolean checkEnPassant(String enPassant) {
+    if ("abcdefgh".indexOf(enPassant.charAt(0)) < 0
+        || enPassant.charAt(1) != (aanZet == 'w' ? '6' : '3')) {
+      return false;
+    }
+    int intern  = CaissaUtils.externToIntern(enPassant);
+    int pion    = aanZet == 'w' ? CaissaConstants.ZPION : CaissaConstants.PION;
+    if (bord[intern] != 0) {
+      return false;
+    }
+    return bord[intern + (aanZet == 'w' ? -10 : +10)] == pion;
   }
 
   public void doeEnPassant(int veldVan, int veldNaar, int stukVan) {
@@ -315,7 +328,7 @@ public class FEN implements Serializable {
 
     fen.append(getPositie()).append(" ");
     fen.append(getAanZet()).append(" ");
-    fen.append(getRochade()).append(" ");
+    fen.append(getRokade()).append(" ");
     fen.append(getEnPassant()).append(" ");
     fen.append(getHalvezetten().toString()).append(" ");
     fen.append(getZetnummer().toString());
@@ -354,19 +367,19 @@ public class FEN implements Serializable {
     return positie;
   }
 
-  protected String getRochade() {
+  protected String getRokade() {
     var rochade = new StringBuilder();
 
-    if (Boolean.TRUE.equals(witKorteRochade)) {
+    if (Boolean.TRUE.equals(witKorteRokade)) {
       rochade.append("K");
     }
-    if (Boolean.TRUE.equals(witLangeRochade)) {
+    if (Boolean.TRUE.equals(witLangeRokade)) {
       rochade.append("Q");
     }
-    if (Boolean.TRUE.equals(zwartKorteRochade)) {
+    if (Boolean.TRUE.equals(zwartKorteRokade)) {
       rochade.append("k");
     }
-    if (Boolean.TRUE.equals(zwartLangeRochade)) {
+    if (Boolean.TRUE.equals(zwartLangeRokade)) {
       rochade.append("q");
     }
     if (rochade.length() == 0) {
@@ -376,16 +389,16 @@ public class FEN implements Serializable {
     return rochade.toString();
   }
 
-  public Boolean getWitKorteRochade() {
-    return witKorteRochade;
+  public Boolean getWitKorteRokade() {
+    return witKorteRokade;
   }
 
   public String getWitKorteToren() {
     return kortetoren + "1";
   }
 
-  public Boolean getWitLangeRochade() {
-    return witLangeRochade;
+  public Boolean getWitLangeRokade() {
+    return witLangeRokade;
   }
 
   public String getWitLangeToren() {
@@ -396,16 +409,16 @@ public class FEN implements Serializable {
     return zetnummer;
   }
 
-  public Boolean getZwartKorteRochade() {
-    return zwartKorteRochade;
+  public Boolean getZwartKorteRokade() {
+    return zwartKorteRokade;
   }
 
   public String getZwartKorteToren() {
     return kortetoren + "8";
   }
 
-  public Boolean getZwartLangeRochade() {
-    return zwartLangeRochade;
+  public Boolean getZwartLangeRokade() {
+    return zwartLangeRokade;
   }
 
   public String getZwartLangeToren() {
@@ -484,21 +497,10 @@ public class FEN implements Serializable {
       return;
     }
 
-    if ("abcdefgh".indexOf(enPassant.charAt(0)) < 0) {
+    if (!checkEnPassant(enPassant)) {
       throw new FenException(MessageFormat.format(
           resourceBundle.getString(ERR_ENPASSANT), enPassant));
     }
-    if (aanZet == 'b'
-        && enPassant.charAt(1) != '3') {
-      throw new FenException(MessageFormat.format(
-          resourceBundle.getString(ERR_ENPASSANT), enPassant));
-    }
-    if (aanZet == 'w'
-        && enPassant.charAt(1) != '6') {
-      throw new FenException(MessageFormat.format(
-          resourceBundle.getString(ERR_ENPASSANT), enPassant));
-    }
-    // TODO test of het wel een e.p. pion is.
 
     this.enPassant = enPassant;
   }
@@ -508,7 +510,7 @@ public class FEN implements Serializable {
 
     setPositie(veld[0]);
     setAanZet(veld[1]);
-    setRochade(veld[2]);
+    setRokade(veld[2]);
     setEnPassant(veld[3]);
     setHalvezetten(Integer.valueOf(veld[4]));
     setZetnummer(Integer.valueOf(veld[5]));
@@ -523,32 +525,31 @@ public class FEN implements Serializable {
     positieToBord();
   }
 
-  private void setRochade(String rochade) {
-    // TODO Test de juiste volgorde.
-    witKorteRochade   = rochade.indexOf('K') != -1;
-    witLangeRochade   = rochade.indexOf('Q') != -1;
-    zwartKorteRochade = rochade.indexOf('k') != -1;
-    zwartLangeRochade = rochade.indexOf('q') != -1;
+  private void setRokade(String rokade) {
+    witKorteRokade    = rokade.indexOf('K') != -1;
+    witLangeRokade    = rokade.indexOf('Q') != -1;
+    zwartKorteRokade  = rokade.indexOf('k') != -1;
+    zwartLangeRokade  = rokade.indexOf('q') != -1;
   }
 
-  public void setWitKorteRochade(Boolean witKorteRochade) {
-    this.witKorteRochade = witKorteRochade;
+  public void setWitKorteRokade(Boolean witKorteRokade) {
+    this.witKorteRokade  = witKorteRokade;
   }
 
-  public void setWitLangeRochade(Boolean witLangeRochade) {
-    this.witLangeRochade = witLangeRochade;
+  public void setWitLangeRokade(Boolean witLangeRokade) {
+    this.witLangeRokade  = witLangeRokade;
   }
 
   public void setZetnummer(Integer zetnummer) {
     this.zetnummer = zetnummer;
   }
 
-  public void setZwartKorteRochade(Boolean zwartKorteRochade) {
-    this.zwartKorteRochade = zwartKorteRochade;
+  public void setZwartKorteRokade(Boolean zwartKorteRokade) {
+    this.zwartKorteRokade  = zwartKorteRokade;
   }
 
-  public void setZwartLangeRochade(Boolean zwartLangeRochade) {
-    this.zwartLangeRochade = zwartLangeRochade;
+  public void setZwartLangeRokade(Boolean zwartLangeRokade) {
+    this.zwartLangeRokade  = zwartLangeRokade;
   }
 
   @Override

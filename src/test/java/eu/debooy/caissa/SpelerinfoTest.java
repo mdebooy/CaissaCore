@@ -1008,6 +1008,97 @@ public class SpelerinfoTest extends TestCase {
   }
 
   @Test
+  public void testRonde1() {
+    var spelerinfo    = new Spelerinfo();
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+
+    assertFalse(spelerinfo.inRonde(1, 4, 3));
+    assertFalse(spelerinfo.inRonde(3, 4, 3));
+    assertFalse(spelerinfo.inRonde(5, 4, 3));
+  }
+
+  @Test
+  public void testRonde2() {
+    var spelerinfo    = new Spelerinfo();
+
+    spelerinfo.setHeenronde(false);
+
+    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+
+    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+
+    assertFalse(spelerinfo.inRonde(1, 4, 3));
+    assertFalse(spelerinfo.inRonde(3, 4, 3));
+    assertFalse(spelerinfo.inRonde(5, 4, 3));
+  }
+
+  @Test
+  public void testRonde3() {
+    var spelerinfo    = new Spelerinfo();
+
+    spelerinfo.setTerugronde(false);
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+
+    assertFalse(spelerinfo.inRonde(1, 4, 3));
+    assertFalse(spelerinfo.inRonde(3, 4, 3));
+    assertFalse(spelerinfo.inRonde(5, 4, 3));
+  }
+
+  @Test
+  public void testRonde4() {
+    var spelerinfo    = new Spelerinfo();
+
+    spelerinfo.setHeenronde(false);
+    spelerinfo.setTerugronde(false);
+
+    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+
+    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+
+    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+
+    assertFalse(spelerinfo.inRonde(1, 4, 3));
+    assertFalse(spelerinfo.inRonde(3, 4, 3));
+    assertFalse(spelerinfo.inRonde(5, 4, 3));
+  }
+
+  @Test
   public void testSpelerId() {
     var spelerinfo    = new Spelerinfo();
 

@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author Marco de Booij
  */
-// TODO Rochade aanpassen aan schaak960.
+// TODO Rokade aanpassen aan schaak960.
 public class Zettengenerator {
   private final List<Zet>   zetten        = new ArrayList<>();
   private       boolean     korteRokade   = false;
@@ -50,15 +50,15 @@ public class Zettengenerator {
       enPassant = CaissaUtils.externToIntern(ep);
     }
     if (fen.getAanZet() == 'w') {
-      korteRokade = fen.getWitKorteRochade();
+      korteRokade = fen.getWitKorteRokade();
       kortetoren  = CaissaUtils.externToIntern(fen.getWitKorteToren());
-      langeRokade = fen.getWitLangeRochade();
+      langeRokade = fen.getWitLangeRokade();
       langetoren  = CaissaUtils.externToIntern(fen.getWitLangeToren());
     } else {
       // Verminder de torenpositie met 70 ivm bordwissel.
-      korteRokade = fen.getZwartKorteRochade();
+      korteRokade = fen.getZwartKorteRokade();
       kortetoren  = CaissaUtils.externToIntern(fen.getZwartKorteToren()) - 70;
-      langeRokade = fen.getZwartLangeRochade();
+      langeRokade = fen.getZwartLangeRokade();
       langetoren  = CaissaUtils.externToIntern(fen.getZwartLangeToren()) - 70;
       bordwissel();
       if (enPassant != 0) {
@@ -144,9 +144,7 @@ public class Zettengenerator {
       naar  = 110 - (naarVeld/10) * 10 + naarVeld%10;
     }
     var zet = new Zet(stuk, van, naar, promotieStuk);
-    if (stukNaar < 0) {
-      zet.setSlagzet(true);
-    }
+    zet.setSlagzet(stukNaar < 0);
     if (naarVeld == enPassant
         && stuk == ' ') {
       zet.setEp(true);
@@ -154,7 +152,8 @@ public class Zettengenerator {
     if (promotieStuk != ' ') {
       bord[naarVeld] = CaissaConstants.NOTATIE_STUKKEN.indexOf(promotieStuk)+1;
     }
-    // Verzet bij rochade ook de toren.
+
+    // Verzet bij rokade ook de toren.
     if (stuk == 'K') {
       if (vanVeld - naarVeld == -2) {
         bord[vanVeld+1] = bord[vanVeld+3];
@@ -165,10 +164,9 @@ public class Zettengenerator {
         bord[vanVeld-4] = 0;
       }
     }
-    if (zetSchaak()) {
-      zet.setSchaak(true);
-    }
-    // Zet bij rochade de toren terug.
+    zet.setSchaak(zetSchaak());
+
+    // Zet bij rokade de toren terug.
     if (stuk == 'K') {
       if (vanVeld - naarVeld == -2) {
         bord[vanVeld+3] = bord[vanVeld+1];
