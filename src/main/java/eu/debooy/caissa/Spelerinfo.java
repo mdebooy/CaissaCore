@@ -21,6 +21,7 @@ import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
+import org.json.simple.JSONObject;
 
 
 /**
@@ -50,6 +51,33 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Double  tieBreakScore = 0.0;
 
   public Spelerinfo() {}
+
+  public Spelerinfo(JSONObject  spelerinfo) {
+    if (spelerinfo.containsKey("alias")) {
+      alias         = spelerinfo.get("alias").toString();
+    }
+    if (spelerinfo.containsKey("elo")) {
+      elo         = Integer.valueOf(spelerinfo.get("elo").toString());
+    }
+    if (spelerinfo.containsKey("email")) {
+      email         = spelerinfo.get("email").toString();
+    }
+    if (spelerinfo.containsKey("heenronde")) {
+      heenronde   = (boolean) spelerinfo.get("heenronde");
+    }
+    if (spelerinfo.containsKey("landkode")) {
+      landKode      = spelerinfo.get("landkode").toString();
+    }
+    if (spelerinfo.containsKey("naam")) {
+      naam          = spelerinfo.get("naam").toString();
+    }
+    if (spelerinfo.containsKey("terugronde")) {
+      terugronde  = (boolean) spelerinfo.get("terugronde");
+    }
+    if (spelerinfo.containsKey("spelerid")) {
+      spelerId    = Integer.valueOf(spelerinfo.get("spelerid").toString());
+    }
+  }
 
   public Spelerinfo(Spelerinfo spelerinfo) {
     alias         = spelerinfo.getAlias();

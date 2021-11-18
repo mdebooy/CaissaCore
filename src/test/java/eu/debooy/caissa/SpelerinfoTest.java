@@ -19,6 +19,9 @@ package eu.debooy.caissa;
 import java.util.Date;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -447,6 +450,149 @@ public class SpelerinfoTest extends TestCase {
                                   .isEquals());
     heenronde = true;
     assertFalse(spelerinfo.inHeenronde());
+  }
+
+  @Test
+  public void testInit1() {
+    var spelerinfo  = new Spelerinfo();
+
+    assertNull(spelerinfo.getAlias());
+    assertNull(spelerinfo.getEerstePartij());
+    assertNull(spelerinfo.getElo());
+    assertNull(spelerinfo.getElogroei());
+    assertNull(spelerinfo.getEmail());
+    assertTrue(spelerinfo.inHeenronde());
+    assertNull(spelerinfo.getLaatstePartij());
+    assertNull(spelerinfo.getLandKode());
+    assertNull(spelerinfo.getMaxDatum());
+    assertNull(spelerinfo.getMaxElo());
+    assertNull(spelerinfo.getMinDatum());
+    assertNull(spelerinfo.getMinElo());
+    assertEquals("", spelerinfo.getNaam());
+    assertNull(spelerinfo.getOfficieel());
+    assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
+    assertEquals(0.0, spelerinfo.getPunten());
+    assertNull(spelerinfo.getSpelerId());
+    assertTrue(spelerinfo.inTerugronde());
+    assertEquals(0.0, spelerinfo.getTieBreakScore());
+  }
+
+  @Test
+  public void testInit2() {
+    var spelerinfo  = new Spelerinfo(spelerinfo8);
+
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+                                          spelerinfo8.getAlias())
+                                  .append(spelerinfo.getEerstePartij(),
+                                          spelerinfo8.getEerstePartij())
+                                  .append(spelerinfo.getElo(),
+                                          spelerinfo8.getElo())
+                                  .append(spelerinfo.getElogroei(),
+                                          spelerinfo8.getElogroei())
+                                  .append(spelerinfo.getEmail(),
+                                          spelerinfo8.getEmail())
+                                  .append(spelerinfo.getLaatstePartij(),
+                                          spelerinfo8.getLaatstePartij())
+                                  .append(spelerinfo.getLandKode(),
+                                          spelerinfo8.getLandKode())
+                                  .append(spelerinfo.getMaxDatum(),
+                                          spelerinfo8.getMaxDatum())
+                                  .append(spelerinfo.getMaxElo(),
+                                          spelerinfo8.getMaxElo())
+                                  .append(spelerinfo.getMinDatum(),
+                                          spelerinfo8.getMinDatum())
+                                  .append(spelerinfo.getMinElo(),
+                                          spelerinfo8.getMinElo())
+                                  .append(spelerinfo.getNaam(),
+                                          spelerinfo8.getNaam())
+                                  .append(spelerinfo.getOfficieel(),
+                                          spelerinfo8.getOfficieel())
+                                  .append(spelerinfo.getPartijen(),
+                                          spelerinfo8.getPartijen())
+                                  .append(spelerinfo.getPunten(),
+                                          spelerinfo8.getPunten())
+                                  .append(spelerinfo.getSpelerId(),
+                                          spelerinfo8.getSpelerId())
+                                  .append(spelerinfo.getTieBreakScore(),
+                                          spelerinfo8.getTieBreakScore())
+                                  .append(spelerinfo.getVolledigenaam(),
+                                          spelerinfo8.getVolledigenaam())
+                                  .append(spelerinfo.getVoornaam(),
+                                          spelerinfo8.getVoornaam())
+                                  .append(spelerinfo.inHeenronde(),
+                                          spelerinfo8.inHeenronde())
+                                  .append(spelerinfo.inTerugronde(),
+                                          spelerinfo8.inTerugronde())
+                                  .isEquals());
+  }
+
+  @Test
+  public void testInit3() {
+    var         minJson = "{\"naam\": \"Speler, Alice\"}";
+    JSONParser  parser  = new JSONParser();
+    try {
+      JSONObject  json        = (JSONObject) parser.parse(minJson);
+     var         spelerinfo  = new Spelerinfo(json);
+      assertNull(spelerinfo.getAlias());
+      assertNull(spelerinfo.getEerstePartij());
+      assertNull(spelerinfo.getElo());
+      assertNull(spelerinfo.getElogroei());
+      assertNull(spelerinfo.getEmail());
+      assertTrue(spelerinfo.inHeenronde());
+      assertNull(spelerinfo.getLaatstePartij());
+      assertNull(spelerinfo.getLandKode());
+      assertNull(spelerinfo.getMaxDatum());
+      assertNull(spelerinfo.getMaxElo());
+      assertNull(spelerinfo.getMinDatum());
+      assertNull(spelerinfo.getMinElo());
+      assertEquals("Speler, Alice", spelerinfo.getNaam());
+      assertNull(spelerinfo.getOfficieel());
+      assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
+      assertEquals(0.0, spelerinfo.getPunten());
+      assertNull(spelerinfo.getSpelerId());
+      assertTrue(spelerinfo.inTerugronde());
+      assertEquals(0.0, spelerinfo.getTieBreakScore());
+    } catch (ParseException e) {
+      fail("JSON parse exception: " + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInit4() {
+    var         minJson = "{\"alias\": \"Caissa\", "
+                            + "\"elo\": 2112, "
+                            + "\"email\": \"alice@caissa.chess\", "
+                            + "\"heenronde\": false, "
+                            + "\"landkode\": \"bel\", "
+                            + "\"naam\": \"Speler, Alice\", "
+                            + "\"spelerid\": 1221, "
+                            + "\"terugronde\": true}";
+    JSONParser  parser  = new JSONParser();
+    try {
+      JSONObject  json        = (JSONObject) parser.parse(minJson);
+     var         spelerinfo  = new Spelerinfo(json);
+      assertEquals("Caissa", spelerinfo.getAlias());
+      assertNull(spelerinfo.getEerstePartij());
+      assertEquals(Integer.valueOf(2112), spelerinfo.getElo());
+      assertNull(spelerinfo.getElogroei());
+      assertEquals("alice@caissa.chess", spelerinfo.getEmail());
+      assertFalse(spelerinfo.inHeenronde());
+      assertNull(spelerinfo.getLaatstePartij());
+      assertEquals("bel", spelerinfo.getLandKode());
+      assertNull(spelerinfo.getMaxDatum());
+      assertNull(spelerinfo.getMaxElo());
+      assertNull(spelerinfo.getMinDatum());
+      assertNull(spelerinfo.getMinElo());
+      assertEquals("Speler, Alice", spelerinfo.getNaam());
+      assertNull(spelerinfo.getOfficieel());
+      assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
+      assertEquals(0.0, spelerinfo.getPunten());
+      assertEquals(Integer.valueOf(1221), spelerinfo.getSpelerId());
+      assertTrue(spelerinfo.inTerugronde());
+      assertEquals(0.0, spelerinfo.getTieBreakScore());
+    } catch (ParseException e) {
+      fail("JSON parse exception: " + e.getLocalizedMessage());
+    }
   }
 
   @Test
