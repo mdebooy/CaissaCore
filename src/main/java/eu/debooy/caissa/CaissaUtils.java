@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 
 /**
@@ -138,16 +140,14 @@ public final class CaissaUtils {
                                     Set<Partij> schema,
                                     List<String> heenronde,
                                     int rondenummer) {
-    var                   noSpelers = spelers.size();
-    Map<String, Integer>  spelermap = new HashMap<>();
+    var noSpelers = spelers.size();
 
     if (noSpelers%2 == 1) {
       var naam  = "bye";
       var speler  = new Spelerinfo();
-      speler.setSpelerId(noSpelers);
+      speler.setSpelerId(999999);
       speler.setNaam(naam);
       spelers.add(speler);
-      spelermap.put(naam, Integer.valueOf(999999));
       noSpelers++;
     }
 
@@ -561,6 +561,29 @@ public final class CaissaUtils {
     }
   }
 
+  public static void verwijderNietActief(Spelerinfo[] punten,
+                                         double[][] matrix,
+                                         int enkel) {
+    var noSpelers     = punten.length;
+    var laatsteKolom  = noSpelers * enkel - enkel;
+    var laatsteSpeler = noSpelers - 1;
+
+    for (var i = 0; i < noSpelers; i++) {
+      if (punten[i].getPartijen() == 0) {
+        for (var j = i; j < laatsteSpeler; j++) {
+          matrix[j] = matrix[j+1];
+        }
+        for (var j = i*enkel; j < laatsteKolom; j++) {
+          for (var k = 0; k < laatsteSpeler; k++) {
+            matrix[k][j]  = matrix[k][j+enkel];
+          }
+        }
+        laatsteKolom  -= enkel;
+        laatsteSpeler--;
+      }
+    }
+  }
+
   public static Zet vindZet(FEN fen, String pgnZet) throws PgnException {
     var       zettengenerator = new Zettengenerator(fen);
     List<Zet> zetten          = zettengenerator.getZetten();
@@ -578,10 +601,21 @@ public final class CaissaUtils {
         resourceBundle.getString(PGN.ERR_ONGELDIGEZET), pgnZet, fen.getFen()));
   }
 
+  public static void vulSpelers(List<Spelerinfo> spelers, JSONArray jSpelers) {
+    int spelerId  = 1;
+    for (Object jSpeler : jSpelers.toArray()) {
+      Spelerinfo  speler  = new Spelerinfo((JSONObject) jSpeler);
+      if (null == speler.getSpelerId()) {
+        speler.setSpelerId(spelerId);
+      }
+      spelers.add(speler);
+      spelerId++;
+    }
+  }
+
   public static void vulToernooiMatrix(Collection<PGN> partijen,
-                                       Spelerinfo[] speler, String[] halve,
-                                       double[][] matrix, int toernooiType,
-                                       boolean sorteerOpStand,
+                                       Spelerinfo[] speler, double[][] matrix,
+                                       int toernooiType, boolean sorteerOpStand,
                                        String tieBreakType) {
     var aantalIteraties = sorteerOpStand ? 2 : 1;
     var noSpelers       = speler.length;
@@ -595,7 +629,6 @@ public final class CaissaUtils {
     Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);
 
     for (var i = 0; i < aantalIteraties; i++) {
-      // Initialiseer de matrix.
       initMatrix(matrix, noSpelers);
 
       // Sorteer de speler array op plaats in de stand. Dit enkel in de 2e
