@@ -16,11 +16,19 @@
  */
 package eu.debooy.caissa;
 
-import eu.debooy.doosutils.DoosConstants;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_ALIAS;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_ELO;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_EMAIL;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_HEENRONDE;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_LANDKODE;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_NAAM;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERID;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_TERUGRONDE;
 import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.json.simple.JSONObject;
 
 
@@ -53,29 +61,31 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   public Spelerinfo() {}
 
   public Spelerinfo(JSONObject  spelerinfo) {
-    if (spelerinfo.containsKey("alias")) {
-      alias         = spelerinfo.get("alias").toString();
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_ALIAS)) {
+      alias         = spelerinfo.get(JSON_TAG_SPELER_ALIAS).toString();
     }
-    if (spelerinfo.containsKey("elo")) {
-      elo         = Integer.valueOf(spelerinfo.get("elo").toString());
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_ELO)) {
+      elo         = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_ELO)
+                                              .toString());
     }
-    if (spelerinfo.containsKey("email")) {
-      email         = spelerinfo.get("email").toString();
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_EMAIL)) {
+      email         = spelerinfo.get(JSON_TAG_SPELER_EMAIL).toString();
     }
-    if (spelerinfo.containsKey("heenronde")) {
-      heenronde   = (boolean) spelerinfo.get("heenronde");
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_HEENRONDE)) {
+      heenronde   = (boolean) spelerinfo.get(JSON_TAG_SPELER_HEENRONDE);
     }
-    if (spelerinfo.containsKey("landkode")) {
-      landKode      = spelerinfo.get("landkode").toString();
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_LANDKODE)) {
+      landKode      = spelerinfo.get(JSON_TAG_SPELER_LANDKODE).toString();
     }
-    if (spelerinfo.containsKey("naam")) {
-      naam          = spelerinfo.get("naam").toString();
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_NAAM)) {
+      naam          = spelerinfo.get(JSON_TAG_SPELER_NAAM).toString();
     }
-    if (spelerinfo.containsKey("terugronde")) {
-      terugronde  = (boolean) spelerinfo.get("terugronde");
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_TERUGRONDE)) {
+      terugronde  = (boolean) spelerinfo.get(JSON_TAG_SPELER_TERUGRONDE);
     }
-    if (spelerinfo.containsKey("spelerid")) {
-      spelerId    = Integer.valueOf(spelerinfo.get("spelerid").toString());
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_SPELERID)) {
+      spelerId    = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_SPELERID)
+                                              .toString());
     }
   }
 
@@ -125,31 +135,19 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
    * De SpelerInfo moet als volgt gesorteerd worden:
    *   1 De meeste punten.
    *   2 De minste partijen.
-   *   3 De meeste tieBreakScore
+   *   3 De hoogste tieBreakScore
    *   4 De 'kleinste' naam
    * De grootste moet als eerste in de lijst komen.
    * @param other
    */
   @Override
   public int compareTo(Spelerinfo other) {
-    if (this == other) {
-      return DoosConstants.EQUAL;
-    }
-
-    var verschil  = other.punten.compareTo(this.punten);
-    if (verschil != 0) {
-      return verschil;
-    }
-    verschil  = this.partijen.compareTo(other.partijen);
-    if (verschil != 0) {
-      return verschil;
-    }
-    verschil  = other.tieBreakScore.compareTo(this.tieBreakScore);
-    if (verschil != 0) {
-      return verschil;
-    }
-
-    return this.naam.compareToIgnoreCase(other.naam);
+    return new CompareToBuilder().append(other.punten, punten)
+                                 .append(partijen, other.partijen)
+                                 .append(other.tieBreakScore, tieBreakScore)
+                                 .append(naam.toUpperCase(),
+                                         other.naam.toUpperCase())
+                                 .toComparison();
   }
 
   @Override

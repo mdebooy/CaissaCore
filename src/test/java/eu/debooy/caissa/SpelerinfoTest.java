@@ -62,10 +62,11 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo7 = new Spelerinfo();
     spelerinfo8 = new Spelerinfo();
 
-    spelerinfo4.setNaam(JANSEN_JAN);
-    spelerinfo4.setPartijen(9);
-    spelerinfo4.setPunten(8.5);
-    spelerinfo4.setTieBreakScore(20.0);
+    spelerinfo1.setNaam(JANSEN_JAN);
+    spelerinfo1.setPartijen(10);
+    spelerinfo1.setPunten(8.5);
+    spelerinfo1.setSpelerId(1);
+    spelerinfo1.setTieBreakScore(20.0);
 
     spelerinfo2.setNaam(ADAMS_JAN);
     spelerinfo2.setPartijen(10);
@@ -77,30 +78,29 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo3.setPunten(8.5);
     spelerinfo3.setTieBreakScore(20.0);
 
-    spelerinfo1.setNaam(JANSEN_JAN);
-    spelerinfo1.setPartijen(10);
-    spelerinfo1.setPunten(8.5);
-    spelerinfo1.setSpelerId(1);
-    spelerinfo1.setTieBreakScore(20.0);
-
-    spelerinfo8.setNaam(JANSEN_JAN);
-    spelerinfo8.setPartijen(10);
-    spelerinfo8.setPunten(8.5);
-    spelerinfo8.setTieBreakScore(20.0);
-
-    spelerinfo6.setNaam(JANSEN_JAN);
-    spelerinfo6.setPartijen(10);
-    spelerinfo6.setPunten(8.5);
-    spelerinfo6.setTieBreakScore(19.75);
+    spelerinfo4.setNaam(JANSEN_JAN);
+    spelerinfo4.setPartijen(9);
+    spelerinfo4.setPunten(8.5);
+    spelerinfo4.setTieBreakScore(20.0);
 
     spelerinfo5.setNaam(JANSEN_JAN);
     spelerinfo5.setPartijen(10);
     spelerinfo5.setPunten(7.5);
     spelerinfo5.setTieBreakScore(20.0);
 
+    spelerinfo6.setNaam(JANSEN_JAN);
+    spelerinfo6.setPartijen(10);
+    spelerinfo6.setPunten(8.5);
+    spelerinfo6.setTieBreakScore(19.75);
+
     spelerinfo7.setPartijen(0);
     spelerinfo7.setPunten(0.0);
     spelerinfo7.setTieBreakScore(0.0);
+
+    spelerinfo8.setNaam(JANSEN_JAN);
+    spelerinfo8.setPartijen(10);
+    spelerinfo8.setPunten(8.5);
+    spelerinfo8.setTieBreakScore(20.0);
   }
 
   @Test

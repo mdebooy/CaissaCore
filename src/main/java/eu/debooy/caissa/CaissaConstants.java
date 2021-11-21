@@ -31,6 +31,17 @@ public final class CaissaConstants {
 
   public static final String  FMT_PGNTAG        = "[{0} \"{1}\"]";
 
+  public static final String  JSON_TAG_EVENTDATE          = "eventdate";
+  public static final String  JSON_TAG_SPELERS            = "spelers";
+  public static final String  JSON_TAG_SPELER_ALIAS       = "alias";
+  public static final String  JSON_TAG_SPELER_ELO         = "elo";
+  public static final String  JSON_TAG_SPELER_EMAIL       = "email";
+  public static final String  JSON_TAG_SPELER_HEENRONDE   = "heenronde";
+  public static final String  JSON_TAG_SPELER_LANDKODE    = "landkode";
+  public static final String  JSON_TAG_SPELER_NAAM        = "naam";
+  public static final String  JSON_TAG_SPELER_SPELERID    = "spelerid";
+  public static final String  JSON_TAG_SPELER_TERUGRONDE  = "terugronde";
+
   public static final String  PGNTAG_BLACK      = "Black";
   public static final String  PGNTAG_DATE       = "Date";
   public static final String  PGNTAG_ECO        = "ECO";
