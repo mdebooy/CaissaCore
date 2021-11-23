@@ -186,8 +186,8 @@ public final class CaissaUtils {
     Set<Partij>       schema    = new TreeSet<>();
 
     spelers.stream()
-           .filter(speler -> speler.inHeenronde())
-           .forEach(speler -> dezeronde.add(speler));
+           .filter(Spelerinfo::inHeenronde)
+           .forEach(dezeronde::add);
     genereerRonde(dezeronde, schema, heenronde, 1);
 
     if (enkel) {
@@ -197,8 +197,8 @@ public final class CaissaUtils {
     var rondenummer = dezeronde.size();
     dezeronde.clear();
     spelers.stream()
-           .filter(speler -> speler.inTerugronde())
-           .forEach(speler -> dezeronde.add(speler));
+           .filter(Spelerinfo::inTerugronde)
+           .forEach(dezeronde::add);
     genereerRonde(dezeronde, schema, heenronde, rondenummer);
 
     return schema;
@@ -602,9 +602,9 @@ public final class CaissaUtils {
   }
 
   public static void vulSpelers(List<Spelerinfo> spelers, JSONArray jSpelers) {
-    int spelerId  = 1;
-    for (Object jSpeler : jSpelers.toArray()) {
-      Spelerinfo  speler  = new Spelerinfo((JSONObject) jSpeler);
+    var spelerId  = 1;
+    for (var jSpeler : jSpelers.toArray()) {
+      var speler  = new Spelerinfo((JSONObject) jSpeler);
       if (null == speler.getSpelerId()) {
         speler.setSpelerId(spelerId);
       }

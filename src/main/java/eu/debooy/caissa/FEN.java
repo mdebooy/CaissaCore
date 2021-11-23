@@ -211,8 +211,8 @@ public class FEN implements Serializable {
         || enPassant.charAt(1) != (aanZet == 'w' ? '6' : '3')) {
       return false;
     }
-    int intern  = CaissaUtils.externToIntern(enPassant);
-    int pion    = aanZet == 'w' ? CaissaConstants.ZPION : CaissaConstants.PION;
+    var intern  = CaissaUtils.externToIntern(enPassant);
+    var pion    = aanZet == 'w' ? CaissaConstants.ZPION : CaissaConstants.PION;
     if (bord[intern] != 0) {
       return false;
     }

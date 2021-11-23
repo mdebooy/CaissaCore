@@ -86,48 +86,84 @@ public class Zettengenerator {
   }
 
   private boolean aangevallen (int stuk) {
-    // Aangevallen door pion?
-    if (bord[stuk +  9] == -1) {
+    if (aanvalPion(stuk, -1)) {
       return true;
     }
-    if (bord[stuk + 11] == -1) {
+
+    if (aanvalPaard(stuk, -1)) {
       return true;
     }
-    // Aangevallen door koning?
+
+    if (aanvalLoperDame(stuk, -1)) {
+      return true;
+    }
+
+    if (aanvalTorenDame(stuk, -1)) {
+      return true;
+    }
+
+    return aanvalKoning(stuk, -1);
+  }
+
+  private boolean aanvalKoning (int stuk, int kleur) {
     for (var i = 0; i < 8; i++) {
-      if (bord[stuk + loop[i]] == -6) {
+      if (bord[stuk + loop[i]] == CaissaConstants.KONING * kleur) {
         return true;
       }
     }
-    // Aangevallen door paard?
-    for (var i = 8; i < 16; i++) {
-      if (bord[stuk + loop[i]] == -2) {
-        return true;
-      }
-    }
+
+    return false;
+  }
+
+  private boolean aanvalLoperDame(int stuk, int kleur) {
     int naarVeld;
-    // Aangevallen door loper of dame?
+
     for (var i = 0; i < 4; i++) {
       naarVeld  = stuk + loop[i];
       while (bord[naarVeld] == 0) {
         naarVeld  = naarVeld + loop[i];
       }
-      if (bord[naarVeld] == -3
-          || bord[naarVeld] == -5) {
+      if (bord[naarVeld] == CaissaConstants.LOPER * kleur
+          || bord[naarVeld] == CaissaConstants.DAME * kleur) {
         return true;
       }
     }
-    // Aangevallen door toren of dame?
+
+    return false;
+  }
+
+  private boolean aanvalPaard (int stuk, int kleur) {
+    for (var i = 8; i < 16; i++) {
+      if (bord[stuk + loop[i]] == CaissaConstants.PAARD * kleur) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private boolean aanvalPion(int stuk, int kleur) {
+    if (bord[stuk +  9] == CaissaConstants.PION * kleur) {
+      return true;
+    }
+
+    return bord[stuk + 11] == CaissaConstants.PION * kleur;
+  }
+
+  private boolean aanvalTorenDame(int stuk, int kleur) {
+    int naarVeld;
+
     for (var i = 4; i < 8; i++) {
       naarVeld  = stuk + loop[i];
       while (bord[naarVeld] == 0) {
         naarVeld  = naarVeld + loop[i];
       }
-      if (bord[naarVeld] == -4
-          || bord[naarVeld] == -5) {
+      if (bord[naarVeld] == CaissaConstants.TOREN * kleur
+          || bord[naarVeld] == CaissaConstants.DAME * kleur) {
         return true;
       }
     }
+
     return false;
   }
 
@@ -164,7 +200,7 @@ public class Zettengenerator {
         bord[vanVeld-4] = 0;
       }
     }
-    zet.setSchaak(zetSchaak());
+    zet.setSchaak(isSchaak());
 
     // Zet bij rokade de toren terug.
     if (stuk == 'K') {
@@ -262,6 +298,22 @@ public class Zettengenerator {
     return new LinkedList<>(zetMap.values());
   }
 
+  private boolean isSchaak() {
+    if (aanvalPion(schaakDoel, 1)) {
+      return true;
+    }
+
+    if (aanvalPaard(schaakDoel, 1)) {
+      return true;
+    }
+
+    if (aanvalLoperDame(schaakDoel, 1)) {
+      return true;
+    }
+
+    return aanvalTorenDame(schaakDoel, 1);
+ }
+
   private boolean kanRokeren(int koning, int toren) {
     if (aangevallen(koning)) {
       return false;
@@ -342,20 +394,25 @@ public class Zettengenerator {
     }
   }
 
+  private void pionZet(int vanVeld, int naarVeld, int stukNaar) {
+    if (aangevallen(koning)) {
+      return;
+    }
+
+    if ((naarVeld) > 90) {
+      addZet(' ', vanVeld, naarVeld, stukNaar, 'Q');
+      addZet(' ', vanVeld, naarVeld, stukNaar, 'R');
+      addZet(' ', vanVeld, naarVeld, stukNaar, 'N');
+      addZet(' ', vanVeld, naarVeld, stukNaar, 'B');
+    } else {
+      addZet(' ', vanVeld, naarVeld, stukNaar);
+    }
+  }
+
   private void pionZet(int veld) {
     if (bord[veld + 10] == 0) {
       zetHeen(veld, (veld + 10));
-      if (!aangevallen(koning)) {
-        if ((veld + 10) > 90) {
-          // Promotie
-          addZet(' ', veld, veld + 10, 0, 'Q');
-          addZet(' ', veld, veld + 10, 0, 'R');
-          addZet(' ', veld, veld + 10, 0, 'N');
-          addZet(' ', veld, veld + 10, 0, 'B');
-        } else {
-          addZet(' ', veld, veld + 10, 0);
-        }
-      }
+      pionZet(veld, veld + 10, 0);
       if (veld < 40
           && bord[veld + 20] == 0) {
         zetHeen((veld + 10), (veld + 20));
@@ -366,36 +423,16 @@ public class Zettengenerator {
       }
       zetTerug(veld, (veld + 10), 0);
     }
-    // Stuk te slaan?
+
     if (bord[veld + 9] < 0) {
       var stukNaar  = zetHeen(veld, (veld + 9));
-      if (!aangevallen(koning)) {
-        if ((veld + 9) > 90) {
-          // Promotie
-          addZet(' ', veld, veld + 9, stukNaar, 'Q');
-          addZet(' ', veld, veld + 9, stukNaar, 'R');
-          addZet(' ', veld, veld + 9, stukNaar, 'N');
-          addZet(' ', veld, veld + 9, stukNaar, 'B');
-        } else {
-          addZet(' ', veld, veld + 9, stukNaar);
-        }
-      }
+      pionZet(veld, veld + 9, stukNaar);
       zetTerug(veld, (veld + 9), stukNaar);
     }
-    // Stuk te slaan?
+
     if (bord[veld + 11] < 0) {
       var stukNaar  = zetHeen(veld, (veld + 11));
-      if (!aangevallen(koning)) {
-        if ((veld + 11) > 90) {
-          // Promotie
-          addZet(' ', veld, veld + 11, stukNaar, 'Q');
-          addZet(' ', veld, veld + 11, stukNaar, 'R');
-          addZet(' ', veld, veld + 11, stukNaar, 'N');
-          addZet(' ', veld, veld + 11, stukNaar, 'B');
-        } else {
-          addZet(' ', veld, veld + 11, stukNaar);
-        }
-      }
+      pionZet(veld, veld + 11, stukNaar);
       zetTerug(veld, (veld + 11), stukNaar);
     }
     // Stuk En-Passant te slaan?
@@ -443,46 +480,6 @@ public class Zettengenerator {
 
     return stukNaar;
   }
-
-  private boolean zetSchaak() {
-    // Schaak door pion?
-    if (bord[schaakDoel -  9] == CaissaConstants.PION) {
-      return true;
-    }
-    if (bord[schaakDoel - 11] == CaissaConstants.PION) {
-      return true;
-    }
-    // Schaak door paard?
-    for (var i = 8; i < 16; i++) {
-      if (bord[schaakDoel + loop[i]] == CaissaConstants.PAARD) {
-        return true;
-      }
-    }
-    int naarVeld;
-    // Schaak door loper of dame?
-    for (var i = 0; i < 4; i++) {
-      naarVeld  = schaakDoel + loop[i];
-      while (bord[naarVeld] == 0) {
-        naarVeld  = naarVeld + loop[i];
-      }
-      if (bord[naarVeld] == CaissaConstants.LOPER
-          || bord[naarVeld] == CaissaConstants.DAME) {
-        return true;
-      }
-    }
-    // Schaak door toren of dame?
-    for (var i = 4; i < 8; i++) {
-      naarVeld  = schaakDoel + loop[i];
-      while (bord[naarVeld] == 0) {
-        naarVeld  = naarVeld + loop[i];
-      }
-      if (bord[naarVeld] == CaissaConstants.TOREN
-          || bord[naarVeld] == CaissaConstants.DAME) {
-        return true;
-      }
-    }
-    return false;
- }
 
   private void zetTerug(int van, int naar, int stukNaar) {
     bord[van]   = bord[naar];
