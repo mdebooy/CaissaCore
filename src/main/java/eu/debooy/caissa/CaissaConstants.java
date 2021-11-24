@@ -46,6 +46,7 @@ public final class CaissaConstants {
   public static final String  JSON_TAG_SPELER_NAAM        = "naam";
   public static final String  JSON_TAG_SPELER_SPELERID    = "id";
   public static final String  JSON_TAG_SPELER_SPELERSEQ   = "seq";
+  public static final String  JSON_TAG_SPELER_TELEFOON    = "telefoon";
   public static final String  JSON_TAG_SPELER_TERUGRONDE  = "terugronde";
 
   public static final String  PGNTAG_BLACK      = "Black";

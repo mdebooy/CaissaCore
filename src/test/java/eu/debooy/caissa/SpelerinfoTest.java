@@ -67,6 +67,7 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo1.setPunten(8.5);
     spelerinfo1.setSpelerId(1);
     spelerinfo1.setSpelerSeq(1);
+    spelerinfo1.setTelefoon("+32/2/21.12.00");
     spelerinfo1.setTieBreakScore(20.0);
 
     spelerinfo2.setNaam(ADAMS_JAN);
@@ -143,6 +144,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -219,6 +222,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -280,6 +285,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -334,6 +341,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -388,6 +397,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -449,6 +460,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -525,6 +538,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo8.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo8.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -647,6 +662,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -708,6 +725,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -763,6 +782,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -824,6 +845,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -879,6 +902,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -940,6 +965,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -998,6 +1025,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.inHeenronde(),
@@ -1057,6 +1086,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getVolledigenaam(),
                                           spelerinfo0.getVolledigenaam())
                                   .append(spelerinfo.getVoornaam(),
@@ -1116,6 +1147,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1170,6 +1203,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1315,6 +1350,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1425,6 +1462,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1436,6 +1475,60 @@ public class SpelerinfoTest extends TestCase {
                                   .isEquals());
     spelerinfo.setTerugronde(null);
     assertNull(spelerinfo.inTerugronde());
+  }
+
+  @Test
+  public void testTelefoon() {
+    var spelerinfo  = new Spelerinfo();
+
+    assertNull(spelerinfo.getTelefoon());
+    spelerinfo.setTelefoon("+32/2/21.12.00");
+    assertEquals("+32/2/21.12.00", spelerinfo.getTelefoon());
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+                                          spelerinfo0.getAlias())
+                                  .append(spelerinfo.getEerstePartij(),
+                                          spelerinfo0.getEerstePartij())
+                                  .append(spelerinfo.getElo(),
+                                          spelerinfo0.getElo())
+                                  .append(spelerinfo.getElogroei(),
+                                          spelerinfo0.getElogroei())
+                                  .append(spelerinfo.getEmail(),
+                                          spelerinfo0.getEmail())
+                                  .append(spelerinfo.getLaatstePartij(),
+                                          spelerinfo0.getLaatstePartij())
+                                  .append(spelerinfo.getLandKode(),
+                                          spelerinfo0.getLandKode())
+                                  .append(spelerinfo.getMaxDatum(),
+                                          spelerinfo0.getMaxDatum())
+                                  .append(spelerinfo.getMaxElo(),
+                                          spelerinfo0.getMaxElo())
+                                  .append(spelerinfo.getMinDatum(),
+                                          spelerinfo0.getMinDatum())
+                                  .append(spelerinfo.getMinElo(),
+                                          spelerinfo0.getMinElo())
+                                  .append(spelerinfo.getNaam(),
+                                          spelerinfo0.getNaam())
+                                  .append(spelerinfo.getOfficieel(),
+                                          spelerinfo0.getOfficieel())
+                                  .append(spelerinfo.getPartijen(),
+                                          spelerinfo0.getPartijen())
+                                  .append(spelerinfo.getPunten(),
+                                          spelerinfo0.getPunten())
+                                  .append(spelerinfo.getSpelerId(),
+                                          spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTieBreakScore(),
+                                          spelerinfo0.getTieBreakScore())
+                                  .append(spelerinfo.getVolledigenaam(),
+                                          spelerinfo0.getVolledigenaam())
+                                  .append(spelerinfo.getVoornaam(),
+                                          spelerinfo0.getVoornaam())
+                                  .append(spelerinfo.inHeenronde(),
+                                          spelerinfo0.inHeenronde())
+                                  .isEquals());
+    spelerinfo.setTelefoon(null);
+    assertEquals("", spelerinfo.getTelefoon());
   }
 
   @Test
@@ -1479,6 +1572,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getSpelerId())
                                   .append(spelerinfo.getSpelerSeq(),
                                           spelerinfo0.getSpelerSeq())
+                                  .append(spelerinfo.getTelefoon(),
+                                          spelerinfo0.getTelefoon())
                                   .append(spelerinfo.getVolledigenaam(),
                                           spelerinfo0.getVolledigenaam())
                                   .append(spelerinfo.getVoornaam(),

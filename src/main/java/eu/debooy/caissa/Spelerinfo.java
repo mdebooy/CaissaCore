@@ -24,6 +24,7 @@ import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_LANDKODE;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_NAAM;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERID;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERSEQ;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_TELEFOON;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_TERUGRONDE;
 import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
@@ -57,6 +58,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Double  punten        = 0.0;
   private Integer spelerSeq;
   private Integer spelerId;
+  private String  telefoon;
   private Boolean terugronde    = true;
   private Double  tieBreakScore = 0.0;
 
@@ -93,6 +95,9 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
       spelerSeq   = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_SPELERSEQ)
                                               .toString());
     }
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_TELEFOON)) {
+      telefoon    = spelerinfo.get(JSON_TAG_SPELER_TELEFOON).toString();
+    }
   }
 
   public Spelerinfo(Spelerinfo spelerinfo) {
@@ -113,6 +118,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     punten        = spelerinfo.getPunten();
     spelerId      = spelerinfo.getSpelerId();
     spelerSeq     = spelerinfo.getSpelerSeq();
+    telefoon      = spelerinfo.getTelefoon();
     tieBreakScore = spelerinfo.getTieBreakScore();
   }
 
@@ -264,6 +270,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return spelerSeq;
   }
 
+  public String getTelefoon() {
+    return telefoon;
+  }
+
   public Double getTieBreakScore() {
     return tieBreakScore;
   }
@@ -412,12 +422,12 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     if (null == punten) {
       this.punten = 0.0d;
     } else {
-      this.punten = punten;
+      this.punten   = punten;
     }
   }
 
   public void setSpelerId(Integer spelerId) {
-    this.spelerId = spelerId;
+    this.spelerId   = spelerId;
   }
 
   public void setSpelerSeq(Integer spelerSeq) {
@@ -425,7 +435,11 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public void setTerugronde(Boolean terugronde) {
-    this.terugronde  = terugronde;
+    this.terugronde = terugronde;
+  }
+
+  public void setTelefoon(String telefoon) {
+    this.telefoon   = DoosUtils.nullToEmpty(telefoon);
   }
 
   public void setTieBreakScore(Double tieBreakScore) {
