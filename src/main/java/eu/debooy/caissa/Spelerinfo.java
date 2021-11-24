@@ -23,6 +23,7 @@ import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_HEENRONDE;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_LANDKODE;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_NAAM;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERID;
+import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERSEQ;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_TERUGRONDE;
 import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
@@ -54,13 +55,14 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Date    officieel;
   private Integer partijen      = 0;
   private Double  punten        = 0.0;
+  private Integer spelerSeq;
   private Integer spelerId;
   private Boolean terugronde    = true;
   private Double  tieBreakScore = 0.0;
 
   public Spelerinfo() {}
 
-  public Spelerinfo(JSONObject  spelerinfo) {
+  public Spelerinfo(JSONObject spelerinfo) {
     if (spelerinfo.containsKey(JSON_TAG_SPELER_ALIAS)) {
       alias         = spelerinfo.get(JSON_TAG_SPELER_ALIAS).toString();
     }
@@ -87,6 +89,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
       spelerId    = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_SPELERID)
                                               .toString());
     }
+    if (spelerinfo.containsKey(JSON_TAG_SPELER_SPELERSEQ)) {
+      spelerSeq   = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_SPELERSEQ)
+                                              .toString());
+    }
   }
 
   public Spelerinfo(Spelerinfo spelerinfo) {
@@ -106,6 +112,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     partijen      = spelerinfo.getPartijen();
     punten        = spelerinfo.getPunten();
     spelerId      = spelerinfo.getSpelerId();
+    spelerSeq     = spelerinfo.getSpelerSeq();
     tieBreakScore = spelerinfo.getTieBreakScore();
   }
 
@@ -116,6 +123,16 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     @Override
     public int compare(Spelerinfo spelerinfo1, Spelerinfo spelerinfo2) {
       return spelerinfo1.getNaam().compareToIgnoreCase(spelerinfo2.getNaam());
+    }
+  }
+
+  public static class BySpelerSeqComparator
+      implements Comparator<Spelerinfo>, Serializable {
+    private static final  long  serialVersionUID  = 1L;
+
+    @Override
+    public int compare(Spelerinfo spelerinfo1, Spelerinfo spelerinfo2) {
+      return spelerinfo1.getSpelerSeq().compareTo(spelerinfo2.getSpelerSeq());
     }
   }
 
@@ -241,6 +258,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Integer getSpelerId() {
     return spelerId;
+  }
+
+  public Integer getSpelerSeq() {
+    return spelerSeq;
   }
 
   public Double getTieBreakScore() {
@@ -399,6 +420,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     this.spelerId = spelerId;
   }
 
+  public void setSpelerSeq(Integer spelerSeq) {
+    this.spelerSeq  = spelerSeq;
+  }
+
   public void setTerugronde(Boolean terugronde) {
     this.terugronde  = terugronde;
   }
@@ -416,6 +441,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return new StringBuilder()
         .append("Spelerinfo data (")
         .append("SpelerID: ").append(spelerId).append(", ")
+        .append("SpelerSeq: ").append(spelerSeq).append(", ")
         .append("naam: [").append(naam).append("], ")
         .append("landkode: ").append(landKode).append(", ")
         .append("ELO: ").append(elo).append(", ")

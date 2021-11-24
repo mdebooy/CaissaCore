@@ -66,6 +66,7 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo1.setPartijen(10);
     spelerinfo1.setPunten(8.5);
     spelerinfo1.setSpelerId(1);
+    spelerinfo1.setSpelerSeq(1);
     spelerinfo1.setTieBreakScore(20.0);
 
     spelerinfo2.setNaam(ADAMS_JAN);
@@ -140,6 +141,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -214,6 +217,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -273,6 +278,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -325,6 +332,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -377,6 +386,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -400,12 +411,9 @@ public class SpelerinfoTest extends TestCase {
   @Test
   public void testHeenronde() {
     var spelerinfo  = new Spelerinfo();
-    var heenronde   = spelerinfo.inHeenronde();
 
     assertTrue(spelerinfo.inHeenronde());
-    heenronde = false;
-    assertTrue(spelerinfo.inHeenronde());
-    spelerinfo.setHeenronde(heenronde);
+    spelerinfo.setHeenronde(false);
     assertFalse(spelerinfo.inHeenronde());
     assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
@@ -439,6 +447,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -448,8 +458,8 @@ public class SpelerinfoTest extends TestCase {
                                   .append(spelerinfo.inTerugronde(),
                                           spelerinfo0.inTerugronde())
                                   .isEquals());
-    heenronde = true;
-    assertFalse(spelerinfo.inHeenronde());
+    spelerinfo.setHeenronde(null);
+    assertNull(spelerinfo.inHeenronde());
   }
 
   @Test
@@ -513,6 +523,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo8.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo8.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo8.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -565,7 +577,7 @@ public class SpelerinfoTest extends TestCase {
                             + "\"heenronde\": false, "
                             + "\"landkode\": \"bel\", "
                             + "\"naam\": \"Speler, Alice\", "
-                            + "\"spelerid\": 1221, "
+                            + "\"id\": 1221, "
                             + "\"terugronde\": true}";
     JSONParser  parser  = new JSONParser();
     try {
@@ -633,6 +645,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -692,6 +706,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -745,6 +761,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -804,6 +822,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -857,6 +877,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -916,6 +938,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -972,6 +996,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.inHeenronde(),
@@ -1027,6 +1053,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1086,6 +1114,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1138,6 +1168,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPartijen())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1281,6 +1313,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPartijen())
                                   .append(spelerinfo.getPunten(),
                                           spelerinfo0.getPunten())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1297,14 +1331,65 @@ public class SpelerinfoTest extends TestCase {
   }
 
   @Test
+  public void testSpelerSeq() {
+    var spelerinfo    = new Spelerinfo();
+
+    assertNull(spelerinfo.getSpelerSeq());
+    spelerinfo.setSpelerSeq(1221);
+    assertEquals(Integer.valueOf(1221), spelerinfo.getSpelerSeq());
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+                                          spelerinfo0.getAlias())
+                                  .append(spelerinfo.getElo(),
+                                          spelerinfo0.getElo())
+                                  .append(spelerinfo.getElogroei(),
+                                          spelerinfo0.getElogroei())
+                                  .append(spelerinfo.getEmail(),
+                                          spelerinfo0.getEmail())
+                                  .append(spelerinfo.getEerstePartij(),
+                                          spelerinfo0.getEerstePartij())
+                                  .append(spelerinfo.getLaatstePartij(),
+                                          spelerinfo0.getLaatstePartij())
+                                  .append(spelerinfo.getLandKode(),
+                                          spelerinfo0.getLandKode())
+                                  .append(spelerinfo.getMaxDatum(),
+                                          spelerinfo0.getMaxDatum())
+                                  .append(spelerinfo.getMaxElo(),
+                                          spelerinfo0.getMaxElo())
+                                  .append(spelerinfo.getMinDatum(),
+                                          spelerinfo0.getMinDatum())
+                                  .append(spelerinfo.getMinElo(),
+                                          spelerinfo0.getMinElo())
+                                  .append(spelerinfo.getNaam(),
+                                          spelerinfo0.getNaam())
+                                  .append(spelerinfo.getOfficieel(),
+                                          spelerinfo0.getOfficieel())
+                                  .append(spelerinfo.getPartijen(),
+                                          spelerinfo0.getPartijen())
+                                  .append(spelerinfo.getPunten(),
+                                          spelerinfo0.getPunten())
+                                  .append(spelerinfo.getSpelerId(),
+                                          spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getTieBreakScore(),
+                                          spelerinfo0.getTieBreakScore())
+                                  .append(spelerinfo.getVolledigenaam(),
+                                          spelerinfo0.getVolledigenaam())
+                                  .append(spelerinfo.getVoornaam(),
+                                          spelerinfo0.getVoornaam())
+                                  .append(spelerinfo.inHeenronde(),
+                                          spelerinfo0.inHeenronde())
+                                  .append(spelerinfo.inTerugronde(),
+                                          spelerinfo0.inTerugronde())
+                                  .isEquals());
+    spelerinfo.setSpelerSeq(null);
+    assertNull(spelerinfo.getSpelerSeq());
+  }
+
+  @Test
   public void testTerugronde() {
     var spelerinfo  = new Spelerinfo();
-    var terugronde  = spelerinfo.inHeenronde();
 
     assertTrue(spelerinfo.inTerugronde());
-    terugronde = false;
-    assertTrue(spelerinfo.inTerugronde());
-    spelerinfo.setTerugronde(terugronde);
+    spelerinfo.setTerugronde(false);
     assertFalse(spelerinfo.inTerugronde());
     assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
@@ -1338,6 +1423,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getTieBreakScore(),
                                           spelerinfo0.getTieBreakScore())
                                   .append(spelerinfo.getVolledigenaam(),
@@ -1347,8 +1434,8 @@ public class SpelerinfoTest extends TestCase {
                                   .append(spelerinfo.inHeenronde(),
                                           spelerinfo0.inHeenronde())
                                   .isEquals());
-    terugronde = true;
-    assertFalse(spelerinfo.inTerugronde());
+    spelerinfo.setTerugronde(null);
+    assertNull(spelerinfo.inTerugronde());
   }
 
   @Test
@@ -1390,6 +1477,8 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.getPunten())
                                   .append(spelerinfo.getSpelerId(),
                                           spelerinfo0.getSpelerId())
+                                  .append(spelerinfo.getSpelerSeq(),
+                                          spelerinfo0.getSpelerSeq())
                                   .append(spelerinfo.getVolledigenaam(),
                                           spelerinfo0.getVolledigenaam())
                                   .append(spelerinfo.getVoornaam(),
@@ -1405,6 +1494,6 @@ public class SpelerinfoTest extends TestCase {
 
   @Test
   public void testToString() {
-    assertEquals("Spelerinfo data (SpelerID: 1, naam: [Jansen, Jan], landkode: null, ELO: null, punten: 8.5, partijen: 10, tieBreakScore: 20.0, alias: null, email: null)", spelerinfo1.toString());
+    assertEquals("Spelerinfo data (SpelerID: 1, SpelerSeq: 1, naam: [Jansen, Jan], landkode: null, ELO: null, punten: 8.5, partijen: 10, tieBreakScore: 20.0, alias: null, email: null)", spelerinfo1.toString());
   }
 }
