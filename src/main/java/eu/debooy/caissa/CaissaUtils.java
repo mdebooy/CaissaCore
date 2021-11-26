@@ -257,7 +257,7 @@ public final class CaissaUtils {
     return enkel;
   }
 
-  private static void initMatrix(double[][] matrix, int noSpelers) {
+  public static void initMatrix(double[][] matrix, int noSpelers) {
     int kolommen  = matrix[0].length;
     for (var i = 0; i < noSpelers; i++) {
       for (var j = 0; j < kolommen; j++) {
@@ -647,6 +647,7 @@ public final class CaissaUtils {
       namen[i]  = spelers.get(i).getNaam();
     }
     Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);
+
     if (!sorteerOpStand) {
       spelers.sort(new Spelerinfo.ByNaamComparator());
     }
