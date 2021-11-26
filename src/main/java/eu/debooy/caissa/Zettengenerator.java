@@ -76,7 +76,7 @@ public class Zettengenerator {
       if (bord[i] == CaissaConstants.KONING) {
         koning      = i;
       }
-      if (bord[i] == -6) {
+      if (bord[i] == CaissaConstants.ZKONING) {
         schaakDoel  = i;
       }
       i++;
@@ -143,11 +143,11 @@ public class Zettengenerator {
   }
 
   private boolean aanvalPion(int stuk, int kleur) {
-    if (bord[stuk +  9] == CaissaConstants.PION * kleur) {
+    if (bord[stuk -  (9 * kleur)] == CaissaConstants.PION * kleur) {
       return true;
     }
 
-    return bord[stuk + 11] == CaissaConstants.PION * kleur;
+    return bord[stuk - (11 * kleur)] == CaissaConstants.PION * kleur;
   }
 
   private boolean aanvalTorenDame(int stuk, int kleur) {

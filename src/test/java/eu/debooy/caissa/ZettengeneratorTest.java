@@ -72,4 +72,18 @@ public class ZettengeneratorTest extends TestCase {
     assertEquals(93, zetten.getAantalZetten());
     assertEquals(93, zetten.getZetten().size());
   }
+
+  @Test
+  public void testPionschaak() throws CaissaException {
+    var zetten  = new Zettengenerator(new FEN("1r1r2k1/5p1p/p2p2P1/1p2p3/5nN1/P6P/1P3PP1/1BRb2K1 w - - 0 29"));
+    var zet     = new Zet(77, 88);
+    zet.setSchaak(true);
+    zet.setSlagzet(true);
+    assertTrue(zetten.getZetten().toString().contains(zet.toString()));
+
+    zet = new Zet(77, 86);
+    zet.setSchaak(true);
+    zet.setSlagzet(true);
+    assertTrue(zetten.getZetten().toString().contains(zet.toString()));
+  }
 }
