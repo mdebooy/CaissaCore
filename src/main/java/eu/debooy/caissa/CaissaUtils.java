@@ -563,8 +563,15 @@ public final class CaissaUtils {
     }
   }
 
-  public static void verwijderNietActief(List<Spelerinfo> spelers,
-                                         double[][] matrix, int enkel) {
+  public static double[][] verwijderNietActief(List<Spelerinfo> spelers,
+                                               double[][] matrix, int enkel) {
+    var zonderPartij  = spelers.stream()
+                               .filter(speler -> speler.getPartijen().equals(0))
+                               .count();
+    if (zonderPartij == 0) {
+      return matrix;
+    }
+
     var noSpelers     = spelers.size();
     var laatsteKolom  = noSpelers * enkel - enkel;
     var laatsteSpeler = noSpelers - 1;
@@ -583,6 +590,15 @@ public final class CaissaUtils {
         laatsteSpeler--;
       }
     }
+
+    spelers.removeIf(speler -> speler.getPartijen().equals(0));
+    noSpelers   = spelers.size();
+    var schoon  = new double[noSpelers][noSpelers * enkel];
+    for (var i = 0; i < noSpelers; i++) {
+      schoon[i] = Arrays.copyOf(matrix[i], noSpelers * enkel);
+    }
+
+    return schoon;
   }
 
   public static Zet vindZet(FEN fen, String pgnZet) throws PgnException {

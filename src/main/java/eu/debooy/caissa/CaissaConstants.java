@@ -35,6 +35,7 @@ public final class CaissaConstants {
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
   public static final String  JSON_TAG_KALENDER           = "kalender";
   public static final String  JSON_TAG_KALENDER_DATUM     = "datum";
+  public static final String  JSON_TAG_KALENDER_EXTRA     = "extra";
   public static final String  JSON_TAG_KALENDER_INHAAL    = "inhaal";
   public static final String  JSON_TAG_KALENDER_RONDE     = "ronde";
   public static final String  JSON_TAG_SPELERS            = "spelers";
