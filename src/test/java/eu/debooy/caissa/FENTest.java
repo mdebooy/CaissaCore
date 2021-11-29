@@ -16,6 +16,7 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
+import eu.debooy.caissa.exceptions.ZetException;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.util.Locale;
@@ -54,7 +55,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet1() {
+  public void testGeefZet1() throws ZetException {
     fen = new FEN();
     Zet e2e4    = new Zet(' ', 35, 55);
     FEN fenE2e4 = new FEN(FEN_1E2E4);
@@ -69,7 +70,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet2() {
+  public void testGeefZet2() throws ZetException {
     fen = new FEN();
     Zet e2e4    = new Zet(' ', 35, 55);
     FEN fenE2e4 = new FEN(FEN_1E2E4);
@@ -149,7 +150,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeE2e4() throws FenException {
+  public void testDoeE2e4() throws FenException, ZetException {
     fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
     assertEquals('b', fen.getAanZet());
@@ -160,7 +161,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeE7e5() throws FenException {
+  public void testDoeE7e5() throws FenException, ZetException {
     fen = new FEN(FEN_1E2E4);
     fen.doeZet(new Zet(' ', 85, 65));
     assertEquals('w', fen.getAanZet());
@@ -172,7 +173,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeKe1e2() throws FenException {
+  public void testDoeKe1e2() throws FenException, ZetException {
     fen = new FEN(FEN_1E7E5);
     fen.doeZet(new Zet('K', 25, 35));
     assertEquals('b', fen.getAanZet());
@@ -184,7 +185,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeKe8e7() throws FenException {
+  public void testDoeKe8e7() throws FenException, ZetException {
     fen = new FEN(FEN_2KE1E2);
     fen.doeZet(new Zet('K', 95, 85));
     assertEquals('w', fen.getAanZet());
@@ -196,7 +197,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeD2d4() throws FenException {
+  public void testDoeD2d4() throws FenException, ZetException {
     fen = new FEN(FEN_2KE8E7);
     fen.doeZet(new Zet(' ', 34, 54));
     assertEquals('b', fen.getAanZet());
@@ -208,7 +209,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeZetten() throws FenException {
+  public void testDoeZetten() throws FenException, ZetException {
     fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
     fen.doeZet(new Zet(' ', 85, 65));

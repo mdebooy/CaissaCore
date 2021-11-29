@@ -665,7 +665,7 @@ public final class CaissaUtils {
     Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);
 
     if (!sorteerOpStand) {
-      spelers.sort(new Spelerinfo.ByNaamComparator());
+    spelers.sort(new Spelerinfo.ByNaamComparator());
     }
 
     for (var i = 0; i < aantalIteraties; i++) {

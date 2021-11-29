@@ -68,9 +68,9 @@ public class FEN implements Serializable {
   private static final String  BEGINSTELLING  =
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-  public  static final String  ERR_AANZET     = "fen.aanzet.incorrect";
-  public  static final String  ERR_ENPASSANT  = "fen.ep.incorrect";
-  public  static final String  ERR_ZET        = "fen.zet.incorrect";
+  public static final String  ERR_AANZET    = "fen.aanzet.incorrect";
+  public static final String  ERR_ENPASSANT = "fen.ep.incorrect";
+  public static final String  ERR_ZET       = "fen.zet.incorrect";
 
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");

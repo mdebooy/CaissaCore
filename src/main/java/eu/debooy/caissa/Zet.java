@@ -17,10 +17,10 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.ZetException;
-import eu.debooy.doosutils.DoosConstants;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -40,11 +40,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @author Marco de Booij
  */
-public class Zet implements Comparable<Object>, Serializable {
+public class Zet implements Comparable<Zet>, Serializable {
   private static final long serialVersionUID  = 1L;
 
-  private static final String  ERR_PROMOTIESTUK = "zet.promotiestuk.incorrect";
-  private static final String  ERR_STUK         = "zet.incorrect";
+  public static final String  ERR_NAAR         = "zet.naar.incorrect";
+  public static final String  ERR_PROMOTIESTUK = "zet.promotiestuk.incorrect";
+  public static final String  ERR_STUK         = "zet.stuk.incorrect";
+  public static final String  ERR_VAN          = "zet.van.incorrect";
 
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
@@ -62,23 +64,29 @@ public class Zet implements Comparable<Object>, Serializable {
   public Zet() {
   }
 
-  public Zet(int van, int naar) {
-    this.stuk = ' ';
-    this.naar = naar;
-    this.van  = van;
+  public Zet(int van, int naar) throws ZetException {
+    this(' ', van, naar, ' ');
   }
 
-  public Zet(char stuk, int van, int naar) {
-    this.stuk = stuk;
-    this.naar = naar;
-    this.van  = van;
+  public Zet(char stuk, int van, int naar) throws ZetException {
+    this(stuk, van, naar, ' ');
   }
 
-  public Zet(char stuk, int van, int naar, char promotieStuk) {
-    this.stuk         = stuk;
-    this.naar         = naar;
-    this.van          = van;
-    this.promotieStuk = promotieStuk;
+  public Zet(int van, int naar, char promotieStuk) throws ZetException {
+    this(' ', van, naar, promotieStuk);
+  }
+
+  protected Zet(char stuk, int van, int naar, char promotieStuk)
+      throws ZetException {
+    if (' ' == promotieStuk) {
+      setStuk(stuk);
+    } else {
+      setStuk(' ');
+
+    }
+    setNaar(naar);
+    setPromotieStuk(promotieStuk);
+    setVan(van);
   }
 
   public Zet(Zet zet) {
@@ -109,35 +117,12 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   @Override
-  public int compareTo(Object obj) {
-    Zet other = (Zet) obj;
-
-    if (naar < other.getNaar()) {
-      return DoosConstants.BEFORE;
-    }
-    if (naar > other.getNaar()) {
-      return DoosConstants.AFTER;
-    }
-    if (stuk < other.getStuk()) {
-      return DoosConstants.BEFORE;
-    }
-    if (stuk > other.getStuk()) {
-      return DoosConstants.AFTER;
-    }
-    if (van < other.getVan()) {
-      return DoosConstants.BEFORE;
-    }
-    if (van > other.getVan()) {
-      return DoosConstants.AFTER;
-    }
-    if (promotieStuk < other.getPromotieStuk()) {
-      return DoosConstants.BEFORE;
-    }
-    if (promotieStuk > other.getPromotieStuk()) {
-      return DoosConstants.AFTER;
-    }
-
-    return DoosConstants.EQUAL;
+  public int compareTo(Zet other) {
+    return new CompareToBuilder().append(naar, other.naar)
+                                 .append(stuk, other.stuk)
+                                 .append(van, other.van)
+                                 .append(promotieStuk, other.promotieStuk)
+                                 .toComparison();
   }
 
   private String doeChessTheatreRokade() {
@@ -398,6 +383,15 @@ public class Zet implements Comparable<Object>, Serializable {
   }
 
   public void setKorteNotatieLevel(int korteNotatieLevel) {
+    if (korteNotatieLevel < 0) {
+      this.korteNotatieLevel  = 0;
+      return;
+    }
+    if (korteNotatieLevel >3) {
+      this.korteNotatieLevel  = 3;
+      return;
+    }
+
     this.korteNotatieLevel = korteNotatieLevel;
   }
 
@@ -405,12 +399,17 @@ public class Zet implements Comparable<Object>, Serializable {
     this.mat = mat;
   }
 
-  public void setNaar(int naar) {
+  public final void setNaar(int naar) throws ZetException {
+    if (naar < 21 || naar > 98 || naar%10 == 0 || naar%10 == 9) {
+      throw new ZetException(resourceBundle.getString(ERR_NAAR));
+    }
+
     this.naar = naar;
   }
 
-  public void setPromotieStuk(char promotieStuk) throws ZetException {
-    if (CaissaConstants.PROMOTIE_STUKKEN.indexOf(promotieStuk) < 0) {
+  public final void setPromotieStuk(char promotieStuk) throws ZetException {
+    if (' ' != promotieStuk
+        && CaissaConstants.PROMOTIE_STUKKEN.indexOf(promotieStuk) < 0) {
       throw new ZetException(MessageFormat.format(
           resourceBundle.getString(ERR_PROMOTIESTUK), promotieStuk));
     }
@@ -426,7 +425,7 @@ public class Zet implements Comparable<Object>, Serializable {
     this.slagzet = slagzet;
   }
 
-  public void setStuk(char stuk) throws ZetException {
+  public final void setStuk(char stuk) throws ZetException {
     if (CaissaConstants.NOTATIE_STUKKEN.indexOf(stuk) < 0) {
       throw new ZetException(MessageFormat.format(
           resourceBundle.getString(ERR_STUK), stuk));
@@ -435,7 +434,11 @@ public class Zet implements Comparable<Object>, Serializable {
     this.stuk = stuk;
   }
 
-  public void setVan(int van) {
+  public final void setVan(int van) throws ZetException {
+    if (van < 21 || van > 98 || van%10 == 0 || van%10 == 9) {
+      throw new ZetException(resourceBundle.getString(ERR_VAN));
+    }
+
     this.van = van;
   }
 

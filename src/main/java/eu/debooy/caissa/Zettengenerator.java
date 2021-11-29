@@ -17,11 +17,14 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.caissa.exceptions.ZetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -173,50 +176,56 @@ public class Zettengenerator {
 
   private void addZet(char stuk, int vanVeld, int naarVeld, int stukNaar,
                       char promotieStuk) {
-    var van   = vanVeld;
-    var naar  = naarVeld;
-    if (fen.getAanZet() == 'b') {
-      van   = 110 - (vanVeld/10)  * 10 + vanVeld%10;
-      naar  = 110 - (naarVeld/10) * 10 + naarVeld%10;
-    }
-    var zet = new Zet(stuk, van, naar, promotieStuk);
-    zet.setSlagzet(stukNaar < 0);
-    if (naarVeld == enPassant
-        && stuk == ' ') {
-      zet.setEp(true);
-    }
-    if (promotieStuk != ' ') {
-      bord[naarVeld] = CaissaConstants.NOTATIE_STUKKEN.indexOf(promotieStuk)+1;
-    }
+    try {
+      var van   = vanVeld;
+      var naar  = naarVeld;
+      if (fen.getAanZet() == 'b') {
+        van   = 110 - (vanVeld/10)  * 10 + vanVeld%10;
+        naar  = 110 - (naarVeld/10) * 10 + naarVeld%10;
+      }
+      var zet = new Zet(stuk, van, naar, promotieStuk);
+      zet.setSlagzet(stukNaar < 0);
+      if (naarVeld == enPassant
+              && stuk == ' ') {
+        zet.setEp(true);
+      }
+      if (promotieStuk != ' ') {
+        bord[naarVeld] =
+            CaissaConstants.NOTATIE_STUKKEN.indexOf(promotieStuk) + 1;
+      }
 
-    // Verzet bij rokade ook de toren.
-    if (stuk == 'K') {
-      if (vanVeld - naarVeld == -2) {
-        bord[vanVeld+1] = bord[vanVeld+3];
-        bord[vanVeld+3] = 0;
+      // Verzet bij rokade ook de toren.
+      if (stuk == 'K') {
+        if (vanVeld - naarVeld == -2) {
+          bord[vanVeld+1] = bord[vanVeld+3];
+          bord[vanVeld+3] = 0;
+        }
+        if (vanVeld - naarVeld == 2) {
+          bord[vanVeld-1] = bord[vanVeld-4];
+          bord[vanVeld-4] = 0;
+        }
       }
-      if (vanVeld - naarVeld == 2) {
-        bord[vanVeld-1] = bord[vanVeld-4];
-        bord[vanVeld-4] = 0;
-      }
-    }
-    zet.setSchaak(isSchaak());
+      zet.setSchaak(isSchaak());
 
-    // Zet bij rokade de toren terug.
-    if (stuk == 'K') {
-      if (vanVeld - naarVeld == -2) {
-        bord[vanVeld+3] = bord[vanVeld+1];
-        bord[vanVeld+1] = 0;
+      // Zet bij rokade de toren terug.
+      if (stuk == 'K') {
+        if (vanVeld - naarVeld == -2) {
+          bord[vanVeld+3] = bord[vanVeld+1];
+          bord[vanVeld+1] = 0;
+        }
+        if (vanVeld - naarVeld == 2) {
+          bord[vanVeld-4] = bord[vanVeld-1];
+          bord[vanVeld-1] = 0;
+        }
       }
-      if (vanVeld - naarVeld == 2) {
-        bord[vanVeld-4] = bord[vanVeld-1];
-        bord[vanVeld-1] = 0;
+      if (promotieStuk != ' ') {
+        bord[naarVeld] = CaissaConstants.PION;
       }
+      zetten.add(zet);
+    } catch (ZetException e) {
+      Logger.getLogger(Zettengenerator.class.getName())
+            .log(Level.SEVERE, null, e);
     }
-    if (promotieStuk != ' ') {
-      bord[naarVeld] = CaissaConstants.PION;
-    }
-    zetten.add(zet);
   }
 
   private void bordwissel() {
