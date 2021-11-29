@@ -16,6 +16,7 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.caissa.CaissaConstants.Stukcodes;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
@@ -33,6 +34,7 @@ import static junit.framework.TestCase.fail;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -95,6 +97,24 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
+  public void testHashCode() throws PgnException {
+    assertEquals(1865614310, pgn.hashCode());
+    pgn.setTag(CaissaConstants.PGNTAG_RESULT, "1-0");
+    assertEquals(2063237628, pgn.hashCode());
+  }
+
+  @Test
+  public void testInit() throws PgnException {
+    var instance  = new PGN(pgn);
+
+    assertEquals(7, instance.getTags().size());
+    assertTrue(instance.isValid());
+    assertEquals(pgn, instance);
+    instance.setTag(CaissaConstants.PGNTAG_RESULT, "1-0");
+    assertNotEquals(pgn, instance);
+  }
+
+  @Test
   public void testMissingBlack() throws PgnException {
     pgn.deleteTag(CaissaConstants.PGNTAG_BLACK);
     assertFalse(pgn.isValid());
@@ -137,6 +157,27 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
+  public void testRankedRated() throws PgnException {
+    assertTrue(pgn.isValid());
+    assertTrue(pgn.isRanked());
+    assertTrue(pgn.isRated());
+
+    pgn.setZetten("{" + CaissaConstants.PARTIJ_UNRANKED + ","
+                    + CaissaConstants.PARTIJ_UNRATED + "}");
+
+    assertTrue(pgn.isValid());
+    assertFalse(pgn.isRanked());
+    assertFalse(pgn.isRated());
+  }
+
+  @Test
+  public void testRated() {
+    assertTrue(pgn.isRated());
+    pgn.setRated(false);
+    assertFalse(pgn.isRated());
+  }
+
+  @Test
   public void testResultTag() {
     try {
       pgn.addTag(CaissaConstants.PGNTAG_RESULT, "fout");
@@ -169,8 +210,49 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
+  public void testSortByEvent() throws PgnException {
+    Collection<PGN> partijen    = new TreeSet<>(new PGN.ByEventComparator());
+    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                                + TestConstants.BST_TEST_PGN));
+    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    var             controle    =
+        CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                    + TestConstants.BST_EVENT_PGN);
+    var             i           = 0;
+    for (var partij : controle) {
+      assertEquals(partij.toString(), partijTabel[i].toString());
+      i++;
+    }
+  }
+
+  @Test
+  public void testSortDefault() throws PgnException {
+    Collection<PGN> partijen    = new TreeSet<>();
+    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                                + TestConstants.BST_TEST_PGN));
+    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    var             controle    =
+        CaissaUtils.laadPgnBestand(TEMP + File.separator
+                                    + TestConstants.BST_DEFAULT_PGN);
+    var             i           = 0;
+    for (var partij : controle) {
+      assertEquals(partij.toString(), partijTabel[i].toString());
+      i++;
+    }
+  }
+
+  @Test
+  public void testStukken() {
+    assertEquals(CaissaConstants.STUKKEN, pgn.getStukken());
+    pgn.setStukken(Stukcodes.NL.getStukcodes());
+    assertEquals(Stukcodes.NL.getStukcodes(), pgn.getStukken());
+  }
+
+  @Test
   public void testValidity() throws PgnException {
     assertTrue(pgn.isValid());
+    pgn.deleteTag(CaissaConstants.PGNTAG_RESULT);
+    assertFalse(pgn.isValid());
   }
 
   @Test
@@ -197,52 +279,6 @@ public class PGNTest extends BatchTest {
       assertEquals("Verkeerd bij partij " + (i+1),
                    zuivereZetten, resultaat);
       i += 2;
-    }
-  }
-
-  @Test
-  public void testRankedRated() throws PgnException {
-    assertTrue(pgn.isValid());
-    assertTrue(pgn.isRanked());
-    assertTrue(pgn.isRated());
-
-    pgn.setZetten("{" + CaissaConstants.PARTIJ_UNRANKED + ","
-                    + CaissaConstants.PARTIJ_UNRATED + "}");
-
-    assertTrue(pgn.isValid());
-    assertFalse(pgn.isRanked());
-    assertFalse(pgn.isRated());
-  }
-
-  @Test
-  public void testSortByEvent() throws PgnException {
-    Collection<PGN> partijen    = new TreeSet<>(new PGN.ByEventComparator());
-    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
-                                                + TestConstants.BST_TEST_PGN));
-    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
-    var             controle    =
-        CaissaUtils.laadPgnBestand(TEMP + File.separator
-                                    + TestConstants.BST_EVENT_PGN);
-    var             i           = 0;
-    for (var partij : controle) {
-      assertEquals(partij.toString(), partijTabel[i].toString());
-      i++;
-    }
-  }
-
-  @Test
-  public void testSortDefault() throws PgnException {
-    Collection<PGN> partijen    = new TreeSet<>(new PGN.DefaultComparator());
-    partijen.addAll(CaissaUtils.laadPgnBestand(TEMP + File.separator
-                                                + TestConstants.BST_TEST_PGN));
-    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
-    var             controle    =
-        CaissaUtils.laadPgnBestand(TEMP + File.separator
-                                    + TestConstants.BST_DEFAULT_PGN);
-    var             i           = 0;
-    for (var partij : controle) {
-      assertEquals(partij.toString(), partijTabel[i].toString());
-      i++;
     }
   }
 }

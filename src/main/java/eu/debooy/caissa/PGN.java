@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 
 /**
@@ -132,8 +133,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public PGN(PGN pgn) throws PgnException {
-    Arrays.sort(sevenTagRoster);
-    Arrays.sort(uitslagen);
+    this();
 
     ranked        = pgn.ranked;
     rated         = pgn.rated;
@@ -172,35 +172,6 @@ public class PGN implements Comparable<PGN>, Serializable {
     }
   }
 
-  public static class DefaultComparator
-      implements Comparator<PGN>, Serializable {
-    private static final  long  serialVersionUID  = 1L;
-
-    @Override
-    public int compare(PGN pgn1, PGN pgn2) {
-      return new CompareToBuilder()
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_DATE)
-                                .replace('?', '0'),
-                            pgn2.getTag(CaissaConstants.PGNTAG_DATE)
-                                .replace('?', '0'))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_EVENT),
-                            pgn2.getTag(CaissaConstants.PGNTAG_EVENT))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_SITE),
-                            pgn2.getTag(CaissaConstants.PGNTAG_SITE))
-                    .append(
-                        new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND)),
-                        new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND)))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_WHITE),
-                            pgn2.getTag(CaissaConstants.PGNTAG_WHITE))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_BLACK),
-                            pgn2.getTag(CaissaConstants.PGNTAG_BLACK))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_RESULT),
-                            pgn2.getTag(CaissaConstants.PGNTAG_RESULT))
-                    .append(pgn1.getZetten(), pgn2.getZetten())
-                    .toComparison();
-    }
-  }
-
   public final void addTag(String tag, String value) throws PgnException {
     tags.put(tag, value);
 
@@ -212,7 +183,26 @@ public class PGN implements Comparable<PGN>, Serializable {
 
   @Override
   public int compareTo(PGN other) {
-    return getSevenTagsAsString().compareTo(other.getSevenTagsAsString());
+    return new CompareToBuilder()
+                  .append(getTag(CaissaConstants.PGNTAG_DATE)
+                               .replace('?', '0'),
+                          other.getTag(CaissaConstants.PGNTAG_DATE)
+                               .replace('?', '0'))
+                  .append(getTag(CaissaConstants.PGNTAG_EVENT),
+                          other.getTag(CaissaConstants.PGNTAG_EVENT))
+                  .append(getTag(CaissaConstants.PGNTAG_SITE),
+                          other.getTag(CaissaConstants.PGNTAG_SITE))
+                  .append(
+                      new Round(getTag(CaissaConstants.PGNTAG_ROUND)),
+                      new Round(other.getTag(CaissaConstants.PGNTAG_ROUND)))
+                  .append(getTag(CaissaConstants.PGNTAG_WHITE),
+                          other.getTag(CaissaConstants.PGNTAG_WHITE))
+                  .append(getTag(CaissaConstants.PGNTAG_BLACK),
+                          other.getTag(CaissaConstants.PGNTAG_BLACK))
+                  .append(getTag(CaissaConstants.PGNTAG_RESULT),
+                          other.getTag(CaissaConstants.PGNTAG_RESULT))
+                  .append(getZetten(), other.getZetten())
+                  .toComparison();
   }
 
   public void deleteTag(String tag) {
@@ -231,8 +221,27 @@ public class PGN implements Comparable<PGN>, Serializable {
       return true;
     }
 
-    return getSevenTagsAsString()
-        .equalsIgnoreCase(((PGN) other).getSevenTagsAsString());
+    var pgn = (PGN) other;
+    return new EqualsBuilder()
+                  .append(getTag(CaissaConstants.PGNTAG_DATE)
+                             .replace('?', '0'),
+                          pgn.getTag(CaissaConstants.PGNTAG_DATE)
+                             .replace('?', '0'))
+                  .append(getTag(CaissaConstants.PGNTAG_EVENT),
+                          pgn.getTag(CaissaConstants.PGNTAG_EVENT))
+                  .append(getTag(CaissaConstants.PGNTAG_SITE),
+                          pgn.getTag(CaissaConstants.PGNTAG_SITE))
+                  .append(
+                      new Round(getTag(CaissaConstants.PGNTAG_ROUND)),
+                      new Round(pgn.getTag(CaissaConstants.PGNTAG_ROUND)))
+                  .append(getTag(CaissaConstants.PGNTAG_WHITE),
+                          pgn.getTag(CaissaConstants.PGNTAG_WHITE))
+                  .append(getTag(CaissaConstants.PGNTAG_BLACK),
+                          pgn.getTag(CaissaConstants.PGNTAG_BLACK))
+                  .append(getTag(CaissaConstants.PGNTAG_RESULT),
+                          pgn.getTag(CaissaConstants.PGNTAG_RESULT))
+                  .append(getZetten(), pgn.getZetten())
+                  .isEquals();
   }
 
   public String getBlack() {
