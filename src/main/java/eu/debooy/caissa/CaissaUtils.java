@@ -491,7 +491,7 @@ public final class CaissaUtils {
   private static void verwerkPartijInMatrix(PGN partij, double[][] matrix,
                                             List<Spelerinfo> spelers,
                                             String[] namen, int toernooiType,
-                                            int iteratie, int[] stand) {
+                                            boolean telUitslag, int[] stand) {
     var noSpelers = spelers.size();
     var rondes    = matrix[0].length;
     var wit       = partij.getTag(CaissaConstants.PGNTAG_WHITE);
@@ -532,30 +532,30 @@ public final class CaissaUtils {
         matrix[iWit][kolomW]    =
             Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
         matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
-        telPunten(iteratie, spelers, iWit, 1.0, iZwart, 0.0);
+        telPunten(telUitslag, spelers, iWit, 1.0, iZwart, 0.0);
         break;
       case CaissaConstants.PARTIJ_REMISE:
         matrix[iWit][kolomW]    =
             Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
         matrix[iZwart][kolomZ]  =
             Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
-        telPunten(iteratie, spelers, iWit, 0.5, iZwart, 0.5);
+        telPunten(telUitslag, spelers, iWit, 0.5, iZwart, 0.5);
         break;
       case CaissaConstants.PARTIJ_ZWART_WINT:
         matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
         matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
                 + 1.0;
-        telPunten(iteratie, spelers, iWit, 0.0, iZwart, 1.0);
+        telPunten(telUitslag, spelers, iWit, 0.0, iZwart, 1.0);
         break;
       default:
         break;
     }
   }
 
-  private static void telPunten(int iteratie, List<Spelerinfo> spelers,
+  private static void telPunten(boolean telUitslag, List<Spelerinfo> spelers,
                                 int iWit, double pWit,
                                 int iZwart, double pZwart) {
-    if (iteratie == 0) {
+    if (telUitslag) {
       spelers.get(iWit).addPartij();
       spelers.get(iWit).addPunt(pWit);
       spelers.get(iZwart).addPartij();
@@ -653,9 +653,8 @@ public final class CaissaUtils {
                                        double[][] matrix, int toernooiType,
                                        boolean sorteerOpStand,
                                        String tieBreakType) {
-    var aantalIteraties = sorteerOpStand ? 2 : 1;
-    var noSpelers       = spelers.size();
-    var namen           = new String[noSpelers];
+    var noSpelers = spelers.size();
+    var namen     = new String[noSpelers];
 
     // Vul een array op met de namen en sorteer deze zodat er een binary search
     // op gedaan kan worden.
@@ -665,36 +664,38 @@ public final class CaissaUtils {
     Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);
 
     if (!sorteerOpStand) {
-    spelers.sort(new Spelerinfo.ByNaamComparator());
+      spelers.sort(new Spelerinfo.ByNaamComparator());
     }
 
-    for (var i = 0; i < aantalIteraties; i++) {
-      initMatrix(matrix, noSpelers);
+    initMatrix(matrix, noSpelers);
+    zetPositieInMatrix(partijen, spelers, matrix, toernooiType, namen, true);
+    berekenTieBreakScore(tieBreakType, spelers, matrix, toernooiType);
 
-      // Sorteer de speler array op plaats in de stand. Dit enkel in de 2e
-      // iteratie.
-      if (i == 1) {
-        Collections.sort(spelers);
-      }
+    if (!sorteerOpStand) {
+      return;
+    }
 
-      // Zet positie in de matrix.
-      var stand = new int[noSpelers];
-      for (var j = 0; j < noSpelers; j++) {
-        stand[Arrays.binarySearch(namen, spelers.get(j).getNaam(),
-                                  String.CASE_INSENSITIVE_ORDER)] = j;
-      }
+    initMatrix(matrix, noSpelers);
+    Collections.sort(spelers);
+    zetPositieInMatrix(partijen, spelers, matrix, toernooiType, namen, false);
+  }
 
-      for (PGN partij: partijen) {
-        if (partij.isRanked()
-            && !partij.isBye()) {
-          verwerkPartijInMatrix(partij, matrix, spelers, namen, toernooiType, i,
-                                stand);
-        }
-      }
+  public static void zetPositieInMatrix(Collection<PGN> partijen,
+                                        List<Spelerinfo> spelers,
+                                        double[][] matrix, int toernooiType,
+                                        String[] namen, boolean telUitslag) {
+    var noSpelers = spelers.size();
+    var stand     = new int[noSpelers];
+    for (var j = 0; j < noSpelers; j++) {
+      stand[Arrays.binarySearch(namen, spelers.get(j).getNaam(),
+                                String.CASE_INSENSITIVE_ORDER)] = j;
+    }
 
-      // Bereken de Tie-Break Score na de eerste iteratie.
-      if (i == 0) {
-        berekenTieBreakScore(tieBreakType, spelers, matrix, toernooiType);
+    for (PGN partij: partijen) {
+      if (partij.isRanked()
+          && !partij.isBye()) {
+        verwerkPartijInMatrix(partij, matrix, spelers, namen, toernooiType,
+                              telUitslag, stand);
       }
     }
   }
