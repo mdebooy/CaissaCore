@@ -31,7 +31,6 @@ public final class CaissaConstants {
 
   public static final String  FMT_PGNTAG        = "[{0} \"{1}\"]";
 
-  public static final String  JSON_TAG_ENKELRONDIG        = "enkelrondig";
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
   public static final String  JSON_TAG_KALENDER           = "kalender";
   public static final String  JSON_TAG_KALENDER_DATUM     = "datum";
@@ -49,6 +48,7 @@ public final class CaissaConstants {
   public static final String  JSON_TAG_SPELER_SPELERSEQ   = "seq";
   public static final String  JSON_TAG_SPELER_TELEFOON    = "telefoon";
   public static final String  JSON_TAG_SPELER_TERUGRONDE  = "terugronde";
+  public static final String  JSON_TAG_TOERNOOITYPE       = "toernooitype";
 
   public static final String  PGNTAG_BLACK      = "Black";
   public static final String  PGNTAG_DATE       = "Date";

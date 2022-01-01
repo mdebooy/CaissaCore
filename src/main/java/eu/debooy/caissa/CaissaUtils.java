@@ -19,6 +19,7 @@ package eu.debooy.caissa;
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_KALENDER_DATUM;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.DoosConstants;
+import eu.debooy.doosutils.access.BestandConstants;
 import eu.debooy.doosutils.access.TekstBestand;
 import eu.debooy.doosutils.exception.BestandException;
 import java.nio.charset.Charset;
@@ -145,7 +146,7 @@ public final class CaissaUtils {
     var noSpelers = spelers.size();
 
     if (noSpelers%2 == 1) {
-      var naam  = "bye";
+      var naam  = CaissaConstants.BYE;
       var speler  = new Spelerinfo();
       speler.setSpelerId(999999);
       speler.setNaam(naam);
@@ -243,15 +244,15 @@ public final class CaissaUtils {
     int enkel;
 
     switch (enkelrondig) {
-    case DoosConstants.WAAR:
-      enkel = CaissaConstants.TOERNOOI_ENKEL;
-      break;
-    case DoosConstants.ONWAAR:
-      enkel = CaissaConstants.TOERNOOI_DUBBEL;
-      break;
-    default:
-      enkel = CaissaConstants.TOERNOOI_MATCH;
-      break;
+      case DoosConstants.WAAR:
+        enkel = CaissaConstants.TOERNOOI_ENKEL;
+        break;
+      case DoosConstants.ONWAAR:
+        enkel = CaissaConstants.TOERNOOI_DUBBEL;
+        break;
+      default:
+        enkel = CaissaConstants.TOERNOOI_MATCH;
+        break;
     }
 
     return enkel;
@@ -283,16 +284,14 @@ public final class CaissaUtils {
 
   public static Collection<PGN> laadPgnBestand(String bestand, String charSet)
       throws PgnException {
-    TekstBestand    input       = null;
     var             lijnnummer  = 0;
     Collection<PGN> partijen    = new ArrayList<>();
 
-    try {
-      input = new TekstBestand.Builder()
+    try (var input = new TekstBestand.Builder()
                               .setBestand(bestand
-                                  + (bestand.endsWith(".pgn") ? "" : ".pgn"))
-                              .setCharset(charSet).build();
-
+                                  + (bestand.endsWith(BestandConstants.EXT_PGN)
+                                        ? "" : BestandConstants.EXT_PGN))
+                              .setCharset(charSet).build()) {
       var eof   = false;
       var lijn  = "";
       if (input.hasNext()) {
@@ -376,14 +375,6 @@ public final class CaissaUtils {
       throw new PgnException(MessageFormat.format(
           resourceBundle.getString(PGN.ERR_BESTAND_EXCEPTION),
           e.getLocalizedMessage()));
-    } finally {
-      try {
-        if (input != null) {
-          input.close();
-        }
-      } catch (BestandException e) {
-        partijen  = new ArrayList<>();
-      }
     }
 
     return partijen;
