@@ -325,6 +325,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getTagsAsString() {
+    var eol     = "\"]" + getEol();
     var result  = new StringBuilder();
 
     result.append(getSevenTagsAsString());
@@ -333,7 +334,7 @@ public class PGN implements Comparable<PGN>, Serializable {
         .filter(map -> Arrays.binarySearch(sevenTagRoster, map.getKey()) < 0)
         .forEach(map ->
             result.append("[").append(map.getKey()).append(" \"")
-                  .append(map.getValue()).append(getEol()));
+                  .append(map.getValue()).append(eol));
 
     return result.toString();
   }
@@ -361,16 +362,12 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     zuivereZetten = " " + zetten + " ";
     // TAB wordt spatie, Verwijder spaties rond de punten (2x),
-    // Verwijder 'diagram', Verwijder 'nieuwtje', Maak van meerdere spaties 1
-    // spatie
-    var teVervangen = new String[]{"\t", "  ", ". ", " .", " D ", " N "};
-    var naar        = new String[]{" ",  " ",  ".",  ".",  " ",   " "};
-
-    for (var i = 0; i<teVervangen.length; i++) {
-      while (zuivereZetten.contains(teVervangen[i])) {
-        zuivereZetten = zuivereZetten.replace(teVervangen[i], naar[i]);
-      }
-    }
+    // Verwijder 'diagram', Verwijder 'nieuwtje'
+    zuivereZetten = zuivereZetten.replace("\t",  " ")
+                                 .replace(". ",  ".")
+                                 .replace(" .",  ".")
+                                 .replace(" D ", " ")
+                                 .replace(" N ", " ");
 
     // Verwijder commentaar en varianten.
     verwijder('{');
@@ -392,7 +389,7 @@ public class PGN implements Comparable<PGN>, Serializable {
       verwijderGesplitsteZetten();
     }
 
-    zuivereZetten = zuivereZetten.trim();
+    zuivereZetten = zuivereZetten.replaceAll(" +", " ").trim();
 
     return zuivereZetten;
   }
