@@ -144,9 +144,10 @@ public final class CaissaUtils {
                                     List<String> heenronde,
                                     int rondenummer) {
     var noSpelers = spelers.size();
+    var heen      = heenronde.isEmpty();
 
     if (noSpelers%2 == 1) {
-      var naam  = CaissaConstants.BYE;
+      var naam    = CaissaConstants.BYE;
       var speler  = new Spelerinfo();
       speler.setSpelerId(999999);
       speler.setNaam(naam);
@@ -162,8 +163,17 @@ public final class CaissaUtils {
       for (var i = noPartijen; i >= 0; i--) {
         var speler  = partijen[i].split("-");
         var partij  = new Partij();
-        var speler1 = new Spelerinfo(spelers.get(Integer.valueOf(speler[0])-1));
-        var speler2 = new Spelerinfo(spelers.get(Integer.valueOf(speler[1])-1));
+        Integer wit;
+        Integer zwart;
+        if (heen) {
+          wit   = Integer.valueOf(speler[0])-1;
+          zwart = Integer.valueOf(speler[1])-1;
+        } else {
+          wit   = Integer.valueOf(speler[1])-1;
+          zwart = Integer.valueOf(speler[0])-1;
+        }
+        var speler1 = new Spelerinfo(spelers.get(wit));
+        var speler2 = new Spelerinfo(spelers.get(zwart));
         var info    = speler1.getSpelerId() + "-" + speler2.getSpelerId();
         partij.setRonde(rondenummer, partijnummer);
         if (heenronde.contains(info)) {
@@ -633,6 +643,9 @@ public final class CaissaUtils {
       var speler  = new Spelerinfo((JSONObject) jSpeler);
       if (null == speler.getSpelerId()) {
         speler.setSpelerId(spelerId);
+      }
+      if (null == speler.getSpelerSeq()) {
+        speler.setSpelerSeq(spelerId);
       }
       spelers.add(speler);
       spelerId++;
