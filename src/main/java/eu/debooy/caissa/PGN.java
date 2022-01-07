@@ -20,6 +20,7 @@ import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -289,21 +290,28 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getSevenTagsAsString() {
-    var eol     = "\"]" + getEol();
+    var eol     = getEol();
     var result  = new StringBuilder();
 
-    result.append("[Event \"")
-          .append(tags.get(CaissaConstants.PGNTAG_EVENT)).append(eol)
-          .append("[Site \"")
-          .append(tags.get(CaissaConstants.PGNTAG_SITE)).append(eol)
-          .append("[Date \"")
-          .append(tags.get(CaissaConstants.PGNTAG_DATE)).append(eol)
-          .append("[Round \"")
-          .append(tags.get(CaissaConstants.PGNTAG_ROUND)).append(eol)
-          .append("[White \"").append(getWhite()).append(eol)
-          .append("[Black \"").append(getBlack()).append(eol)
-          .append("[Result \"")
-          .append(tags.get(CaissaConstants.PGNTAG_RESULT)).append(eol);
+    result.append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_EVENT, tags.get(CaissaConstants.PGNTAG_EVENT)))
+          .append(eol)
+          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_SITE, tags.get(CaissaConstants.PGNTAG_SITE)))
+          .append(eol)
+          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_DATE, tags.get(CaissaConstants.PGNTAG_DATE)))
+          .append(eol)
+          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_ROUND, tags.get(CaissaConstants.PGNTAG_ROUND)))
+          .append(eol)
+          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_WHITE, getWhite())).append(eol)
+          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_BLACK, getBlack())).append(eol)
+          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+        CaissaConstants.PGNTAG_RESULT, tags.get(CaissaConstants.PGNTAG_RESULT)))
+          .append(eol);
 
     return result.toString();
   }
@@ -325,7 +333,6 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getTagsAsString() {
-    var eol     = "\"]" + getEol();
     var result  = new StringBuilder();
 
     result.append(getSevenTagsAsString());
@@ -333,8 +340,9 @@ public class PGN implements Comparable<PGN>, Serializable {
     tags.entrySet().stream()
         .filter(map -> Arrays.binarySearch(sevenTagRoster, map.getKey()) < 0)
         .forEach(map ->
-            result.append("[").append(map.getKey()).append(" \"")
-                  .append(map.getValue()).append(eol));
+            result.append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+                                               map.getKey(), map.getValue()))
+                  .append(getEol()));
 
     return result.toString();
   }
