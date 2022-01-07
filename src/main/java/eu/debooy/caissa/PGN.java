@@ -418,6 +418,11 @@ public class PGN implements Comparable<PGN>, Serializable {
     return tags.containsKey(tag);
   }
 
+  public boolean isBeeindigd() {
+    return !getTag(CaissaConstants.PGNTAG_RESULT)
+                .equals(CaissaConstants.PARTIJ_BEZIG);
+  }
+
   public boolean isBye() {
     var wit   = getWhite();
     var zwart = getBlack();
