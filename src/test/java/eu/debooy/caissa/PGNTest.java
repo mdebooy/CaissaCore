@@ -113,9 +113,10 @@ public class PGNTest extends BatchTest {
     assertTrue(instance.isValid());
     assertEquals(pgn, instance);
     assertFalse(pgn.isBeeindigd());
+    assertFalse(instance.isBeeindigd());
     instance.setTag(CaissaConstants.PGNTAG_RESULT, "1-0");
     assertNotEquals(pgn, instance);
-    assertTrue(pgn.isBeeindigd());
+    assertTrue(instance.isBeeindigd());
   }
 
   @Test
