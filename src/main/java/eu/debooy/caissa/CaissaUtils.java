@@ -380,7 +380,6 @@ public final class CaissaUtils {
           eof = true;
         }
       }
-      input.close();
     } catch (BestandException e) {
       throw new PgnException(MessageFormat.format(
           resourceBundle.getString(PGN.ERR_BESTAND_EXCEPTION),
@@ -499,10 +498,10 @@ public final class CaissaUtils {
     var zwart     = partij.getTag(CaissaConstants.PGNTAG_BLACK);
     var iWit      =
         stand[Arrays.binarySearch(namen, wit,
-                                  String.CASE_INSENSITIVE_ORDER)];
+                                               String.CASE_INSENSITIVE_ORDER)];
     var iZwart    =
         stand[Arrays.binarySearch(namen, zwart,
-                                  String.CASE_INSENSITIVE_ORDER)];
+                                               String.CASE_INSENSITIVE_ORDER)];
 
     int ronde;
     try {

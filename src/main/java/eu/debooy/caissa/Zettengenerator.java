@@ -196,27 +196,13 @@ public class Zettengenerator {
 
       // Verzet bij rokade ook de toren.
       if (stuk == 'K') {
-        if (vanVeld - naarVeld == -2) {
-          bord[vanVeld+1] = bord[vanVeld+3];
-          bord[vanVeld+3] = 0;
-        }
-        if (vanVeld - naarVeld == 2) {
-          bord[vanVeld-1] = bord[vanVeld-4];
-          bord[vanVeld-4] = 0;
-        }
+        rokadeHeen(vanVeld, naarVeld);
       }
       zet.setSchaak(isSchaak());
 
       // Zet bij rokade de toren terug.
       if (stuk == 'K') {
-        if (vanVeld - naarVeld == -2) {
-          bord[vanVeld+3] = bord[vanVeld+1];
-          bord[vanVeld+1] = 0;
-        }
-        if (vanVeld - naarVeld == 2) {
-          bord[vanVeld-4] = bord[vanVeld-1];
-          bord[vanVeld-1] = 0;
-        }
+        rokadeTerug(vanVeld, naarVeld);
       }
       if (promotieStuk != ' ') {
         bord[naarVeld] = CaissaConstants.PION;
@@ -473,6 +459,28 @@ public class Zettengenerator {
     if (langeRokade
         && kanRokeren(koning, langetoren)) {
         addZet('K', koning, 23, 0);
+    }
+  }
+
+  private void rokadeHeen(int vanVeld, int naarVeld) {
+    if (vanVeld - naarVeld == -2) {
+      bord[vanVeld+1] = bord[vanVeld+3];
+      bord[vanVeld+3] = 0;
+    }
+    if (vanVeld - naarVeld == 2) {
+      bord[vanVeld-1] = bord[vanVeld-4];
+      bord[vanVeld-4] = 0;
+    }
+  }
+
+  private void rokadeTerug(int vanVeld, int naarVeld) {
+    if (vanVeld - naarVeld == -2) {
+      bord[vanVeld+3] = bord[vanVeld+1];
+      bord[vanVeld+1] = 0;
+    }
+    if (vanVeld - naarVeld == 2) {
+      bord[vanVeld-4] = bord[vanVeld-1];
+      bord[vanVeld-1] = 0;
     }
   }
 
