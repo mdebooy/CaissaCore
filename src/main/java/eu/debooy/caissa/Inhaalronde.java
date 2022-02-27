@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 /**
@@ -78,12 +80,14 @@ public class Inhaalronde implements Comparable<Inhaalronde>, Serializable {
     var witspeler   = partij.getWitspeler().getNaam();
     var zwartspeler = partij.getZwartspeler().getNaam();
     var afgewezen   = new ArrayList<String>();
+
     if (spelers.contains(witspeler)) {
       afgewezen.add(witspeler);
     }
     if (spelers.contains(zwartspeler)) {
       afgewezen.add(zwartspeler);
     }
+
     if (afgewezen.isEmpty()) {
       partijen.add(partij);
       spelers.add(witspeler);
@@ -104,20 +108,24 @@ public class Inhaalronde implements Comparable<Inhaalronde>, Serializable {
   @Override
   public int compareTo(Inhaalronde andere) {
     return new CompareToBuilder().append(ronde, andere.ronde)
+                                 .append(speeldatum, andere.speeldatum)
                                  .build();
   }
 
   @Override
-  public boolean equals(Object andere) {
-    if (!(andere instanceof Inhaalronde)) {
+  public boolean equals(Object object) {
+    if (!(object instanceof Inhaalronde)) {
       return false;
     }
 
-    if (this == andere) {
+    if (this == object) {
       return true;
     }
 
-    return ronde.equals(((Inhaalronde) andere).ronde);
+    var inhaalronde = (Inhaalronde) object;
+    return new EqualsBuilder().append(ronde, inhaalronde.ronde)
+                              .append(speeldatum, inhaalronde.speeldatum)
+                              .isEquals();
   }
 
   public Integer getAantalPartijen() {
@@ -138,7 +146,9 @@ public class Inhaalronde implements Comparable<Inhaalronde>, Serializable {
 
   @Override
   public int hashCode() {
-    return ronde.hashCode();
+    return new HashCodeBuilder().append(ronde)
+                                .append(speeldatum.replace("?", "9"))
+                                .toHashCode();
   }
 
   public void setRonde(Integer ronde) {
@@ -147,5 +157,15 @@ public class Inhaalronde implements Comparable<Inhaalronde>, Serializable {
 
   public void setSpeeldatum(String speeldatum) {
     this.speeldatum = speeldatum;
+  }
+
+  @Override
+  public String toString() {
+    return new StringBuilder()
+        .append("Inhaalronde (")
+        .append("ronde: ").append(ronde)
+        .append(", speeldatum: ").append(speeldatum)
+        .append(", spelers: ").append(spelers.toString())
+        .append(")").toString();
   }
 }

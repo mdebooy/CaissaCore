@@ -27,6 +27,9 @@ public class TestConstants {
   public static final String  BST_EVENT_PGN         = "event.pgn";
   public static final String  BST_TEST_PGN          = "test.pgn";
 
+  public static final String  RUSHDATUM = "2112.21.12";
+  public static final String  RUSHJAAR  = "2112.??.??";
+
   public static final String  TST_TAAL  = "nl";
 
   private TestConstants() {}
