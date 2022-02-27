@@ -23,24 +23,14 @@ package eu.debooy.caissa.exceptions;
 public class ZetException extends CaissaException {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @param message Explanation of the exception
-   */
   public ZetException(String message) {
     super(message);
   }
 
-  /**
-   * @param cause   Cause of the exception
-   */
   public ZetException(Throwable cause) {
     super(cause);
   }
 
-  /**
-   * @param message Explanation of the exception
-   * @param cause   Cause of the exception
-   */
   public ZetException(String message, Throwable cause) {
     super(message, cause);
   }

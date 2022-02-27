@@ -23,24 +23,14 @@ package eu.debooy.caissa.exceptions;
 public class PgnException extends CaissaException {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @param message Explanation of the exception
-   */
   public PgnException(String message) {
     super(message);
   }
 
-  /**
-   * @param cause   Cause of the exception
-   */
   public PgnException(Throwable cause) {
     super(cause);
   }
 
-  /**
-   * @param message Explanation of the exception
-   * @param cause   Cause of the exception
-   */
   public PgnException(String message, Throwable cause) {
     super(message, cause);
   }

@@ -23,24 +23,14 @@ package eu.debooy.caissa.exceptions;
 public class CaissaException extends Exception {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @param message Explanation of the exception
-   */
   public CaissaException(String message) {
     super(message);
   }
 
-  /**
-   * @param cause   Cause of the exception
-   */
   public CaissaException(Throwable cause) {
     super(cause);
   }
 
-  /**
-   * @param message Explanation of the exception
-   * @param cause   Cause of the exception
-   */
   public CaissaException(String message, Throwable cause) {
     super(message, cause);
   }
