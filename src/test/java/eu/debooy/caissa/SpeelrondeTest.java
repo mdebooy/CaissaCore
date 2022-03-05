@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * @author Marco de Booij
  */
-public class InhaalrondeTest extends TestCase {
+public class SpeelrondeTest extends TestCase {
   private Spelerinfo  speler01;
   private Spelerinfo  speler02;
   private Spelerinfo  speler03;
@@ -37,7 +37,7 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testAddPartijen1() throws CaissaException {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
     var partij1     = new Partij();
     var partij2     = new Partij();
     var partij3     = new Partij();
@@ -65,7 +65,7 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testAddPartijen2() {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
     var partij1     = new Partij();
     var partij2     = new Partij();
     var partij3     = new Partij();
@@ -90,7 +90,7 @@ public class InhaalrondeTest extends TestCase {
       inhaalronde.addPartij(partij3);
       fail("CaissaException verwacht.");
     } catch (CaissaException e) {
-      assertEquals(Inhaalronde.COD_INH_SPELER,
+      assertEquals(Speelronde.COD_INH_SPELER,
                    e.getLocalizedMessage().split(":")[0]);
       assertTrue(e.getLocalizedMessage().contains(speler01.getNaam()));
     }
@@ -104,7 +104,7 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testAddPartijen3() {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
     var partij1     = new Partij();
     var partij2     = new Partij();
     var partij3     = new Partij();
@@ -129,7 +129,7 @@ public class InhaalrondeTest extends TestCase {
       inhaalronde.addPartij(partij3);
       fail("CaissaException verwacht.");
     } catch (CaissaException e) {
-      assertEquals(Inhaalronde.COD_INH_SPELER,
+      assertEquals(Speelronde.COD_INH_SPELER,
                    e.getLocalizedMessage().split(":")[0]);
       assertTrue(e.getLocalizedMessage().contains(speler01.getNaam()));
     }
@@ -143,7 +143,7 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testAddPartijen4() {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
     var partij1     = new Partij();
     var partij2     = new Partij();
     var partij3     = new Partij();
@@ -168,7 +168,7 @@ public class InhaalrondeTest extends TestCase {
       inhaalronde.addPartij(partij3);
       fail("CaissaException verwacht.");
     } catch (CaissaException e) {
-      assertEquals(Inhaalronde.COD_INH_SPELERS,
+      assertEquals(Speelronde.COD_INH_SPELERS,
                    e.getLocalizedMessage().split(":")[0]);
       assertTrue(e.getLocalizedMessage().contains(speler01.getNaam()));
       assertTrue(e.getLocalizedMessage().contains(speler02.getNaam()));
@@ -204,10 +204,10 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testCompareTo() {
-    var gelijk      = new Inhaalronde();
-    var groter      = new Inhaalronde();
-    var kleiner     = new Inhaalronde();
-    var inhaalronde = new Inhaalronde();
+    var gelijk      = new Speelronde();
+    var groter      = new Speelronde();
+    var kleiner     = new Speelronde();
+    var inhaalronde = new Speelronde();
 
     inhaalronde.setRonde(2);
     gelijk.setRonde(2);
@@ -221,9 +221,9 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testEquals1() {
-    var inhaalronde1  = new Inhaalronde();
-    var inhaalronde2  = new Inhaalronde();
-    var inhaalronde3  = new Inhaalronde();
+    var inhaalronde1  = new Speelronde();
+    var inhaalronde2  = new Speelronde();
+    var inhaalronde3  = new Speelronde();
 
     inhaalronde1.setRonde(1);
     inhaalronde2.setRonde(1);
@@ -237,9 +237,9 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testEquals2() {
-    var inhaalronde1  = new Inhaalronde();
-    var inhaalronde2  = new Inhaalronde();
-    var inhaalronde3  = new Inhaalronde();
+    var inhaalronde1  = new Speelronde();
+    var inhaalronde2  = new Speelronde();
+    var inhaalronde3  = new Speelronde();
 
     inhaalronde1.setRonde(1);
     inhaalronde1.setSpeeldatum(TestConstants.RUSHDATUM);
@@ -256,9 +256,9 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testHashCode() {
-    var inhaalronde1  = new Inhaalronde();
-    var inhaalronde2  = new Inhaalronde();
-    var inhaalronde3  = new Inhaalronde();
+    var inhaalronde1  = new Speelronde();
+    var inhaalronde2  = new Speelronde();
+    var inhaalronde3  = new Speelronde();
 
     inhaalronde1.setRonde(1);
     inhaalronde1.setSpeeldatum(TestConstants.RUSHDATUM);
@@ -274,20 +274,20 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testInit() {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
 
     assertEquals(Integer.valueOf(0), inhaalronde.getAantalPartijen());
     assertTrue(inhaalronde.getPartijen().isEmpty());
     assertNull(inhaalronde.getRonde());
     assertEquals(CaissaConstants.DEF_EINDDATUM, inhaalronde.getSpeeldatum());
-    assertEquals("Inhaalronde (ronde: null, speeldatum: 9999.99.99, "
+    assertEquals("Speelronde (ronde: null, speeldatum: 9999.99.99, "
                   + "spelers: [])",
                  inhaalronde.toString());
   }
 
   @Test
   public void testRonde() {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
 
     inhaalronde.setRonde(1);
 
@@ -299,7 +299,7 @@ public class InhaalrondeTest extends TestCase {
 
   @Test
   public void testSpeeldatum() {
-    var inhaalronde = new Inhaalronde();
+    var inhaalronde = new Speelronde();
 
     inhaalronde.setSpeeldatum(TestConstants.RUSHDATUM);
 
