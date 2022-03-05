@@ -83,6 +83,11 @@ public class Speelronde implements Comparable<Speelronde>, Serializable {
     var zwartspeler = partij.getZwartspeler().getNaam();
     var afgewezen   = new ArrayList<String>();
 
+    if (CaissaConstants.BYE.equalsIgnoreCase(witspeler)
+        || CaissaConstants.BYE.equalsIgnoreCase(zwartspeler)) {
+      return;
+    }
+
     if (spelers.contains(witspeler)) {
       afgewezen.add(witspeler);
     }
@@ -148,9 +153,11 @@ public class Speelronde implements Comparable<Speelronde>, Serializable {
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder().append(ronde)
-                                .append(speeldatum.replace("?", "9"))
-                                .toHashCode();
+    return new HashCodeBuilder().append(ronde).append(speeldatum).toHashCode();
+  }
+
+  public boolean hasSpeler(String speler) {
+    return spelers.contains(speler);
   }
 
   public void setRonde(Integer ronde) {

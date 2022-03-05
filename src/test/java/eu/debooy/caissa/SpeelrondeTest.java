@@ -34,6 +34,27 @@ public class SpeelrondeTest extends TestCase {
   private Spelerinfo  speler04;
   private Spelerinfo  speler05;
   private Spelerinfo  speler06;
+  private Spelerinfo  spelerbye;
+
+  @Before
+  @Override
+  public void setUp() {
+    speler01  = new Spelerinfo();
+    speler02  = new Spelerinfo();
+    speler03  = new Spelerinfo();
+    speler04  = new Spelerinfo();
+    speler05  = new Spelerinfo();
+    speler06  = new Spelerinfo();
+    spelerbye = new Spelerinfo();
+
+    speler01.setNaam("Speler, Alice");
+    speler02.setNaam("Speler, Bob");
+    speler03.setNaam("Speler, Carol");
+    speler04.setNaam("Speler, Dave");
+    speler05.setNaam("Speler, Eve");
+    speler06.setNaam("Speler, Frank");
+    spelerbye.setNaam(CaissaConstants.BYE);
+  }
 
   @Test
   public void testAddPartijen1() throws CaissaException {
@@ -184,22 +205,32 @@ public class SpeelrondeTest extends TestCase {
     assertEquals(TestConstants.RUSHDATUM, inhaalronde.getSpeeldatum());
   }
 
-  @Before
-  @Override
-  public void setUp() {
-    speler01  = new Spelerinfo();
-    speler02  = new Spelerinfo();
-    speler03  = new Spelerinfo();
-    speler04  = new Spelerinfo();
-    speler05  = new Spelerinfo();
-    speler06  = new Spelerinfo();
+  @Test
+  public void testAddPartijen5() throws CaissaException {
+    var inhaalronde = new Speelronde();
+    var partij1     = new Partij();
+    var partij2     = new Partij();
+    var partij3     = new Partij();
 
-    speler01.setNaam("Speler, Alice");
-    speler02.setNaam("Speler, Bob");
-    speler03.setNaam("Speler, Carol");
-    speler04.setNaam("Speler, Dave");
-    speler05.setNaam("Speler, Eve");
-    speler06.setNaam("Speler, Frank");
+    partij1.setRonde(new Round("1"));
+    partij1.setWitspeler(speler01);
+    partij1.setZwartspeler(speler02);
+    partij2.setRonde(new Round("1"));
+    partij2.setWitspeler(speler03);
+    partij2.setZwartspeler(speler04);
+    partij3.setRonde(new Round("1"));
+    partij3.setWitspeler(speler05);
+    partij3.setZwartspeler(spelerbye);
+
+    inhaalronde.addPartij(partij1);
+    inhaalronde.addPartij(partij2);
+    inhaalronde.addPartij(partij3);
+    inhaalronde.setRonde(1);
+    inhaalronde.setSpeeldatum(TestConstants.RUSHDATUM);
+
+    assertEquals(Integer.valueOf(2), inhaalronde.getAantalPartijen());
+    assertEquals(Integer.valueOf(1), inhaalronde.getRonde());
+    assertEquals(TestConstants.RUSHDATUM, inhaalronde.getSpeeldatum());
   }
 
   @Test
