@@ -32,6 +32,7 @@ public final class CaissaConstants {
   public static final String  FMT_PGNTAG        = "[{0} \"{1}\"]";
 
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
+  public static final String  JSON_TAG_INHALEN            = "inhalen";
   public static final String  JSON_TAG_KALENDER           = "kalender";
   public static final String  JSON_TAG_KALENDER_DATUM     = "datum";
   public static final String  JSON_TAG_KALENDER_EXTRA     = "extra";
