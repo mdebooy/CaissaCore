@@ -245,6 +245,14 @@ public class PGN implements Comparable<PGN>, Serializable {
                   .isEquals();
   }
 
+  public int getAantalZettenWit() {
+    return (getZuivereZetten().split(" ").length + 1) / 2;
+  }
+
+  public int getAantalZettenZwart() {
+    return getZuivereZetten().split(" ").length / 2;
+  }
+
   public String getBlack() {
     return getTag(CaissaConstants.PGNTAG_BLACK);
   }

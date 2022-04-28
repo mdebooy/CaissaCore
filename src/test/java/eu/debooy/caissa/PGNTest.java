@@ -99,6 +99,32 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
+  public void testAantalZettenWit() throws PgnException {
+    var zettenwit = new int[] {39, 32, 18, 8, 50, 7, 18, 32, 16};
+    var controle  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + TestConstants.BST_DEFAULT_PGN);
+    var i         = 0;
+    for (var partij : controle) {
+      assertEquals(zettenwit[i], partij.getAantalZettenWit());
+      i++;
+    }
+  }
+
+  @Test
+  public void testAantalZettenZwart() throws PgnException {
+    var zettenwit = new int[] {38, 31, 18, 7, 49, 6, 17, 32, 16};
+    var controle  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + TestConstants.BST_DEFAULT_PGN);
+    var i         = 0;
+    for (var partij : controle) {
+      assertEquals(zettenwit[i], partij.getAantalZettenZwart());
+      i++;
+    }
+  }
+
+  @Test
   public void testHashCode() throws PgnException {
     assertEquals(1865614310, pgn.hashCode());
     pgn.setTag(CaissaConstants.PGNTAG_RESULT, "1-0");
@@ -219,7 +245,7 @@ public class PGNTest extends BatchTest {
     Collection<PGN> partijen    = new TreeSet<>(new PGN.ByEventComparator());
     partijen.addAll(CaissaUtils.laadPgnBestand(getTemp() + File.separator
                                                 + TestConstants.BST_TEST_PGN));
-    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    var             partijTabel = partijen.toArray(PGN[]::new);
     var             controle    =
         CaissaUtils.laadPgnBestand(getTemp() + File.separator
                                     + TestConstants.BST_EVENT_PGN);
@@ -235,7 +261,7 @@ public class PGNTest extends BatchTest {
     Collection<PGN> partijen    = new TreeSet<>();
     partijen.addAll(CaissaUtils.laadPgnBestand(getTemp() + File.separator
                                                 + TestConstants.BST_TEST_PGN));
-    var             partijTabel = partijen.toArray(new PGN[partijen.size()]);
+    var             partijTabel = partijen.toArray(PGN[]::new);
     var             controle    =
         CaissaUtils.laadPgnBestand(getTemp() + File.separator
                                     + TestConstants.BST_DEFAULT_PGN);
