@@ -534,7 +534,8 @@ public class PGN implements Comparable<PGN>, Serializable {
   @Override
   public String toString() {
     var result      = new StringBuilder();
-    var teSplitsen  = zetten + " " + tags.get(CaissaConstants.PGNTAG_RESULT);
+    var teSplitsen  =
+            (zetten + " " + tags.get(CaissaConstants.PGNTAG_RESULT)).trim();
 
     result.append(getTagsAsString());
     result.append(getEol());
