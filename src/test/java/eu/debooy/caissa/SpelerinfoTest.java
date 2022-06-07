@@ -31,6 +31,7 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class SpelerinfoTest extends TestCase {
+  public static final String  ADAMS       = "Adams";
   public static final String  ADAMS_JAN   = "Adams, Jan";
   public static final String  DEVRIES_JAN = "de Vries, Jan";
   public static final String  JAN         = "Jan";
@@ -112,7 +113,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getAlias());
     spelerinfo.setAlias("alias");
     assertEquals("alias", spelerinfo.getAlias());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getEerstePartij(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -190,7 +193,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getEerstePartij());
     spelerinfo.setEerstePartij(eerstepartij);
     assertEquals(eerstepartij, spelerinfo.getEerstePartij());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -253,7 +258,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getElo());
     spelerinfo.setElo(2112);
     assertEquals(Integer.valueOf(2112), spelerinfo.getElo());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -309,7 +316,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getElogroei());
     spelerinfo.setElogroei(12);
     assertEquals(Integer.valueOf(12), spelerinfo.getElogroei());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -365,7 +374,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getEmail());
     spelerinfo.setEmail("e-mail");
     assertEquals("e-mail", spelerinfo.getEmail());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -426,7 +437,9 @@ public class SpelerinfoTest extends TestCase {
     assertTrue(spelerinfo.inHeenronde());
     spelerinfo.setHeenronde(false);
     assertFalse(spelerinfo.inHeenronde());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -504,7 +517,9 @@ public class SpelerinfoTest extends TestCase {
   public void testInit2() {
     var spelerinfo  = new Spelerinfo(spelerinfo8);
 
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo8.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo8.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo8.getEerstePartij())
@@ -630,7 +645,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getLaatstePartij());
     spelerinfo.setLaatstePartij(laatstepartij);
     assertEquals(laatstepartij, spelerinfo.getLaatstePartij());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -693,7 +710,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getLandKode());
     spelerinfo.setLandKode("EU");
     assertEquals("EU", spelerinfo.getLandKode());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -750,7 +769,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getMaxDatum());
     spelerinfo.setMaxDatum(maxDatum);
     assertEquals(maxDatum, spelerinfo.getMaxDatum());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -813,7 +834,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getMaxElo());
     spelerinfo.setMaxElo(2112);
     assertEquals(Integer.valueOf(2112), spelerinfo.getMaxElo());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -870,7 +893,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getMinDatum());
     spelerinfo.setMinDatum(minDatum);
     assertEquals(minDatum, spelerinfo.getMinDatum());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -933,7 +958,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getMinElo());
     spelerinfo.setMinElo(1221);
     assertEquals(Integer.valueOf(1221), spelerinfo.getMinElo());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -990,6 +1017,7 @@ public class SpelerinfoTest extends TestCase {
     assertEquals("", spelerinfo.getVoornaam());
     assertEquals("", spelerinfo.getVolledigenaam());
     spelerinfo.setNaam(ADAMS_JAN);
+    assertEquals(ADAMS, spelerinfo.getAchternaam());
     assertEquals(ADAMS_JAN, spelerinfo.getNaam());
     assertEquals(JAN, spelerinfo.getVoornaam());
     assertEquals(JAN_ADAMS, spelerinfo.getVolledigenaam());
@@ -1035,10 +1063,12 @@ public class SpelerinfoTest extends TestCase {
                                           spelerinfo0.inTerugronde())
                                   .isEquals());
     spelerinfo.setNaam(JAN);
+    assertEquals(JAN, spelerinfo.getAchternaam());
     assertEquals(JAN, spelerinfo.getNaam());
     assertEquals(JAN, spelerinfo.getVoornaam());
     assertEquals(JAN, spelerinfo.getVolledigenaam());
     spelerinfo.setNaam(null);
+    assertEquals("", spelerinfo.getAchternaam());
     assertEquals("", spelerinfo.getNaam());
     assertEquals("", spelerinfo.getVoornaam());
     assertEquals("", spelerinfo.getVolledigenaam());
@@ -1052,7 +1082,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getOfficieel());
     spelerinfo.setOfficieel(officieel);
     assertEquals(officieel, spelerinfo.getOfficieel());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -1115,7 +1147,9 @@ public class SpelerinfoTest extends TestCase {
     assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
     spelerinfo.setPartijen(12);
     assertEquals(Integer.valueOf(12), spelerinfo.getPartijen());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -1171,7 +1205,9 @@ public class SpelerinfoTest extends TestCase {
     assertEquals(0.0d, spelerinfo.getPunten());
     spelerinfo.setPunten(8.5d);
     assertEquals(8.5d, spelerinfo.getPunten());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -1318,7 +1354,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getSpelerId());
     spelerinfo.setSpelerId(1221);
     assertEquals(Integer.valueOf(1221), spelerinfo.getSpelerId());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -1374,7 +1412,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getSpelerSeq());
     spelerinfo.setSpelerSeq(1221);
     assertEquals(Integer.valueOf(1221), spelerinfo.getSpelerSeq());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())
@@ -1428,7 +1468,9 @@ public class SpelerinfoTest extends TestCase {
     assertTrue(spelerinfo.inTerugronde());
     spelerinfo.setTerugronde(false);
     assertFalse(spelerinfo.inTerugronde());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -1484,7 +1526,9 @@ public class SpelerinfoTest extends TestCase {
     assertNull(spelerinfo.getTelefoon());
     spelerinfo.setTelefoon("+32/2/21.12.00");
     assertEquals("+32/2/21.12.00", spelerinfo.getTelefoon());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getEerstePartij(),
                                           spelerinfo0.getEerstePartij())
@@ -1538,7 +1582,9 @@ public class SpelerinfoTest extends TestCase {
     assertEquals(0.0d, spelerinfo.getTieBreakScore());
     spelerinfo.setTieBreakScore(11.0d);
     assertEquals(11.0d, spelerinfo.getTieBreakScore());
-    assertTrue(new EqualsBuilder().append(spelerinfo.getAlias(),
+    assertTrue(new EqualsBuilder().append(spelerinfo.getAchternaam(),
+                                          spelerinfo0.getAchternaam())
+                                  .append(spelerinfo.getAlias(),
                                           spelerinfo0.getAlias())
                                   .append(spelerinfo.getElo(),
                                           spelerinfo0.getElo())

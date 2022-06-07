@@ -186,15 +186,21 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return spelerId.equals(((Spelerinfo) other).spelerId);
   }
 
+  public String getAchternaam() {
+    String[] delen = naam.split(",");
+
+    return delen[0].trim();
+  }
+
+  public String getAlias() {
+    return alias;
+  }
+
   public Date getEerstePartij() {
     if (null == eerstePartij) {
       return null;
     }
     return new Date(eerstePartij.getTime());
-  }
-
-  public String getAlias() {
-    return alias;
   }
 
   public Integer getElo() {
