@@ -497,11 +497,9 @@ public final class CaissaUtils {
     var wit       = partij.getTag(CaissaConstants.PGNTAG_WHITE);
     var zwart     = partij.getTag(CaissaConstants.PGNTAG_BLACK);
     var iWit      =
-        stand[Arrays.binarySearch(namen, wit,
-                                               String.CASE_INSENSITIVE_ORDER)];
+        stand[Arrays.binarySearch(namen, wit,   String.CASE_INSENSITIVE_ORDER)];
     var iZwart    =
-        stand[Arrays.binarySearch(namen, zwart,
-                                               String.CASE_INSENSITIVE_ORDER)];
+        stand[Arrays.binarySearch(namen, zwart, String.CASE_INSENSITIVE_ORDER)];
 
     int ronde;
     try {
