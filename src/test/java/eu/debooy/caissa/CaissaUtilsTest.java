@@ -258,6 +258,27 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
+  public void testIsDatum() {
+    assertTrue(CaissaUtils.isDatum("2112.12.21"));
+    assertTrue(CaissaUtils.isDatum("????.12.21"));
+    assertTrue(CaissaUtils.isDatum("2?1?.12.21"));
+    assertTrue(CaissaUtils.isDatum("2112.??.??"));
+    assertTrue(CaissaUtils.isDatum("2112.1?.21"));
+    assertTrue(CaissaUtils.isDatum("2112.?2.21"));
+    assertTrue(CaissaUtils.isDatum("2112.12.2?"));
+    assertTrue(CaissaUtils.isDatum("2112.12.?1"));
+    assertTrue(CaissaUtils.isDatum("????.??.??"));
+    assertFalse(CaissaUtils.isDatum("2112.12"));
+    assertFalse(CaissaUtils.isDatum("x112.12.21"));
+    assertFalse(CaissaUtils.isDatum("2112.1x.21"));
+    assertFalse(CaissaUtils.isDatum("2112.x2.21"));
+    assertFalse(CaissaUtils.isDatum("2112.12.x1"));
+    assertFalse(CaissaUtils.isDatum("2112.12.2x"));
+    assertFalse(CaissaUtils.isDatum("2112.22.21"));
+    assertFalse(CaissaUtils.isDatum("2112.12.41"));
+  }
+
+  @Test
   public void testPgnZettenToChessTheatre()
       throws FenException, PgnException, ZetException {
     var pgnZetten     =

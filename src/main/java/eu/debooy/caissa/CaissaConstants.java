@@ -62,8 +62,12 @@ public final class CaissaConstants {
   public static final String  PGNTAG_SITE       = "Site";
   public static final String  PGNTAG_WHITE      = "White";
 
+  // Gebruik dezelfde waarde uit Toernooi.
+  @Deprecated(forRemoval = true, since = "0.1.15")
   public static final int     TOERNOOI_MATCH    = 0;
+  @Deprecated(forRemoval = true, since = "0.1.15")
   public static final int     TOERNOOI_ENKEL    = 1;
+  @Deprecated(forRemoval = true, since = "0.1.15")
   public static final int     TOERNOOI_DUBBEL   = 2;
 
   public static final String  TIEBREAK_SB       = "SB";

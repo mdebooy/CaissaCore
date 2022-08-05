@@ -18,12 +18,14 @@ package eu.debooy.caissa;
 
 import static eu.debooy.caissa.CaissaConstants.JSON_TAG_KALENDER_DATUM;
 import eu.debooy.caissa.exceptions.PgnException;
+import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.access.BestandConstants;
 import eu.debooy.doosutils.access.TekstBestand;
 import eu.debooy.doosutils.exception.BestandException;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -279,6 +281,44 @@ public final class CaissaUtils {
 
   public static String internToExtern(int veld) {
     return "" + (char) (veld%10 + 96) + (char) (veld/10 + 47);
+  }
+
+  public static boolean isDatum(String datum) {
+    if (datum.length() != 10) {
+      return false;
+    }
+
+    if (datum.charAt(4) != '.'
+        && datum.charAt(7) != '.') {
+      return false;
+    }
+
+    if (datum.substring(0,4)
+             .replaceAll("[\\d\\?]", "").length() != 0) {
+      return false;
+    }
+
+    if (datum.substring(5,7)
+             .replaceAll("[0-1\\?][\\d\\?]", "").length() != 0) {
+      return false;
+    }
+
+    if (datum.substring(8)
+             .replaceAll("[0-3\\?][\\d\\?]", "").length() != 0) {
+      return false;
+    }
+
+    if (datum.indexOf('?') == -1) {
+      try {
+        Datum.toDate(datum, CaissaConstants.PGN_DATUM_FORMAAT);
+      } catch (ParseException e) {
+        return false;
+      }
+
+      return true;
+    }
+
+    return datum.replaceAll("[\\d\\?\\.]", "").length() == 0;
   }
 
   public static boolean isMat(FEN fen) {
