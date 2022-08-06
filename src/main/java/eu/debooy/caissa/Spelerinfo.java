@@ -16,16 +16,6 @@
  */
 package eu.debooy.caissa;
 
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_ALIAS;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_ELO;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_EMAIL;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_HEENRONDE;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_LANDKODE;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_NAAM;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERID;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_SPELERSEQ;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_TELEFOON;
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_SPELER_TERUGRONDE;
 import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
 import java.util.Comparator;
@@ -65,38 +55,50 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   public Spelerinfo() {}
 
   public Spelerinfo(JSONObject spelerinfo) {
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_ALIAS)) {
-      alias         = spelerinfo.get(JSON_TAG_SPELER_ALIAS).toString();
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_ALIAS)) {
+      alias         =
+          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_ALIAS).toString();
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_ELO)) {
-      elo         = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_ELO)
-                                              .toString());
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_ELO)) {
+      elo         =
+          Integer.valueOf(spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_ELO)
+                                    .toString());
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_EMAIL)) {
-      email         = spelerinfo.get(JSON_TAG_SPELER_EMAIL).toString();
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_EMAIL)) {
+      email         =
+          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_EMAIL).toString();
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_HEENRONDE)) {
-      heenronde   = (boolean) spelerinfo.get(JSON_TAG_SPELER_HEENRONDE);
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_HEENRONDE)) {
+      heenronde   =
+          (boolean) spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_HEENRONDE);
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_LANDKODE)) {
-      landKode      = spelerinfo.get(JSON_TAG_SPELER_LANDKODE).toString();
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_LANDKODE)) {
+      landKode      =
+          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_LANDKODE).toString();
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_NAAM)) {
-      naam          = spelerinfo.get(JSON_TAG_SPELER_NAAM).toString();
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_NAAM)) {
+      naam          =
+          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_NAAM).toString();
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_TERUGRONDE)) {
-      terugronde  = (boolean) spelerinfo.get(JSON_TAG_SPELER_TERUGRONDE);
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_TERUGRONDE)) {
+      terugronde  =
+          (boolean) spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_TERUGRONDE);
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_SPELERID)) {
-      spelerId    = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_SPELERID)
-                                              .toString());
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_SPELERID)) {
+      spelerId    =
+          Integer.valueOf(
+              spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_SPELERID)
+                        .toString());
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_SPELERSEQ)) {
-      spelerSeq   = Integer.valueOf(spelerinfo.get(JSON_TAG_SPELER_SPELERSEQ)
-                                              .toString());
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_SPELERSEQ)) {
+      spelerSeq   =
+          Integer.valueOf(
+              spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_SPELERSEQ)
+                        .toString());
     }
-    if (spelerinfo.containsKey(JSON_TAG_SPELER_TELEFOON)) {
-      telefoon    = spelerinfo.get(JSON_TAG_SPELER_TELEFOON).toString();
+    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_TELEFOON)) {
+      telefoon    =
+            spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_TELEFOON).toString();
     }
   }
 
@@ -162,6 +164,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
    *   4 De 'kleinste' naam
    * De grootste moet als eerste in de lijst komen.
    * @param other
+   * @return
    */
   @Override
   public int compareTo(Spelerinfo other) {
@@ -321,19 +324,22 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
       return false;
     }
 
-    switch (toernooiType) {
-      case CaissaConstants.TOERNOOI_MATCH:
-        return true;
-      case CaissaConstants.TOERNOOI_ENKEL:
-        return inHeenronde();
-      case CaissaConstants.TOERNOOI_DUBBEL:
-        if (ronde*2 > rondes) {
-          return inTerugronde();
-        }
-        return inHeenronde();
-      default:
-        return false;
+    if (toernooiType == Toernooi.TOERNOOI_MATCH) {
+      return true;
     }
+
+    if (toernooiType == Toernooi.TOERNOOI_ENKEL) {
+      return inHeenronde();
+    }
+
+    if (toernooiType == Toernooi.TOERNOOI_DUBBEL) {
+      if (ronde*2 > rondes) {
+        return inTerugronde();
+      }
+      return inHeenronde();
+    }
+
+    return false;
   }
 
   public Boolean inTerugronde() {

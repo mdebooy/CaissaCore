@@ -16,7 +16,6 @@
  */
 package eu.debooy.caissa;
 
-import static eu.debooy.caissa.CaissaConstants.JSON_TAG_KALENDER_DATUM;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosConstants;
@@ -257,13 +256,13 @@ public final class CaissaUtils {
 
     switch (enkelrondig) {
       case DoosConstants.WAAR:
-        enkel = CaissaConstants.TOERNOOI_ENKEL;
+        enkel = Toernooi.TOERNOOI_ENKEL;
         break;
       case DoosConstants.ONWAAR:
-        enkel = CaissaConstants.TOERNOOI_DUBBEL;
+        enkel = Toernooi.TOERNOOI_DUBBEL;
         break;
       default:
-        enkel = CaissaConstants.TOERNOOI_MATCH;
+        enkel = Toernooi.TOERNOOI_MATCH;
         break;
     }
 
@@ -663,10 +662,11 @@ public final class CaissaUtils {
     for (var i = 0; i < kalender.size(); i++) {
       var item  = (JSONObject) kalender.get(i);
       if (item.containsKey(toernooi)
-          && item.containsKey(JSON_TAG_KALENDER_DATUM)) {
+          && item.containsKey(CaissaConstants.JSON_TAG_KALENDER_DATUM)) {
         var ronde = Integer.parseInt(item.get(toernooi).toString());
         if (ronde < rondes) {
-          data[ronde] = item.get(JSON_TAG_KALENDER_DATUM).toString();
+          data[ronde] =
+              item.get(CaissaConstants.JSON_TAG_KALENDER_DATUM).toString();
         }
       }
     }

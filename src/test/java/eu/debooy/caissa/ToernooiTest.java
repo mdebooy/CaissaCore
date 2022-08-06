@@ -16,8 +16,6 @@
  */
 package eu.debooy.caissa;
 
-import static eu.debooy.caissa.Toernooi.ERR_RONDES;
-import static eu.debooy.caissa.Toernooi.resourceBundle;
 import eu.debooy.caissa.exceptions.ToernooiException;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -32,6 +30,38 @@ public class ToernooiTest extends TestCase {
   @Test
   public void testDatum() {
     try {
+      toernooi  = new Toernooi.Builder().setEinddatum("2112.12.21")
+                                        .setStartdatum("2112.12.21")
+                                        .build();
+
+      assertTrue(toernooi.getAantalSpelers().isEmpty());
+      assertTrue(toernooi.getEinddatum().isPresent());
+      assertTrue(toernooi.getEvent().isEmpty());
+      assertTrue(toernooi.getRondes().isEmpty());
+      assertTrue(toernooi.getSite().isEmpty());
+      assertTrue(toernooi.getStartdatum().isPresent());
+      assertTrue(toernooi.getType().isEmpty());
+    } catch (ToernooiException e) {
+      fail("Er had geen ToernooiException moeten wezen.");
+    }
+
+    try {
+      toernooi  = new Toernooi.Builder().setEinddatum("2112.12.21")
+                                        .setStartdatum("2022.12.21")
+                                        .build();
+
+      assertTrue(toernooi.getAantalSpelers().isEmpty());
+      assertTrue(toernooi.getEinddatum().isPresent());
+      assertTrue(toernooi.getEvent().isEmpty());
+      assertTrue(toernooi.getRondes().isEmpty());
+      assertTrue(toernooi.getSite().isEmpty());
+      assertTrue(toernooi.getStartdatum().isPresent());
+      assertTrue(toernooi.getType().isEmpty());
+    } catch (ToernooiException e) {
+      fail("Er had geen ToernooiException moeten wezen.");
+    }
+
+    try {
       toernooi  = new Toernooi.Builder().setEinddatum("2022.12.21")
                                         .setStartdatum("2112.12.21")
                                         .build();
@@ -45,7 +75,7 @@ public class ToernooiTest extends TestCase {
       assertTrue(toernooi.getType().isEmpty());
       fail("Er had een ToernooiException moeten wezen.");
     } catch (ToernooiException e) {
-      assertEquals(resourceBundle.getString(Toernooi.ERR_DATUM),
+      assertEquals(Toernooi.resourceBundle.getString(Toernooi.ERR_DATUM),
                    e.getLocalizedMessage());
     }
 
@@ -55,11 +85,11 @@ public class ToernooiTest extends TestCase {
                                         .build();
 
       assertTrue(toernooi.getAantalSpelers().isEmpty());
-      assertEquals("2112.12.21", toernooi.getEinddatum().get());
+      assertTrue(toernooi.getEinddatum().isPresent());
       assertTrue(toernooi.getEvent().isEmpty());
       assertTrue(toernooi.getRondes().isEmpty());
       assertTrue(toernooi.getSite().isEmpty());
-      assertEquals("2112.12.??", toernooi.getStartdatum().get());
+      assertTrue(toernooi.getStartdatum().isPresent());
       assertTrue(toernooi.getType().isEmpty());
     } catch (ToernooiException e) {
       fail("Er had geen ToernooiException moeten wezen.");
@@ -71,11 +101,11 @@ public class ToernooiTest extends TestCase {
                                         .build();
 
       assertTrue(toernooi.getAantalSpelers().isEmpty());
-      assertEquals("2112.12.21", toernooi.getEinddatum().get());
+      assertTrue(toernooi.getEinddatum().isPresent());
       assertTrue(toernooi.getEvent().isEmpty());
       assertTrue(toernooi.getRondes().isEmpty());
       assertTrue(toernooi.getSite().isEmpty());
-      assertEquals("2112.??.??", toernooi.getStartdatum().get());
+      assertTrue(toernooi.getStartdatum().isPresent());
       assertTrue(toernooi.getType().isEmpty());
     } catch (ToernooiException e) {
       fail("Er had geen ToernooiException moeten wezen.");
@@ -100,6 +130,29 @@ public class ToernooiTest extends TestCase {
   }
 
   @Test
+  public void testEquals() throws ToernooiException {
+    var toernooi1 = new Toernooi.Builder().build();
+
+    toernooi  = new Toernooi.Builder().build();
+    assertEquals(toernooi, toernooi1);
+
+    toernooi1 = new Toernooi.Builder().setType(Toernooi.TOERNOOI_MATCH).build();
+    assertEquals(toernooi, toernooi1);
+
+    toernooi1 = new Toernooi.Builder().setType(Toernooi.TOERNOOI_MATCH)
+                                      .setStartdatum("2112.12.21").build();
+    assertFalse(toernooi.equals(toernooi1));
+
+    toernooi  = new Toernooi.Builder().setType(Toernooi.TOERNOOI_MATCH)
+                                      .setStartdatum("2112.12.21").build();
+    assertTrue(toernooi.equals(toernooi1));
+
+    toernooi  = new Toernooi.Builder().setType(Toernooi.TOERNOOI_MATCH)
+                                      .setStartdatum("2112.12.22").build();
+    assertFalse(toernooi.equals(toernooi1));
+  }
+
+  @Test
   public void testFoutiefToernooi() {
     try {
       toernooi  = new Toernooi.Builder().setAantalSpelers(0)
@@ -111,11 +164,11 @@ public class ToernooiTest extends TestCase {
     } catch (ToernooiException e) {
       String  exception = e.getLocalizedMessage();
       assertTrue(exception.contains(
-              resourceBundle.getString(Toernooi.ERR_TYPE)));
+              Toernooi.resourceBundle.getString(Toernooi.ERR_TYPE)));
       assertTrue(exception.contains(
-              resourceBundle.getString(Toernooi.ERR_AANTALSPELERS)));
+              Toernooi.resourceBundle.getString(Toernooi.ERR_AANTALSPELERS)));
       assertTrue(exception.contains(
-              resourceBundle.getString(Toernooi.ERR_RONDES)));
+              Toernooi.resourceBundle.getString(Toernooi.ERR_RONDES)));
     }
   }
 
@@ -143,7 +196,8 @@ public class ToernooiTest extends TestCase {
       assertTrue(toernooi.getAantalSpelers().isEmpty());
       fail("Er had een ToernooiException moeten wezen.");
     } catch (ToernooiException e) {
-      assertEquals(resourceBundle.getString(Toernooi.ERR_AANTALSPELERS),
+      assertEquals(Toernooi.resourceBundle
+                           .getString(Toernooi.ERR_AANTALSPELERS),
                    e.getLocalizedMessage());
     }
 
@@ -153,7 +207,8 @@ public class ToernooiTest extends TestCase {
       assertTrue(toernooi.getAantalSpelers().isEmpty());
       fail("Er had een ToernooiException moeten wezen.");
     } catch (ToernooiException e) {
-      assertEquals(resourceBundle.getString(Toernooi.ERR_AANTALSPELERS),
+      assertEquals(Toernooi.resourceBundle
+                           .getString(Toernooi.ERR_AANTALSPELERS),
                    e.getLocalizedMessage());
     }
 
@@ -249,7 +304,7 @@ public class ToernooiTest extends TestCase {
       assertTrue(toernooi.getRondes().isEmpty());
       fail("Er had een ToernooiException moeten wezen.");
     } catch (ToernooiException e) {
-      assertEquals(resourceBundle.getString(Toernooi.ERR_RONDES),
+      assertEquals(Toernooi.resourceBundle.getString(Toernooi.ERR_RONDES),
                    e.getLocalizedMessage());
     }
 
@@ -261,7 +316,7 @@ public class ToernooiTest extends TestCase {
       assertTrue(toernooi.getRondes().isEmpty());
       fail("Er had een ToernooiException moeten wezen.");
     } catch (ToernooiException e) {
-      assertEquals(resourceBundle.getString(ERR_RONDES),
+      assertEquals(Toernooi.resourceBundle.getString(Toernooi.ERR_RONDES),
                    e.getLocalizedMessage());
     }
 
@@ -350,7 +405,7 @@ public class ToernooiTest extends TestCase {
       assertTrue(toernooi.getType().isEmpty());
       fail("Er had een ToernooiException moeten wezen.");
     } catch (ToernooiException e) {
-      assertEquals(resourceBundle.getString(Toernooi.ERR_TYPE),
+      assertEquals(Toernooi.resourceBundle.getString(Toernooi.ERR_TYPE),
                    e.getLocalizedMessage());
     }
   }

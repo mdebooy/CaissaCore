@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 /**
@@ -174,11 +176,6 @@ public class Toernooi implements Comparable<Toernooi>, Serializable {
       return this;
     }
 
-    public Builder setEinddatum(int aantalSpelers) {
-      this.aantalSpelers    = Optional.of(aantalSpelers);
-      return this;
-    }
-
     public Builder setEinddatum(String einddatum) {
       this.einddatum        = Optional.of(einddatum);
       return this;
@@ -212,15 +209,30 @@ public class Toernooi implements Comparable<Toernooi>, Serializable {
 
   @Override
   public int compareTo(Toernooi other) {
-    return new CompareToBuilder().append(getStartdatum().get(),
-                                         other.getStartdatum().get())
-                                 .append(getEinddatum().get(),
-                                         other.getEinddatum().get())
-                                 .append(getEvent().get(),
-                                         other.getEvent().get())
-                                 .append(getSite().get(),
-                                         other.getSite().get())
+    return new CompareToBuilder().append(getStartdatum(), other.getStartdatum())
+                                 .append(getEinddatum(), other.getEinddatum())
+                                 .append(getEvent(), other.getEvent())
+                                 .append(getSite(), other.getSite())
                                  .toComparison();
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (!(other instanceof Toernooi)) {
+      return false;
+    }
+
+    if (this == other) {
+      return true;
+    }
+
+    var toernooi  = (Toernooi) other;
+
+    return new EqualsBuilder().append(getStartdatum(), toernooi.getStartdatum())
+                              .append(getEinddatum(), toernooi.getEinddatum())
+                              .append(getEvent(), toernooi.getEvent())
+                              .append(getSite(), toernooi.getSite())
+                              .isEquals();
   }
 
   public Optional<Integer> getAantalSpelers() {
@@ -249,6 +261,15 @@ public class Toernooi implements Comparable<Toernooi>, Serializable {
 
   public Optional<Integer> getType() {
     return type;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(getStartdatum())
+                                .append(getEinddatum())
+                                .append(getEvent())
+                                .append(getSite())
+                                .toHashCode();
   }
 
   public boolean isDubbel() {
