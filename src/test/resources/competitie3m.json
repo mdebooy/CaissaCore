@@ -2,12 +2,11 @@
     "event": "HH Caissa 21/22",
     "site": "Schaakvereniging 'Caissa'",
     "eventdate": "2021.09.28",
-    "toernooitype": 2,
+    "toernooitype": 0,
     "spelers": [
       {"naam": "Speler, Alice"},
       {"naam": "Speler, Bob"},
-      {"naam": "Speler, Carol"},
-      {"naam": "Speler, Dave"}
+      {"naam": "Speler, Carol"}
     ],
     "kalender": [
       { "datum": "28/09/2021", "ronde": 1},
