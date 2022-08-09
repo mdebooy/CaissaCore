@@ -20,18 +20,18 @@ package eu.debooy.caissa.exceptions;
 /**
  * @author Marco de Booij
  */
-public class ToernooiException extends CaissaException {
+public class CompetitieException extends CaissaException {
   private static final long serialVersionUID = 1L;
 
-  public ToernooiException(String message) {
+  public CompetitieException(String message) {
     super(message);
   }
 
-  public ToernooiException(Throwable cause) {
+  public CompetitieException(Throwable cause) {
     super(cause);
   }
 
-  public ToernooiException(String message, Throwable cause) {
+  public CompetitieException(String message, Throwable cause) {
     super(message, cause);
   }
 }

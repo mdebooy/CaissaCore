@@ -89,13 +89,13 @@ public class PGNTest extends BatchTest {
   public void setUp() throws PgnException {
     pgn = new PGN();
 
-    pgn.addTag(CaissaConstants.PGNTAG_EVENT, "schaak evenement");
-    pgn.addTag(CaissaConstants.PGNTAG_SITE,  "tournooi ruimte");
-    pgn.addTag(CaissaConstants.PGNTAG_DATE,  "2009.05.17");
-    pgn.addTag(CaissaConstants.PGNTAG_ROUND, "-");
-    pgn.addTag(CaissaConstants.PGNTAG_WHITE, "witspeler");
-    pgn.addTag(CaissaConstants.PGNTAG_BLACK, "zwartspeler");
-    pgn.addTag(CaissaConstants.PGNTAG_RESULT, "*");
+    pgn.addTag(PGN.PGNTAG_EVENT, "schaak evenement");
+    pgn.addTag(PGN.PGNTAG_SITE,  "tournooi ruimte");
+    pgn.addTag(PGN.PGNTAG_DATE,  "2009.05.17");
+    pgn.addTag(PGN.PGNTAG_ROUND, "-");
+    pgn.addTag(PGN.PGNTAG_WHITE, "witspeler");
+    pgn.addTag(PGN.PGNTAG_BLACK, "zwartspeler");
+    pgn.addTag(PGN.PGNTAG_RESULT, "*");
   }
 
   @Test
@@ -127,7 +127,7 @@ public class PGNTest extends BatchTest {
   @Test
   public void testHashCode() throws PgnException {
     assertEquals(1865614310, pgn.hashCode());
-    pgn.setTag(CaissaConstants.PGNTAG_RESULT, "1-0");
+    pgn.setTag(PGN.PGNTAG_RESULT, "1-0");
     assertEquals(2063237628, pgn.hashCode());
   }
 
@@ -140,50 +140,50 @@ public class PGNTest extends BatchTest {
     assertEquals(pgn, instance);
     assertFalse(pgn.isBeeindigd());
     assertFalse(instance.isBeeindigd());
-    instance.setTag(CaissaConstants.PGNTAG_RESULT, "1-0");
+    instance.setTag(PGN.PGNTAG_RESULT, "1-0");
     assertNotEquals(pgn, instance);
     assertTrue(instance.isBeeindigd());
   }
 
   @Test
   public void testMissingBlack() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_BLACK);
+    pgn.deleteTag(PGN.PGNTAG_BLACK);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingDate() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_DATE);
+    pgn.deleteTag(PGN.PGNTAG_DATE);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingEvent() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_EVENT);
+    pgn.deleteTag(PGN.PGNTAG_EVENT);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingResult() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_RESULT);
+    pgn.deleteTag(PGN.PGNTAG_RESULT);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingRound() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_ROUND);
+    pgn.deleteTag(PGN.PGNTAG_ROUND);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingSite() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_SITE);
+    pgn.deleteTag(PGN.PGNTAG_SITE);
     assertFalse(pgn.isValid());
   }
 
   @Test
   public void testMissingWhite() throws PgnException {
-    pgn.deleteTag(CaissaConstants.PGNTAG_WHITE);
+    pgn.deleteTag(PGN.PGNTAG_WHITE);
     assertFalse(pgn.isValid());
   }
 
@@ -211,7 +211,7 @@ public class PGNTest extends BatchTest {
   @Test
   public void testResultTag() {
     try {
-      pgn.addTag(CaissaConstants.PGNTAG_RESULT, "fout");
+      pgn.addTag(PGN.PGNTAG_RESULT, "fout");
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
       assertEquals(resourceBundle.getString(PGN.ERR_PGN_UITSLAG),
@@ -223,13 +223,13 @@ public class PGNTest extends BatchTest {
   public void testResultTags() {
     Map<String, String> tags  = new HashMap<>();
 
-    tags.put(CaissaConstants.PGNTAG_EVENT,  "schaak evenement");
-    tags.put(CaissaConstants.PGNTAG_SITE,   "tournooi ruimte");
-    tags.put(CaissaConstants.PGNTAG_DATE,   "2009.05.17");
-    tags.put(CaissaConstants.PGNTAG_ROUND,  "-");
-    tags.put(CaissaConstants.PGNTAG_WHITE,  "witspeler");
-    tags.put(CaissaConstants.PGNTAG_BLACK,  "zwartspeler");
-    tags.put(CaissaConstants.PGNTAG_RESULT, "fout");
+    tags.put(PGN.PGNTAG_EVENT,  "schaak evenement");
+    tags.put(PGN.PGNTAG_SITE,   "tournooi ruimte");
+    tags.put(PGN.PGNTAG_DATE,   "2009.05.17");
+    tags.put(PGN.PGNTAG_ROUND,  "-");
+    tags.put(PGN.PGNTAG_WHITE,  "witspeler");
+    tags.put(PGN.PGNTAG_BLACK,  "zwartspeler");
+    tags.put(PGN.PGNTAG_RESULT, "fout");
 
     try {
       pgn.setTags(tags);
@@ -282,7 +282,7 @@ public class PGNTest extends BatchTest {
   @Test
   public void testValidity() throws PgnException {
     assertTrue(pgn.isValid());
-    pgn.deleteTag(CaissaConstants.PGNTAG_RESULT);
+    pgn.deleteTag(PGN.PGNTAG_RESULT);
     assertFalse(pgn.isValid());
   }
 

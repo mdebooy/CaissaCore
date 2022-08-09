@@ -233,7 +233,7 @@ public final class CaissaUtils {
       if (null != game) {
         game.setForfait(!partij.isRated());
         game.setRanked(partij.isRanked());
-        game.setUitslag(partij.getTag(CaissaConstants.PGNTAG_RESULT));
+        game.setUitslag(partij.getTag(PGN.PGNTAG_RESULT));
       }
     });
 
@@ -256,13 +256,13 @@ public final class CaissaUtils {
 
     switch (enkelrondig) {
       case DoosConstants.WAAR:
-        enkel = Toernooi.TOERNOOI_ENKEL;
+        enkel = Competitie.TOERNOOI_ENKEL;
         break;
       case DoosConstants.ONWAAR:
-        enkel = Toernooi.TOERNOOI_DUBBEL;
+        enkel = Competitie.TOERNOOI_DUBBEL;
         break;
       default:
-        enkel = Toernooi.TOERNOOI_MATCH;
+        enkel = Competitie.TOERNOOI_MATCH;
         break;
     }
 
@@ -309,7 +309,7 @@ public final class CaissaUtils {
 
     if (datum.indexOf('?') == -1) {
       try {
-        Datum.toDate(datum, CaissaConstants.PGN_DATUM_FORMAAT);
+        Datum.toDate(datum, PGN.PGN_DATUM_FORMAAT);
       } catch (ParseException e) {
         return false;
       }
@@ -374,7 +374,7 @@ public final class CaissaUtils {
         }
 
         // Verwerk de zetten
-        var uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
+        var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
         var zetten  = new StringBuilder();
         while (!eof && !lijn.trim().endsWith(uitslag)) {
           if (lijn.startsWith("[")) {
@@ -533,8 +533,8 @@ public final class CaissaUtils {
                                             boolean telUitslag, int[] stand) {
     var noSpelers = spelers.size();
     var rondes    = matrix[0].length;
-    var wit       = partij.getTag(CaissaConstants.PGNTAG_WHITE);
-    var zwart     = partij.getTag(CaissaConstants.PGNTAG_BLACK);
+    var wit       = partij.getTag(PGN.PGNTAG_WHITE);
+    var zwart     = partij.getTag(PGN.PGNTAG_BLACK);
     var iWit      =
         stand[Arrays.binarySearch(namen, wit,   String.CASE_INSENSITIVE_ORDER)];
     var iZwart    =
@@ -543,11 +543,11 @@ public final class CaissaUtils {
     int ronde;
     try {
       ronde =
-          Integer.parseInt(partij.getTag(CaissaConstants.PGNTAG_ROUND));
+          Integer.parseInt(partij.getTag(PGN.PGNTAG_ROUND));
     } catch (NumberFormatException e) {
       ronde = 1;
     }
-    var uitslag = partij.getTag(CaissaConstants.PGNTAG_RESULT);
+    var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
     if (ronde > noSpelers
         && (!spelers.get(iWit).inRonde(ronde, rondes, toernooiType)
             || !spelers.get(iZwart).inRonde(ronde, rondes, toernooiType))) {
@@ -655,6 +655,7 @@ public final class CaissaUtils {
         resourceBundle.getString(PGN.ERR_ONGELDIGEZET), pgnZet, fen.getFen()));
   }
 
+  @Deprecated
   public static String[] vulKalender(String toernooi, int aantalSpelers,
                                      int enkel, JSONArray kalender) {
     var rondes  = ((aantalSpelers-1+(aantalSpelers%2))*enkel)+1;
@@ -662,11 +663,11 @@ public final class CaissaUtils {
     for (var i = 0; i < kalender.size(); i++) {
       var item  = (JSONObject) kalender.get(i);
       if (item.containsKey(toernooi)
-          && item.containsKey(CaissaConstants.JSON_TAG_KALENDER_DATUM)) {
+          && item.containsKey(Competitie.JSON_TAG_KALENDER_DATUM)) {
         var ronde = Integer.parseInt(item.get(toernooi).toString());
         if (ronde < rondes) {
           data[ronde] =
-              item.get(CaissaConstants.JSON_TAG_KALENDER_DATUM).toString();
+              item.get(Competitie.JSON_TAG_KALENDER_DATUM).toString();
         }
       }
     }
@@ -674,6 +675,7 @@ public final class CaissaUtils {
     return data;
   }
 
+  @Deprecated
   public static void vulSpelers(List<Spelerinfo> spelers, JSONArray jSpelers) {
     var spelerId  = 1;
     for (var jSpeler : jSpelers.toArray()) {

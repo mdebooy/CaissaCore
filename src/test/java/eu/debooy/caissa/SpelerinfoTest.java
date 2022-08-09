@@ -1260,17 +1260,17 @@ public class SpelerinfoTest extends TestCase {
   public void testRonde1() {
     var spelerinfo    = new Spelerinfo();
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_DUBBEL));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_DUBBEL));
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_ENKEL));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_ENKEL));
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_MATCH));
 
     assertFalse(spelerinfo.inRonde(1, 4, 3));
     assertFalse(spelerinfo.inRonde(3, 4, 3));
@@ -1283,17 +1283,17 @@ public class SpelerinfoTest extends TestCase {
 
     spelerinfo.setHeenronde(false);
 
-    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_DUBBEL));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_DUBBEL));
 
-    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_ENKEL));
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_MATCH));
 
     assertFalse(spelerinfo.inRonde(1, 4, 3));
     assertFalse(spelerinfo.inRonde(3, 4, 3));
@@ -1306,17 +1306,17 @@ public class SpelerinfoTest extends TestCase {
 
     spelerinfo.setTerugronde(false);
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_DUBBEL));
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_ENKEL));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_ENKEL));
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_MATCH));
 
     assertFalse(spelerinfo.inRonde(1, 4, 3));
     assertFalse(spelerinfo.inRonde(3, 4, 3));
@@ -1330,17 +1330,17 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo.setHeenronde(false);
     spelerinfo.setTerugronde(false);
 
-    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_DUBBEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_DUBBEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_DUBBEL));
 
-    assertFalse(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertFalse(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_ENKEL));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_ENKEL));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_ENKEL));
 
-    assertTrue(spelerinfo.inRonde(1, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertTrue(spelerinfo.inRonde(3, 4, CaissaConstants.TOERNOOI_MATCH));
-    assertFalse(spelerinfo.inRonde(5, 4, CaissaConstants.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(1, 4, Competitie.TOERNOOI_MATCH));
+    assertTrue(spelerinfo.inRonde(3, 4, Competitie.TOERNOOI_MATCH));
+    assertFalse(spelerinfo.inRonde(5, 4, Competitie.TOERNOOI_MATCH));
 
     assertFalse(spelerinfo.inRonde(1, 4, 3));
     assertFalse(spelerinfo.inRonde(3, 4, 3));

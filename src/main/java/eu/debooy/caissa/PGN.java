@@ -101,6 +101,21 @@ public class PGN implements Comparable<PGN>, Serializable {
   public static final String  ERR_PGN_UITSLAG       = "pgn.error.uitslag";
   public static final String  ERR_STUKKEN           = "pgn.error.ongeldige.zet";
 
+  public static final String  FMT_PGNTAG  = "[{0} \"{1}\"]";
+
+  public static final String  PGNTAG_BLACK      = "Black";
+  public static final String  PGNTAG_DATE       = "Date";
+  public static final String  PGNTAG_ECO        = "ECO";
+  public static final String  PGNTAG_EVENTDATE  = "EventDate";
+  public static final String  PGNTAG_EVENT      = "Event";
+  public static final String  PGNTAG_FEN        = "FEN";
+  public static final String  PGNTAG_RESULT     = "Result";
+  public static final String  PGNTAG_ROUND      = "Round";
+  public static final String  PGNTAG_SITE       = "Site";
+  public static final String  PGNTAG_WHITE      = "White";
+
+  public static final String  PGN_DATUM_FORMAAT = "yyyy.MM.dd";
+
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
@@ -117,13 +132,13 @@ public class PGN implements Comparable<PGN>, Serializable {
                                              CaissaConstants.PARTIJ_ZWART_WINT,
                                              CaissaConstants.PARTIJ_REMISE,
                                              CaissaConstants.PARTIJ_BEZIG};
-  private final String[]  sevenTagRoster  = {CaissaConstants.PGNTAG_EVENT,
-                                             CaissaConstants.PGNTAG_SITE,
-                                             CaissaConstants.PGNTAG_DATE,
-                                             CaissaConstants.PGNTAG_ROUND,
-                                             CaissaConstants.PGNTAG_WHITE,
-                                             CaissaConstants.PGNTAG_BLACK,
-                                             CaissaConstants.PGNTAG_RESULT};
+  private final String[]  sevenTagRoster  = {PGNTAG_EVENT,
+                                             PGNTAG_SITE,
+                                             PGNTAG_DATE,
+                                             PGNTAG_ROUND,
+                                             PGNTAG_WHITE,
+                                             PGNTAG_BLACK,
+                                             PGNTAG_RESULT};
   private String    stukken               = CaissaConstants.STUKKEN;
   private String    zetten                = "";
   private String    zuivereZetten         = "";
@@ -151,23 +166,22 @@ public class PGN implements Comparable<PGN>, Serializable {
     @Override
     public int compare(PGN pgn1, PGN pgn2) {
       return new CompareToBuilder()
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_EVENT),
-                            pgn2.getTag(CaissaConstants.PGNTAG_EVENT))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_SITE),
-                            pgn2.getTag(CaissaConstants.PGNTAG_SITE))
+                    .append(pgn1.getTag(PGNTAG_EVENT),
+                            pgn2.getTag(PGNTAG_EVENT))
+                    .append(pgn1.getTag(PGNTAG_SITE),
+                            pgn2.getTag(PGNTAG_SITE))
                     .append(
-                        new Round(pgn1.getTag(CaissaConstants.PGNTAG_ROUND)),
-                        new Round(pgn2.getTag(CaissaConstants.PGNTAG_ROUND)))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_DATE)
-                                .replace('?', '0'),
-                            pgn2.getTag(CaissaConstants.PGNTAG_DATE)
+                        new Round(pgn1.getTag(PGNTAG_ROUND)),
+                        new Round(pgn2.getTag(PGNTAG_ROUND)))
+                    .append(pgn1.getTag(PGNTAG_DATE).replace('?', '0'),
+                            pgn2.getTag(PGNTAG_DATE)
                                 .replace('?', '0'))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_WHITE),
-                            pgn2.getTag(CaissaConstants.PGNTAG_WHITE))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_BLACK),
-                            pgn2.getTag(CaissaConstants.PGNTAG_BLACK))
-                    .append(pgn1.getTag(CaissaConstants.PGNTAG_RESULT),
-                            pgn2.getTag(CaissaConstants.PGNTAG_RESULT))
+                    .append(pgn1.getTag(PGNTAG_WHITE),
+                            pgn2.getTag(PGNTAG_WHITE))
+                    .append(pgn1.getTag(PGNTAG_BLACK),
+                            pgn2.getTag(PGNTAG_BLACK))
+                    .append(pgn1.getTag(PGNTAG_RESULT),
+                            pgn2.getTag(PGNTAG_RESULT))
                     .append(pgn1.getZetten(), pgn2.getZetten())
                     .toComparison();
     }
@@ -176,7 +190,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   public final void addTag(String tag, String value) throws PgnException {
     tags.put(tag, value);
 
-    if (CaissaConstants.PGNTAG_RESULT.equals(tag)
+    if (PGNTAG_RESULT.equals(tag)
         && Arrays.binarySearch(uitslagen, value) < 0) {
       throw new PgnException(resourceBundle.getString(ERR_PGN_UITSLAG));
     }
@@ -185,23 +199,21 @@ public class PGN implements Comparable<PGN>, Serializable {
   @Override
   public int compareTo(PGN other) {
     return new CompareToBuilder()
-                  .append(getTag(CaissaConstants.PGNTAG_DATE)
-                               .replace('?', '0'),
-                          other.getTag(CaissaConstants.PGNTAG_DATE)
-                               .replace('?', '0'))
-                  .append(getTag(CaissaConstants.PGNTAG_EVENT),
-                          other.getTag(CaissaConstants.PGNTAG_EVENT))
-                  .append(getTag(CaissaConstants.PGNTAG_SITE),
-                          other.getTag(CaissaConstants.PGNTAG_SITE))
+                  .append(getTag(PGNTAG_DATE).replace('?', '0'),
+                          other.getTag(PGNTAG_DATE).replace('?', '0'))
+                  .append(getTag(PGNTAG_EVENT),
+                          other.getTag(PGNTAG_EVENT))
+                  .append(getTag(PGNTAG_SITE),
+                          other.getTag(PGNTAG_SITE))
                   .append(
-                      new Round(getTag(CaissaConstants.PGNTAG_ROUND)),
-                      new Round(other.getTag(CaissaConstants.PGNTAG_ROUND)))
-                  .append(getTag(CaissaConstants.PGNTAG_WHITE),
-                          other.getTag(CaissaConstants.PGNTAG_WHITE))
-                  .append(getTag(CaissaConstants.PGNTAG_BLACK),
-                          other.getTag(CaissaConstants.PGNTAG_BLACK))
-                  .append(getTag(CaissaConstants.PGNTAG_RESULT),
-                          other.getTag(CaissaConstants.PGNTAG_RESULT))
+                      new Round(getTag(PGNTAG_ROUND)),
+                      new Round(other.getTag(PGNTAG_ROUND)))
+                  .append(getTag(PGNTAG_WHITE),
+                          other.getTag(PGNTAG_WHITE))
+                  .append(getTag(PGNTAG_BLACK),
+                          other.getTag(PGNTAG_BLACK))
+                  .append(getTag(PGNTAG_RESULT),
+                          other.getTag(PGNTAG_RESULT))
                   .append(getZetten(), other.getZetten())
                   .toComparison();
   }
@@ -224,25 +236,27 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     var pgn = (PGN) other;
     return new EqualsBuilder()
-                  .append(getTag(CaissaConstants.PGNTAG_DATE)
-                             .replace('?', '0'),
-                          pgn.getTag(CaissaConstants.PGNTAG_DATE)
-                             .replace('?', '0'))
-                  .append(getTag(CaissaConstants.PGNTAG_EVENT),
-                          pgn.getTag(CaissaConstants.PGNTAG_EVENT))
-                  .append(getTag(CaissaConstants.PGNTAG_SITE),
-                          pgn.getTag(CaissaConstants.PGNTAG_SITE))
+                  .append(getTag(PGNTAG_DATE).replace('?', '0'),
+                          pgn.getTag(PGNTAG_DATE).replace('?', '0'))
+                  .append(getTag(PGNTAG_EVENT),
+                          pgn.getTag(PGNTAG_EVENT))
+                  .append(getTag(PGNTAG_SITE),
+                          pgn.getTag(PGNTAG_SITE))
                   .append(
-                      new Round(getTag(CaissaConstants.PGNTAG_ROUND)),
-                      new Round(pgn.getTag(CaissaConstants.PGNTAG_ROUND)))
-                  .append(getTag(CaissaConstants.PGNTAG_WHITE),
-                          pgn.getTag(CaissaConstants.PGNTAG_WHITE))
-                  .append(getTag(CaissaConstants.PGNTAG_BLACK),
-                          pgn.getTag(CaissaConstants.PGNTAG_BLACK))
-                  .append(getTag(CaissaConstants.PGNTAG_RESULT),
-                          pgn.getTag(CaissaConstants.PGNTAG_RESULT))
+                      new Round(getTag(PGNTAG_ROUND)),
+                      new Round(pgn.getTag(PGNTAG_ROUND)))
+                  .append(getTag(PGNTAG_WHITE),
+                          pgn.getTag(PGNTAG_WHITE))
+                  .append(getTag(PGNTAG_BLACK),
+                          pgn.getTag(PGNTAG_BLACK))
+                  .append(getTag(PGNTAG_RESULT),
+                          pgn.getTag(PGNTAG_RESULT))
                   .append(getZetten(), pgn.getZetten())
                   .isEquals();
+  }
+
+  public static String formatTag(String tag, String waarde) {
+    return MessageFormat.format(FMT_PGNTAG, tag, waarde);
   }
 
   public int getAantalZettenWit() {
@@ -254,14 +268,14 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getBlack() {
-    return getTag(CaissaConstants.PGNTAG_BLACK);
+    return getTag(PGNTAG_BLACK);
   }
 
   public Date getDate() {
     Date  datum;
 
     try {
-      datum = toDate(getTag(CaissaConstants.PGNTAG_DATE));
+      datum = toDate(getTag(PGNTAG_DATE));
     } catch (ParseException e) {
       return null;
     }
@@ -285,7 +299,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     Date  datum;
 
     try {
-      datum = toDate(getTag(CaissaConstants.PGNTAG_EVENTDATE));
+      datum = toDate(getTag(PGNTAG_EVENTDATE));
     } catch (ParseException e) {
       return null;
     }
@@ -301,24 +315,24 @@ public class PGN implements Comparable<PGN>, Serializable {
     var eol     = getEol();
     var result  = new StringBuilder();
 
-    result.append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_EVENT, tags.get(CaissaConstants.PGNTAG_EVENT)))
+    result.append(MessageFormat.format(FMT_PGNTAG, PGNTAG_EVENT,
+                                       tags.get(PGNTAG_EVENT)))
           .append(eol)
-          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_SITE, tags.get(CaissaConstants.PGNTAG_SITE)))
+          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_SITE,
+                                       tags.get(PGNTAG_SITE)))
           .append(eol)
-          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_DATE, tags.get(CaissaConstants.PGNTAG_DATE)))
+          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_DATE,
+                                       tags.get(PGNTAG_DATE)))
           .append(eol)
-          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_ROUND, tags.get(CaissaConstants.PGNTAG_ROUND)))
+          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_ROUND,
+                                       tags.get(PGNTAG_ROUND)))
           .append(eol)
-          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_WHITE, getWhite())).append(eol)
-          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_BLACK, getBlack())).append(eol)
-          .append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
-        CaissaConstants.PGNTAG_RESULT, tags.get(CaissaConstants.PGNTAG_RESULT)))
+          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_WHITE, getWhite()))
+          .append(eol)
+          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_BLACK, getBlack()))
+          .append(eol)
+          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_RESULT,
+                                       tags.get(PGNTAG_RESULT)))
           .append(eol);
 
     return result.toString();
@@ -348,7 +362,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     tags.entrySet().stream()
         .filter(map -> Arrays.binarySearch(sevenTagRoster, map.getKey()) < 0)
         .forEach(map ->
-            result.append(MessageFormat.format(CaissaConstants.FMT_PGNTAG,
+            result.append(MessageFormat.format(FMT_PGNTAG,
                                                map.getKey(), map.getValue()))
                   .append(getEol()));
 
@@ -356,7 +370,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getWhite() {
-    return getTag(CaissaConstants.PGNTAG_WHITE);
+    return getTag(PGNTAG_WHITE);
   }
 
   public String getZetten() {
@@ -427,8 +441,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public boolean isBeeindigd() {
-    return !getTag(CaissaConstants.PGNTAG_RESULT)
-                .equals(CaissaConstants.PARTIJ_BEZIG);
+    return !getTag(PGNTAG_RESULT).equals(CaissaConstants.PARTIJ_BEZIG);
   }
 
   public boolean isBye() {
@@ -513,10 +526,10 @@ public class PGN implements Comparable<PGN>, Serializable {
 
   public String speeltKleur(String speler) {
     if (getWhite().equals(speler)) {
-      return CaissaConstants.PGNTAG_WHITE;
+      return PGNTAG_WHITE;
     }
     if (getBlack().equals(speler)) {
-      return CaissaConstants.PGNTAG_BLACK;
+      return PGNTAG_BLACK;
     }
 
     return null;
@@ -528,14 +541,13 @@ public class PGN implements Comparable<PGN>, Serializable {
       return null;
     }
 
-    return Datum.toDate(datum, CaissaConstants.PGN_DATUM_FORMAAT);
+    return Datum.toDate(datum, PGN_DATUM_FORMAAT);
   }
 
   @Override
   public String toString() {
     var result      = new StringBuilder();
-    var teSplitsen  =
-            (zetten + " " + tags.get(CaissaConstants.PGNTAG_RESULT)).trim();
+    var teSplitsen  = (zetten + " " + tags.get(PGNTAG_RESULT)).trim();
 
     result.append(getTagsAsString());
     result.append(getEol());

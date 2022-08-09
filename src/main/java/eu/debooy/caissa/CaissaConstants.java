@@ -21,54 +21,12 @@ package eu.debooy.caissa;
  * @author Marco de Booij
  */
 public final class CaissaConstants {
-  public static final String  PGN_DATUM_FORMAAT = "yyyy.MM.dd";
   public static final String  STUKKEN           = "PNBRQK";
   public static final String  NOTATIE_STUKKEN   = " NBRQK";
   public static final String  PROMOTIE_STUKKEN  = "NBRQ";
 
   public static final String  DEF_STARTDATUM  = "0000.00.00";
   public static final String  DEF_EINDDATUM   = "9999.99.99";
-
-  public static final String  FMT_PGNTAG        = "[{0} \"{1}\"]";
-
-  public static final String  JSON_TAG_EVENTDATE          = "eventdate";
-  public static final String  JSON_TAG_INHALEN            = "inhalen";
-  public static final String  JSON_TAG_KALENDER           = "kalender";
-  public static final String  JSON_TAG_KALENDER_DATUM     = "datum";
-  public static final String  JSON_TAG_KALENDER_EXTRA     = "extra";
-  public static final String  JSON_TAG_KALENDER_INHAAL    = "inhaal";
-  public static final String  JSON_TAG_KALENDER_RONDE     = "ronde";
-  public static final String  JSON_TAG_SPELERS            = "spelers";
-  public static final String  JSON_TAG_SPELER_ALIAS       = "alias";
-  public static final String  JSON_TAG_SPELER_ELO         = "elo";
-  public static final String  JSON_TAG_SPELER_EMAIL       = "email";
-  public static final String  JSON_TAG_SPELER_HEENRONDE   = "heenronde";
-  public static final String  JSON_TAG_SPELER_LANDKODE    = "landkode";
-  public static final String  JSON_TAG_SPELER_NAAM        = "naam";
-  public static final String  JSON_TAG_SPELER_SPELERID    = "id";
-  public static final String  JSON_TAG_SPELER_SPELERSEQ   = "seq";
-  public static final String  JSON_TAG_SPELER_TELEFOON    = "telefoon";
-  public static final String  JSON_TAG_SPELER_TERUGRONDE  = "terugronde";
-  public static final String  JSON_TAG_TOERNOOITYPE       = "toernooitype";
-
-  public static final String  PGNTAG_BLACK      = "Black";
-  public static final String  PGNTAG_DATE       = "Date";
-  public static final String  PGNTAG_ECO        = "ECO";
-  public static final String  PGNTAG_EVENTDATE  = "EventDate";
-  public static final String  PGNTAG_EVENT      = "Event";
-  public static final String  PGNTAG_FEN        = "FEN";
-  public static final String  PGNTAG_RESULT     = "Result";
-  public static final String  PGNTAG_ROUND      = "Round";
-  public static final String  PGNTAG_SITE       = "Site";
-  public static final String  PGNTAG_WHITE      = "White";
-
-  // Gebruik dezelfde waarde uit Toernooi.
-  @Deprecated(forRemoval = true, since = "0.1.15")
-  public static final int     TOERNOOI_MATCH    = 0;
-  @Deprecated(forRemoval = true, since = "0.1.15")
-  public static final int     TOERNOOI_ENKEL    = 1;
-  @Deprecated(forRemoval = true, since = "0.1.15")
-  public static final int     TOERNOOI_DUBBEL   = 2;
 
   public static final String  TIEBREAK_SB       = "SB";
   public static final String  TIEBREAK_WP       = "WP";
@@ -104,6 +62,8 @@ public final class CaissaConstants {
   public static final String  BYE = "bye";
 
   private static final  String  BSLTDK  = "BSLTDK";
+
+  public static final String  RESOURCEBUNDLE  = "CaissaCore";
 
   private CaissaConstants() {
   }

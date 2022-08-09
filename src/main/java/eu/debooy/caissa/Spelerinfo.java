@@ -55,50 +55,50 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   public Spelerinfo() {}
 
   public Spelerinfo(JSONObject spelerinfo) {
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_ALIAS)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_ALIAS)) {
       alias         =
-          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_ALIAS).toString();
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_ALIAS).toString();
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_ELO)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_ELO)) {
       elo         =
-          Integer.valueOf(spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_ELO)
+          Integer.valueOf(spelerinfo.get(Competitie.JSON_TAG_SPELER_ELO)
                                     .toString());
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_EMAIL)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_EMAIL)) {
       email         =
-          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_EMAIL).toString();
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_EMAIL).toString();
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_HEENRONDE)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_HEENRONDE)) {
       heenronde   =
-          (boolean) spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_HEENRONDE);
+          (boolean) spelerinfo.get(Competitie.JSON_TAG_SPELER_HEENRONDE);
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_LANDKODE)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_LANDKODE)) {
       landKode      =
-          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_LANDKODE).toString();
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_LANDKODE).toString();
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_NAAM)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_NAAM)) {
       naam          =
-          spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_NAAM).toString();
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_NAAM).toString();
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_TERUGRONDE)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_TERUGRONDE)) {
       terugronde  =
-          (boolean) spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_TERUGRONDE);
+          (boolean) spelerinfo.get(Competitie.JSON_TAG_SPELER_TERUGRONDE);
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_SPELERID)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_SPELERID)) {
       spelerId    =
           Integer.valueOf(
-              spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_SPELERID)
+              spelerinfo.get(Competitie.JSON_TAG_SPELER_SPELERID)
                         .toString());
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_SPELERSEQ)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_SPELERSEQ)) {
       spelerSeq   =
           Integer.valueOf(
-              spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_SPELERSEQ)
+              spelerinfo.get(Competitie.JSON_TAG_SPELER_SPELERSEQ)
                         .toString());
     }
-    if (spelerinfo.containsKey(CaissaConstants.JSON_TAG_SPELER_TELEFOON)) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_TELEFOON)) {
       telefoon    =
-            spelerinfo.get(CaissaConstants.JSON_TAG_SPELER_TELEFOON).toString();
+            spelerinfo.get(Competitie.JSON_TAG_SPELER_TELEFOON).toString();
     }
   }
 
@@ -324,15 +324,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
       return false;
     }
 
-    if (toernooiType == Toernooi.TOERNOOI_MATCH) {
+    if (toernooiType == Competitie.TOERNOOI_MATCH) {
       return true;
     }
 
-    if (toernooiType == Toernooi.TOERNOOI_ENKEL) {
+    if (toernooiType == Competitie.TOERNOOI_ENKEL) {
       return inHeenronde();
     }
 
-    if (toernooiType == Toernooi.TOERNOOI_DUBBEL) {
+    if (toernooiType == Competitie.TOERNOOI_DUBBEL) {
       if (ronde*2 > rondes) {
         return inTerugronde();
       }
