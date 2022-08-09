@@ -47,6 +47,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  ERR_KALENDER  = "cmp.error.kalender";
   public static final String  ERR_MATCH     = "cmp.error.match";
   public static final String  ERR_RONDES    = "cmp.error.rondes";
+  public static final String  ERR_SPELERS   = "cmp.error.spelers";
   public static final String  ERR_TYPE      = "cmp.error.type";
 
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
@@ -105,17 +106,25 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       spelers     = new ArrayList<>();
 
       vulSpelers();
-      validate();
       vulSpeeldata();
 
-      if (!speeldata.isEmpty() && !checkKalender()) {
-        throw new CompetitieException(
-          MessageFormat.format(resourceBundle.getString(ERR_KALENDER),
-                               speeldata.size(), rondes));
-      }
+      validate();
     } catch (BestandException | ParseException e) {
       throw new CompetitieException(e.getLocalizedMessage());
     }
+  }
+
+  private Integer berekenRondes() {
+    Integer teSpelen;
+
+    if (isRoundrobin()) {
+      teSpelen = (spelers.size() + (spelers.size()%2) - 1)
+                  * (isDubbel() ? 2 : 1);
+    } else {
+      teSpelen  = rondes;
+    }
+
+    return teSpelen;
   }
 
   private boolean checkKalender() {
@@ -191,41 +200,6 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return type;
   }
 
-  private void vulSpeeldata() throws ParseException {
-    if (!competitie.containsKey(JSON_TAG_KALENDER)) {
-      return;
-    }
-
-    for (var item: (JSONArray) competitie.get(JSON_TAG_KALENDER)) {
-      var ronde  = (JSONObject) item;
-      if (ronde.containsKey(JSON_TAG_KALENDER_RONDE)
-          & ronde.containsKey(JSON_TAG_KALENDER_DATUM)) {
-        speeldata.add(
-            Datum.toDate(ronde.get(Competitie.JSON_TAG_KALENDER_DATUM)
-                              .toString()));
-      }
-    }
-  }
-
-  private void vulSpelers() {
-    if (!competitie.containsKey(JSON_TAG_SPELERS)) {
-      return;
-    }
-
-    var spelerId  = 1;
-    for (var jSpeler : (JSONArray)  competitie.get(JSON_TAG_SPELERS)) {
-      var speler  = new Spelerinfo((JSONObject) jSpeler);
-      if (null == speler.getSpelerId()) {
-        speler.setSpelerId(spelerId);
-      }
-      if (null == speler.getSpelerSeq()) {
-        speler.setSpelerSeq(spelerId);
-      }
-      spelers.add(speler);
-      spelerId++;
-    }
-  }
-
   public boolean isDubbel() {
     return type.equals(TOERNOOI_DUBBEL);
   }
@@ -254,8 +228,9 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     validateEventdate(fouten);
 
     validateType(fouten);
-    validateSpelers(fouten);
     validateRondes(fouten);
+
+    validateSpelers(fouten);
   }
 
   private void validateEvent(List<String> fouten) {
@@ -306,8 +281,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   private void validateRondesRoundRobin(List<String> fouten) {
     if (null == rondes) {
-      rondes  =
-          (spelers.size() + (spelers.size()%2) - 1) * (isDubbel() ? 2 : 1);
+      rondes  = berekenRondes();
     }
 
     if (rondes.compareTo(1) < 0) {
@@ -341,6 +315,12 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     if (spelers.isEmpty()) {
       fouten.add(resourceBundle.getString(MIS_SPELERS));
     }
+
+    var teSpelen  = berekenRondes();
+    if (!rondes.equals(teSpelen)) {
+      fouten.add(MessageFormat.format(resourceBundle.getString(ERR_SPELERS),
+                                      teSpelen, rondes));
+    }
   }
 
   private void validateType(List<String> fouten) {
@@ -352,6 +332,40 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     type  = ((Long) competitie.get(JSON_TAG_TOERNOOITYPE)).intValue();
     if (!types.contains(type)) {
       fouten.add(resourceBundle.getString(ERR_TYPE));
+    }
+  }
+
+  private void vulSpeeldata() throws ParseException {
+    if (!competitie.containsKey(JSON_TAG_KALENDER)) {
+      return;
+    }
+
+    for (var item: (JSONArray) competitie.get(JSON_TAG_KALENDER)) {
+      var ronde  = (JSONObject) item;
+      if (ronde.containsKey(JSON_TAG_KALENDER_RONDE)
+          & ronde.containsKey(JSON_TAG_KALENDER_DATUM)) {
+        speeldata.add(Datum.toDate(ronde.get(Competitie.JSON_TAG_KALENDER_DATUM)
+                                        .toString()));
+      }
+    }
+  }
+
+  private void vulSpelers() {
+    if (!competitie.containsKey(JSON_TAG_SPELERS)) {
+      return;
+    }
+
+    var spelerId  = 1;
+    for (var jSpeler : (JSONArray)  competitie.get(JSON_TAG_SPELERS)) {
+      var speler  = new Spelerinfo((JSONObject) jSpeler);
+      if (null == speler.getSpelerId()) {
+        speler.setSpelerId(spelerId);
+      }
+      if (null == speler.getSpelerSeq()) {
+        speler.setSpelerSeq(spelerId);
+      }
+      spelers.add(speler);
+      spelerId++;
     }
   }
 }
