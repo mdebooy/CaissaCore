@@ -36,8 +36,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 
 /**
@@ -653,42 +651,6 @@ public final class CaissaUtils {
 
     throw new PgnException(MessageFormat.format(
         resourceBundle.getString(PGN.ERR_ONGELDIGEZET), pgnZet, fen.getFen()));
-  }
-
-  @Deprecated
-  public static String[] vulKalender(String toernooi, int aantalSpelers,
-                                     int enkel, JSONArray kalender) {
-    var rondes  = ((aantalSpelers-1+(aantalSpelers%2))*enkel)+1;
-    var data    = new String[rondes];
-    for (var i = 0; i < kalender.size(); i++) {
-      var item  = (JSONObject) kalender.get(i);
-      if (item.containsKey(toernooi)
-          && item.containsKey(Competitie.JSON_TAG_KALENDER_DATUM)) {
-        var ronde = Integer.parseInt(item.get(toernooi).toString());
-        if (ronde < rondes) {
-          data[ronde] =
-              item.get(Competitie.JSON_TAG_KALENDER_DATUM).toString();
-        }
-      }
-    }
-
-    return data;
-  }
-
-  @Deprecated
-  public static void vulSpelers(List<Spelerinfo> spelers, JSONArray jSpelers) {
-    var spelerId  = 1;
-    for (var jSpeler : jSpelers.toArray()) {
-      var speler  = new Spelerinfo((JSONObject) jSpeler);
-      if (null == speler.getSpelerId()) {
-        speler.setSpelerId(spelerId);
-      }
-      if (null == speler.getSpelerSeq()) {
-        speler.setSpelerSeq(spelerId);
-      }
-      spelers.add(speler);
-      spelerId++;
-    }
   }
 
   public static void vulToernooiMatrix(Collection<PGN> partijen,
