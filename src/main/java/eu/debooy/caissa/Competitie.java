@@ -397,7 +397,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   private void vulSpeeldata() throws ParseException {
-    if (!toernooi.containsKey(JSON_TAG_KALENDER)) {
+     if (!toernooi.containsKey(JSON_TAG_KALENDER)) {
       return;
     }
 
