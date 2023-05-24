@@ -444,6 +444,7 @@ public class ZetTest extends BatchTest {
   @Test
   public void testOO() throws ZetException {
     zet = new Zet('K', 95, 97);
+    zet.setRokade(true);
 
     assertEquals("4.rk.", zet.getChessTheatreZet());
     assertEquals("5878", zet.getCorrespondentieZet());
@@ -455,6 +456,7 @@ public class ZetTest extends BatchTest {
   @Test
   public void testOOO() throws ZetException {
     zet = new Zet('K', 25, 23);
+    zet.setRokade(true);
 
     assertEquals("56.1KR.", zet.getChessTheatreZet());
     assertEquals("5131", zet.getCorrespondentieZet());
@@ -467,6 +469,7 @@ public class ZetTest extends BatchTest {
   public void testOOOm() throws ZetException {
     zet = new Zet('K', 95, 93);
     zet.setMat(true);
+    zet.setRokade(true);
 
     assertEquals(".1kr.", zet.getChessTheatreZet());
     assertEquals("5838", zet.getCorrespondentieZet());
@@ -481,6 +484,7 @@ public class ZetTest extends BatchTest {
   @Test
   public void testOOOs() throws ZetException {
     zet = new Zet('K', 95, 93);
+    zet.setRokade(true);
     zet.setSchaak(true);
 
     assertEquals(".1kr.", zet.getChessTheatreZet());
@@ -496,6 +500,7 @@ public class ZetTest extends BatchTest {
   @Test
   public void testOOm() throws ZetException {
     zet = new Zet('K', 25, 27);
+    zet.setRokade(true);
     zet.setMat(true);
 
     assertEquals("60.RK.", zet.getChessTheatreZet());
@@ -511,6 +516,7 @@ public class ZetTest extends BatchTest {
   @Test
   public void testOOs() throws ZetException {
     zet = new Zet('K', 25, 27);
+    zet.setRokade(true);
     zet.setSchaak(true);
 
     assertEquals("60.RK.", zet.getChessTheatreZet());

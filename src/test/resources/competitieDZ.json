@@ -1,0 +1,21 @@
+{
+  "event": "Dubbel Zwitsers Caissa 21/22",
+  "eventdate": "2021.09.28",
+  "punten": "4;2;1;3",
+  "site": "Schaakvereniging 'Caissa'",
+  "toernooitype": 4,
+  "spelers": [
+     {"naam": "Speler, Alice"},
+     {"naam": "Speler, Bob"},
+     {"naam": "Speler, Carol"},
+     {"naam": "Speler, Dave"},
+     {"naam": "Speler, Eve"},
+     {"naam": "Speler, Frank"},
+     {"naam": "Speler, Grace"}
+   ],
+   "kalender": [
+     { "datum": "28/09/2021", "ronde": 1},
+     { "datum": "05/10/2021", "ronde": 2},
+     { "datum": "12/10/2021", "ronde": 3}
+   ]
+ }

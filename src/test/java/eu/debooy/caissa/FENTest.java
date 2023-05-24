@@ -55,7 +55,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet1() throws ZetException {
+  public void testGeefZet1() throws ZetException, FenException {
     fen = new FEN();
     Zet e2e4    = new Zet(' ', 35, 55);
     FEN fenE2e4 = new FEN(FEN_1E2E4);
@@ -70,7 +70,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet2() throws ZetException {
+  public void testGeefZet2() throws ZetException, FenException {
     fen = new FEN();
     Zet e2e4    = new Zet(' ', 35, 55);
     FEN fenE2e4 = new FEN(FEN_1E2E4);
@@ -85,7 +85,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet3() {
+  public void testGeefZet3() throws FenException {
     fen = new FEN();
     FEN fen2Ke8e7 = new FEN(FEN_2KE8E7);
 
@@ -99,7 +99,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet4() {
+  public void testGeefZet4() throws FenException {
     fen = new FEN();
     FEN fen3d2d4 = new FEN(FEN_3D2D4);
 
@@ -113,7 +113,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet5() {
+  public void testGeefZet5() throws FenException {
     fen = new FEN();
     FEN fenFout = new FEN(FEN_FOUT);
 

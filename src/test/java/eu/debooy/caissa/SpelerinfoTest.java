@@ -1635,6 +1635,6 @@ public class SpelerinfoTest extends TestCase {
 
   @Test
   public void testToString() {
-    assertEquals("Spelerinfo data (SpelerID: 1, SpelerSeq: 1, naam: [Jansen, Jan], landkode: null, ELO: null, punten: 8.5, partijen: 10, tieBreakScore: 20.0, alias: null, email: null)", spelerinfo1.toString());
+    assertEquals("Spelerinfo data (SpelerID: 1, SpelerSeq: 1, naam: [Jansen, Jan], landkode: null, ELO: null, punten: 8.5, partijen: 10, byeScore: 0.0, tieBreakScore: 20.0, alias: null, email: null)", spelerinfo1.toString());
   }
 }

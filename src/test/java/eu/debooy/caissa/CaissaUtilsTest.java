@@ -15,24 +15,29 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.caissa.exceptions.ZetException;
-import eu.debooy.doosutils.access.JsonBestand;
 import eu.debooy.doosutils.exception.BestandException;
-import java.util.ArrayList;
-import java.util.List;
+import eu.debooy.doosutils.test.BatchTest;
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
-import junit.framework.TestCase;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 /**
  * @author Marco de Booij
  */
-public class CaissaUtilsTest extends TestCase {
+public class CaissaUtilsTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       CaissaUtilsTest.class.getClassLoader();
   protected static final  String      JSON_COMPETITIE3      =
@@ -71,36 +76,44 @@ public class CaissaUtilsTest extends TestCase {
          "12-11 1-10 2-9 3-8 4-7 5-6",
          "6-12 7-5 8-4 9-3 10-2 11-1"};
 
-  private List<Spelerinfo> getSpelers(String jsonbestand) {
-    JsonBestand       competitie  = null;
-    List<Spelerinfo>  spelers     = new ArrayList<>();
-    try {
-      competitie  =
-          new JsonBestand.Builder()
-                         .setClassLoader(CLASSLOADER)
-                         .setBestand(jsonbestand)
-                         .build();
-      JSONArray jsonArray = competitie.getArray("spelers");
-      int       spelerId  = 1;
-      for (Object jSpeler : jsonArray.toArray()) {
-        Spelerinfo  speler  = new Spelerinfo((JSONObject) jSpeler);
-        speler.setSpelerId(spelerId);
-        spelers.add(speler);
-        spelerId++;
-      }
-    } catch (BestandException e) {
-      fail("BestandException: " + e.getLocalizedMessage());
-    } finally {
-      if (null != competitie) {
-        try {
-          competitie.close();
-        } catch (BestandException e) {
-          fail("BestandException: " + e.getLocalizedMessage());
-        }
-      }
-    }
+  @AfterClass
+  public static void afterClass() {
+    verwijderBestanden(getTemp() + File.separator,
+                       new String[] {JSON_COMPETITIE3, JSON_COMPETITIE4_1,
+                                     JSON_COMPETITIE4, JSON_COMPETITIE4HEEN,
+                                     JSON_COMPETITIE4TERUG, JSON_COMPETITIE5_1,
+                                     JSON_COMPETITIE5, JSON_COMPETITIE5HEEN,
+                                     JSON_COMPETITIE5TERUG});
+  }
 
-    return spelers;
+  @BeforeClass
+  public static void beforeClass() throws BestandException {
+    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
+    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+                                                Locale.getDefault());
+    try {
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE3,
+                     getTemp() + File.separator + JSON_COMPETITIE3);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE4_1,
+                     getTemp() + File.separator + JSON_COMPETITIE4_1);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE4,
+                     getTemp() + File.separator + JSON_COMPETITIE4);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE4HEEN,
+                     getTemp() + File.separator + JSON_COMPETITIE4HEEN);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE4TERUG,
+                     getTemp() + File.separator + JSON_COMPETITIE4TERUG);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE5_1,
+                     getTemp() + File.separator + JSON_COMPETITIE5_1);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE5,
+                     getTemp() + File.separator + JSON_COMPETITIE5);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE5HEEN,
+                     getTemp() + File.separator + JSON_COMPETITIE5HEEN);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE5TERUG,
+                     getTemp() + File.separator + JSON_COMPETITIE5TERUG);
+    } catch (IOException e) {
+      System.out.println(e.getLocalizedMessage());
+      throw new BestandException(e);
+    }
   }
 
   private void testBergertabel(String[] rondes, String[] testrondes) {
@@ -131,10 +144,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema1() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE3);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema1() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -144,10 +157,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema2() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE4);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema2() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE4);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -157,10 +170,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema3() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE4HEEN);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema3() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE4HEEN);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -170,10 +183,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema4() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE4TERUG);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema4() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE4TERUG);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -183,10 +196,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema5() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE4_1);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema5() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE4_1);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -194,17 +207,18 @@ public class CaissaUtilsTest extends TestCase {
     assertEquals(12, partijen.size());
     assertEquals(6, byes);
 
-    spelers     = getSpelers(JSON_COMPETITIE3);
-    Set<Partij> partijen3 = CaissaUtils.genereerSpeelschema(spelers, false);
+    competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
+    Set<Partij> partijen3 = CaissaUtils.genereerSpeelschema(competitie);
 
     assertEquals(partijen3.toString(), partijen.toString());
   }
 
   @Test
-  public void testGenereerSpeelschema6() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE5);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema6() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE5);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -214,10 +228,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema7() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE5HEEN);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema7() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE5HEEN);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -227,10 +241,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema8() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE5TERUG);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema8() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE5TERUG);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -240,10 +254,10 @@ public class CaissaUtilsTest extends TestCase {
   }
 
   @Test
-  public void testGenereerSpeelschema9() {
-    List<Spelerinfo>  spelers     = getSpelers(JSON_COMPETITIE5_1);
-    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(spelers,
-                                                                    false);
+  public void testGenereerSpeelschema9() throws CompetitieException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE5_1);
+    Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
     long              byes        = partijen.stream()
                                             .filter(partij -> partij.isBye())
                                             .count();
@@ -251,8 +265,9 @@ public class CaissaUtilsTest extends TestCase {
     assertEquals(12, partijen.size());
     assertEquals(0, byes);
 
-    spelers     = getSpelers(JSON_COMPETITIE4);
-    Set<Partij> partijen4 = CaissaUtils.genereerSpeelschema(spelers, false);
+    competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE4);
+    Set<Partij> partijen4 = CaissaUtils.genereerSpeelschema(competitie);
 
     assertEquals(partijen4.toString(), partijen.toString());
   }

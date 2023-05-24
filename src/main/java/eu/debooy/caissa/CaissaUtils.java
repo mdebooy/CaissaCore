@@ -28,7 +28,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,54 +47,62 @@ public final class CaissaUtils {
   private static final  char[]  stuk  = {'k', 'q', 'r', 'b', 'n', 'p', '.',
                                          'P', 'N', 'B', 'R', 'Q', 'K'};
 
-  private CaissaUtils() {
-  }
+  private CaissaUtils() {}
 
-  private static void berekenSBscore(List<Spelerinfo> spelers,
-                                     double[][] matrix, int toernooiType) {
-    var noSpelers = spelers.size();
+  private static void berekenSBscore(double[][] matrix,
+                                     Competitie competitie) {
+    var dubbel    = competitie.getHeenTerug();
     var kolommen  = matrix[0].length;
+    var noSpelers = competitie.getSpelers().size();
+
     for (var i = 0; i < noSpelers; i++) {
       Double  sbScore = 0.0;
       for (var j = 0; j < kolommen; j++) {
-        if (toernooiType > 0 && matrix[i][j] > 0.0) {
-          sbScore += spelers.get(j / toernooiType).getPunten()
-                              * matrix[i][j];
+        if (!competitie.isMatch()
+            && matrix[i][j] == competitie.getPuntenWinst()) {
+          sbScore += competitie.getSpeler(j / dubbel).getPunten();
+        }
+        if (!competitie.isMatch()
+            && matrix[i][j] == competitie.getPuntenRemise()) {
+          sbScore += competitie.getSpeler(j / dubbel).getPunten() * 0.5;
         }
       }
-      spelers.get(i).setTieBreakScore(sbScore);
+      competitie.getSpeler(i).setTieBreakScore(sbScore);
     }
   }
 
-  public static void berekenTieBreakScore(String tieBreakType,
-                                          List<Spelerinfo> spelers,
-                                          double[][] matrix,
-                                          int toernooiType) {
-    switch (tieBreakType) {
+  public static void berekenTieBreakScore(double[][] matrix,
+                                          Competitie competitie) {
+    switch (competitie.getTiebreak()) {
       case CaissaConstants.TIEBREAK_SB:
-                berekenSBscore(spelers, matrix, toernooiType);
+                berekenSBscore(matrix, competitie);
                 break;
       case CaissaConstants.TIEBREAK_WP:
-                berekenWeerstandspunten(spelers, matrix, toernooiType);
+                berekenWeerstandspunten(matrix, competitie);
                 break;
       default:
         break;
     }
   }
 
-  private static void berekenWeerstandspunten(List<Spelerinfo> spelers,
-                                             double[][] matrix,
-                                             int toernooiType) {
-    var noSpelers = spelers.size();
+  private static void berekenWeerstandspunten(double[][] matrix,
+                                             Competitie competitie) {
+    var dubbel    = competitie.getHeenTerug();
     var kolommen  = matrix[0].length;
+    var noSpelers = competitie.getSpelers().size();
+
+    if (competitie.metBye()) {
+      kolommen--;
+    }
+
     for (var i = 0; i < noSpelers; i++) {
       Double weerstandspunten = 0.0;
       for (var j = 0; j < kolommen; j++) {
-        if (toernooiType > 0) {
-          weerstandspunten += spelers.get(j / toernooiType).getPunten();
+        if (!competitie.isMatch()) {
+          weerstandspunten += competitie.getSpeler(j / dubbel).getPunten();
         }
       }
-      spelers.get(i).setTieBreakScore(weerstandspunten);
+      competitie.getSpeler(i).setTieBreakScore(weerstandspunten);
     }
   }
 
@@ -134,6 +141,19 @@ public final class CaissaUtils {
     return resultaat;
   }
 
+  public static void draaiBord(int[] bord) {
+    for (var i = 2; i < 6; i++) {
+      for (var j = 1; j < 9; j++) {
+        var hulp    = i * 10;
+        var van     = hulp + j;
+        var naar    = 110 - hulp + j;
+        hulp        = bord[van];
+        bord[van]   = -bord[naar];
+        bord[naar]  = -hulp;
+      }
+    }
+  }
+
   public static int externToIntern(String veld) {
     return (veld.charAt(0) - 96) + (veld.charAt(1) - 47) * 10;
   }
@@ -165,11 +185,11 @@ public final class CaissaUtils {
         Integer wit;
         Integer zwart;
         if (heen) {
-          wit   = Integer.valueOf(speler[0])-1;
-          zwart = Integer.valueOf(speler[1])-1;
+          wit   = Integer.parseInt(speler[0])-1;
+          zwart = Integer.parseInt(speler[1])-1;
         } else {
-          wit   = Integer.valueOf(speler[1])-1;
-          zwart = Integer.valueOf(speler[0])-1;
+          wit   = Integer.parseInt(speler[1])-1;
+          zwart = Integer.parseInt(speler[0])-1;
         }
         var speler1 = new Spelerinfo(spelers.get(wit));
         var speler2 = new Spelerinfo(spelers.get(zwart));
@@ -191,18 +211,24 @@ public final class CaissaUtils {
     }
   }
 
-  public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
-                                                boolean enkel) {
-    List<Spelerinfo>  dezeronde = new ArrayList<>();
-    List<String>      heenronde = new ArrayList<>();
+  public static Set<Partij> genereerSpeelschema(Competitie competitie) {
     Set<Partij>       schema    = new TreeSet<>();
 
+    if (competitie.isZwitsers()) {
+      return schema;
+    }
+
+    List<Spelerinfo>  dezeronde = new ArrayList<>();
+    List<String>      heenronde = new ArrayList<>();
+    var               spelers   = competitie.getSpelers();
+
+    spelers.sort(new Spelerinfo.BySpelerSeqComparator());
     spelers.stream()
            .filter(Spelerinfo::inHeenronde)
            .forEach(dezeronde::add);
     genereerRonde(dezeronde, schema, heenronde, 1);
 
-    if (enkel) {
+    if (competitie.isEnkel()) {
       return schema;
     }
 
@@ -216,11 +242,13 @@ public final class CaissaUtils {
     return schema;
   }
 
-  public static Set<Partij> genereerSpeelschema(List<Spelerinfo> spelers,
-                                                boolean enkel,
+  public static Set<Partij> genereerSpeelschema(Competitie competitie,
                                                 Collection<PGN> partijen) {
-    var schema  = genereerSpeelschema(spelers, enkel);
+    if (competitie.isZwitsers()) {
+      return genereerZwitsersSchema(competitie.getSpelers(), partijen);
+    }
 
+    var schema  = genereerSpeelschema(competitie);
     partijen.forEach(partij -> {
       var game  = schema.stream()
                         .filter(ptij -> ptij.getWitspeler().getNaam()
@@ -236,6 +264,54 @@ public final class CaissaUtils {
     });
 
     return schema;
+  }
+
+  private static Set<Partij> genereerZwitsersSchema(List<Spelerinfo> spelers,
+                                                    Collection<PGN> partijen) {
+    var         opRonde       = new TreeSet<PGN>(new PGN.ByEventComparator());
+    var         partijnummer  = 0;
+    Set<Partij> schema        = new TreeSet<>();
+    var         vorigeRonde   = 0;
+
+    opRonde.addAll(partijen);
+    for (var pgn : opRonde) {
+      var ronde   =
+            Integer.parseInt(pgn.getTag(PGN.PGNTAG_ROUND).split("\\.")[0]);
+      if (ronde != vorigeRonde) {
+        vorigeRonde   = ronde;
+        partijnummer  = 0;
+      }
+
+      partijnummer++;
+      var partij  = new Partij();
+      var wit     = spelers.stream()
+                           .filter(speler -> speler.getNaam()
+                                                   .equals(pgn.getWhite()))
+                           .findFirst().orElse(getBye());
+      var zwart   = spelers.stream()
+                           .filter(speler -> speler.getNaam()
+                                                   .equals(pgn.getBlack()))
+                           .findFirst().orElse(getBye());
+
+      partij.setWitspeler(wit);
+      partij.setZwartspeler(zwart);
+      partij.setRonde(ronde, partijnummer);
+      partij.setUitslag(pgn.getTag(PGN.PGNTAG_RESULT));
+
+      schema.add(partij);
+    }
+
+    return schema;
+  }
+
+  public static Spelerinfo getBye() {
+    var bye = new Spelerinfo();
+
+    bye.setNaam(CaissaConstants.BYE);
+    bye.setSpelerId(Integer.MAX_VALUE);
+    bye.setSpelerSeq(Integer.MAX_VALUE);
+
+    return bye;
   }
 
   public static char getStuk(int stukcode) {
@@ -269,6 +345,7 @@ public final class CaissaUtils {
 
   public static void initMatrix(double[][] matrix, int noSpelers) {
     int kolommen  = matrix[0].length;
+
     for (var i = 0; i < noSpelers; i++) {
       for (var j = 0; j < kolommen; j++) {
         matrix[i][j]  = -1.0;
@@ -526,17 +603,16 @@ public final class CaissaUtils {
   }
 
   private static void verwerkPartijInMatrix(PGN partij, double[][] matrix,
-                                            List<Spelerinfo> spelers,
-                                            String[] namen, int toernooiType,
-                                            boolean telUitslag, int[] stand) {
+                                            Competitie competitie,
+                                            boolean telUitslag) {
+    var dubbel    = competitie.getHeenTerug();
+    var spelers   = competitie.getSpelers();
     var noSpelers = spelers.size();
     var rondes    = matrix[0].length;
     var wit       = partij.getTag(PGN.PGNTAG_WHITE);
     var zwart     = partij.getTag(PGN.PGNTAG_BLACK);
-    var iWit      =
-        stand[Arrays.binarySearch(namen, wit,   String.CASE_INSENSITIVE_ORDER)];
-    var iZwart    =
-        stand[Arrays.binarySearch(namen, zwart, String.CASE_INSENSITIVE_ORDER)];
+    var iWit      = competitie.getSpelerIndex(wit);
+    var iZwart    = competitie.getSpelerIndex(zwart);
 
     int ronde;
     try {
@@ -546,41 +622,67 @@ public final class CaissaUtils {
       ronde = 1;
     }
     var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
-    if (ronde > noSpelers
-        && (!spelers.get(iWit).inRonde(ronde, rondes, toernooiType)
-            || !spelers.get(iZwart).inRonde(ronde, rondes, toernooiType))) {
-      return;
-    }
-    var kolomW  = ronde - 1;
-    var kolomZ  = ronde - 1;
-    if (toernooiType > 0) {
-      kolomW  = iZwart * toernooiType;
-      kolomZ  = iWit * toernooiType + toernooiType - 1;
-    }
 
     if (null == uitslag) {
       return;
     }
 
+    if (partij.isBye()) {
+      if (competitie.metBye() && telUitslag) {
+        if (competitie.getPuntenBye() != 0.0) {
+          if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
+            competitie.getSpeler(iWit).addByeScore(competitie.getPuntenBye());
+            telPunten(telUitslag, spelers, iWit, competitie.getPuntenBye(),
+                      iZwart, 0.0);
+          }
+          if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
+            competitie.getSpeler(iZwart).addByeScore(competitie.getPuntenBye());
+            telPunten(telUitslag, spelers, iWit, 0.0,
+                      iZwart, competitie.getPuntenBye());
+          }
+        }
+      }
+      return;
+    }
+
+    if (ronde > noSpelers
+        && (!competitie.getSpeler(iWit).inRonde(ronde, rondes,
+                                                competitie.getType())
+            || !competitie.getSpeler(iZwart).inRonde(ronde, rondes,
+                                                     competitie.getType()))) {
+      return;
+    }
+    var kolomW  = ronde - 1;
+    var kolomZ  = ronde - 1;
+    if (!competitie.isMatch()) {
+      kolomW  = iZwart * dubbel;
+      kolomZ  = iWit * dubbel + dubbel - 1;
+    }
+
     switch (uitslag) {
       case CaissaConstants.PARTIJ_WIT_WINT:
-        matrix[iWit][kolomW]    =
-            Math.max(matrix[iWit][kolomW], 0.0) + 1.0;
-        matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0);
-        telPunten(telUitslag, spelers, iWit, 1.0, iZwart, 0.0);
+        matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0)
+                                    + competitie.getPuntenWinst();
+        matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ],
+                                           competitie.getPuntenVerlies());
+        telPunten(telUitslag, spelers, iWit, competitie.getPuntenWinst(),
+                  iZwart, competitie.getPuntenVerlies());
         break;
       case CaissaConstants.PARTIJ_REMISE:
-        matrix[iWit][kolomW]    =
-            Math.max(matrix[iWit][kolomW], 0.0) + 0.5;
-        matrix[iZwart][kolomZ]  =
-            Math.max(matrix[iZwart][kolomZ], 0.0) + 0.5;
-        telPunten(telUitslag, spelers, iWit, 0.5, iZwart, 0.5);
+        matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0)
+                                    + competitie.getPuntenRemise();
+        matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
+                                    + competitie.getPuntenRemise();
+        telPunten(telUitslag, spelers, iWit, competitie.getPuntenRemise(),
+                  iZwart, competitie.getPuntenRemise());
         break;
       case CaissaConstants.PARTIJ_ZWART_WINT:
-        matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW], 0.0);
+        matrix[iWit][kolomW]    = Math.max(matrix[iWit][kolomW],
+                                           competitie.getPuntenVerlies());
         matrix[iZwart][kolomZ]  = Math.max(matrix[iZwart][kolomZ], 0.0)
-                + 1.0;
-        telPunten(telUitslag, spelers, iWit, 0.0, iZwart, 1.0);
+                                    + competitie.getPuntenWinst();
+        telPunten(telUitslag, spelers, iWit, competitie.getPuntenVerlies(),
+                  iZwart, competitie.getPuntenWinst());
         break;
       default:
         break;
@@ -591,15 +693,25 @@ public final class CaissaUtils {
                                 int iWit, double pWit,
                                 int iZwart, double pZwart) {
     if (telUitslag) {
-      spelers.get(iWit).addPartij();
-      spelers.get(iWit).addPunt(pWit);
-      spelers.get(iZwart).addPartij();
-      spelers.get(iZwart).addPunt(pZwart);
+      if (iWit > -1) {
+        if (iZwart > -1) {
+          spelers.get(iWit).addPartij();
+        }
+        spelers.get(iWit).addPunt(pWit);
+      }
+      if (iZwart > -1) {
+        if (iWit > -1) {
+          spelers.get(iZwart).addPartij();
+        }
+        spelers.get(iZwart).addPunt(pZwart);
+      }
     }
   }
 
-  public static double[][] verwijderNietActief(List<Spelerinfo> spelers,
-                                               double[][] matrix, int enkel) {
+  public static double[][] verwijderNietActief(double[][] matrix,
+                                               Competitie competitie) {
+    var enkel         = competitie.getHeenTerug();
+    var spelers       = competitie.getSpelers();
     var zonderPartij  = spelers.stream()
                                .filter(speler -> speler.getPartijen().equals(0))
                                .count();
@@ -653,54 +765,36 @@ public final class CaissaUtils {
         resourceBundle.getString(PGN.ERR_ONGELDIGEZET), pgnZet, fen.getFen()));
   }
 
-  public static void vulToernooiMatrix(Collection<PGN> partijen,
-                                       List<Spelerinfo> spelers,
-                                       double[][] matrix, int toernooiType,
-                                       boolean sorteerOpStand,
-                                       String tieBreakType) {
-    var noSpelers = spelers.size();
-    var namen     = new String[noSpelers];
-
-    // Vul een array op met de namen en sorteer deze zodat er een binary search
-    // op gedaan kan worden.
-    for (var i = 0; i < noSpelers; i++) {
-      namen[i]  = spelers.get(i).getNaam();
-    }
-    Arrays.sort(namen, String.CASE_INSENSITIVE_ORDER);
-
-    if (!sorteerOpStand) {
-      spelers.sort(new Spelerinfo.ByNaamComparator());
-    }
+  public static double[][] vulToernooiMatrix(Collection<PGN> partijen,
+                                             Competitie competitie,
+                                             boolean sorteerOpStand) {
+    var noSpelers = competitie.getSpelers().size();
+    var kolommen  =
+        (competitie.isMatch() ? partijen.size()
+                              : noSpelers * competitie.getHeenTerug());
+    var matrix    = new double[noSpelers][kolommen];
 
     initMatrix(matrix, noSpelers);
-    zetPositieInMatrix(partijen, spelers, matrix, toernooiType, namen, true);
-    berekenTieBreakScore(tieBreakType, spelers, matrix, toernooiType);
+    zetInMatrix(partijen, matrix, competitie, true);
+    berekenTieBreakScore(matrix, competitie);
 
-    if (!sorteerOpStand) {
-      return;
+    if (sorteerOpStand) {
+      competitie.sorteerOpStand();
+      initMatrix(matrix, noSpelers);
+      zetInMatrix(partijen, matrix, competitie, false);
     }
 
-    initMatrix(matrix, noSpelers);
-    Collections.sort(spelers);
-    zetPositieInMatrix(partijen, spelers, matrix, toernooiType, namen, false);
+    return matrix;
   }
 
-  public static void zetPositieInMatrix(Collection<PGN> partijen,
-                                        List<Spelerinfo> spelers,
-                                        double[][] matrix, int toernooiType,
-                                        String[] namen, boolean telUitslag) {
-    var noSpelers = spelers.size();
-    var stand     = new int[noSpelers];
-    for (var j = 0; j < noSpelers; j++) {
-      stand[Arrays.binarySearch(namen, spelers.get(j).getNaam(),
-                                String.CASE_INSENSITIVE_ORDER)] = j;
-    }
-
+  private static void zetInMatrix(Collection<PGN> partijen,
+                                  double[][] matrix,
+                                  Competitie competitie,
+                                  boolean telUitslag) {
     for (PGN partij: partijen) {
       if (partij.isRanked()
-          && !partij.isBye()) {
-        verwerkPartijInMatrix(partij, matrix, spelers, namen, toernooiType,
-                              telUitslag, stand);
+          && (!partij.isBye() || competitie.metBye())) {
+        verwerkPartijInMatrix(partij, matrix, competitie, telUitslag);
       }
     }
   }

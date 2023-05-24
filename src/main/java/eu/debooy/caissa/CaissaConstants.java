@@ -25,8 +25,12 @@ public final class CaissaConstants {
   public static final String  NOTATIE_STUKKEN   = " NBRQK";
   public static final String  PROMOTIE_STUKKEN  = "NBRQ";
 
-  public static final String  DEF_STARTDATUM  = "0000.00.00";
-  public static final String  DEF_EINDDATUM   = "9999.99.99";
+  public static final String  DEF_DATUMFORMAAT  = "dd/MM/yyyy";
+  public static final String  DEF_EINDDATUM     = "9999.99.99";
+  public static final String  DEF_STARTDATUM    = "0000.00.00";
+
+  public static final String  FEN_KORTEROKADE = "cdefgh";
+  public static final String  FEN_LANGEROKADE = "abcdef";
 
   public static final String  TIEBREAK_SB       = "SB";
   public static final String  TIEBREAK_WP       = "WP";
@@ -64,6 +68,9 @@ public final class CaissaConstants {
   private static final  String  BSLTDK  = "BSLTDK";
 
   public static final String  RESOURCEBUNDLE  = "CaissaCore";
+
+  public static final char  WIT   = 'w';
+  public static final char  ZWART = 'b';
 
   private CaissaConstants() {
   }

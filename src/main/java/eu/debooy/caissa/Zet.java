@@ -53,6 +53,7 @@ public class Zet implements Comparable<Zet>, Serializable {
 
   private boolean ep                = false;
   private boolean mat               = false;
+  private boolean rokade            = false;
   private boolean schaak            = false;
   private boolean slagzet           = false;
   private char    promotieStuk      = ' ';
@@ -105,11 +106,12 @@ public class Zet implements Comparable<Zet>, Serializable {
     if (promotieStuk != ' ') {
       zet.append(promotieStuk);
     }
-    if (schaak) {
-      zet.append('+');
-    }
     if (mat) {
       zet.append('#');
+    } else {
+      if (schaak) {
+        zet.append('+');
+      }
     }
     if (ep) {
       zet.append(CaissaConstants.EN_PASSANT);
@@ -176,11 +178,8 @@ public class Zet implements Comparable<Zet>, Serializable {
   }
 
   private String doeRokade() {
-    if ((van - naar) == -2) {
-      return CaissaConstants.KORTE_ROCHADE;
-    }
-
-    return CaissaConstants.LANGE_ROCHADE;
+    return ((van - naar) < 0) ? CaissaConstants.KORTE_ROCHADE
+                              : CaissaConstants.LANGE_ROCHADE;
   }
 
   @Override
@@ -244,8 +243,7 @@ public class Zet implements Comparable<Zet>, Serializable {
   private String getKorteNotatie(int level) {
     var zet = new StringBuilder();
 
-    if (stuk == 'K'
-        && Math.abs(van - naar) == 2) {
+    if (rokade) {
       zet.append(doeRokade());
     } else {
       zet.append(stuk);
@@ -275,23 +273,21 @@ public class Zet implements Comparable<Zet>, Serializable {
   public String getLangeNotatie() {
     var zet = new StringBuilder();
 
-    if (stuk == 'K'
-      && (van - naar) == -2) {
+    if (rokade) {
+      if ((van - naar) < 0) {
         zet.append(CaissaConstants.KORTE_ROCHADE);
-    } else {
-      if (stuk == 'K'
-        && (van - naar) == 2) {
-        zet.append(CaissaConstants.LANGE_ROCHADE);
       } else {
-        zet.append(stuk);
-        zet.append(CaissaUtils.internToExtern(van));
-        if (isSlagzet()) {
-          zet.append('x');
-        } else {
-          zet.append('-');
-        }
-        zet.append(CaissaUtils.internToExtern(naar));
+        zet.append(CaissaConstants.LANGE_ROCHADE);
       }
+    } else {
+      zet.append(stuk);
+      zet.append(CaissaUtils.internToExtern(van));
+      if (isSlagzet()) {
+        zet.append('x');
+      } else {
+        zet.append('-');
+      }
+      zet.append(CaissaUtils.internToExtern(naar));
     }
     addExtraZetinfo(zet);
 
@@ -417,12 +413,16 @@ public class Zet implements Comparable<Zet>, Serializable {
     this.promotieStuk = promotieStuk;
   }
 
+  public void setRokade(boolean rokade) {
+    this.rokade   = rokade;
+  }
+
   public void setSchaak(boolean schaak) {
-    this.schaak = schaak;
+    this.schaak   = schaak;
   }
 
   public void setSlagzet(boolean slagzet) {
-    this.slagzet = slagzet;
+    this.slagzet  = slagzet;
   }
 
   public final void setStuk(char stuk) throws ZetException {

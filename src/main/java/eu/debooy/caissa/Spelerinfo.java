@@ -30,7 +30,9 @@ import org.json.simple.JSONObject;
 public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private static final long serialVersionUID = 1L;
 
+  private Integer aantalBye     = 0;
   private String  alias;
+  private Double  byeScore      = 0.0;
   private Date    eerstePartij;
   private Integer elo;
   private Integer elogroei;
@@ -104,6 +106,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Spelerinfo(Spelerinfo spelerinfo) {
     alias         = spelerinfo.getAlias();
+    byeScore      = spelerinfo.getByeScore();
     eerstePartij  = spelerinfo.getEerstePartij();
     elo           = spelerinfo.getElo();
     elogroei      = spelerinfo.getElogroei();
@@ -152,6 +155,11 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     partijen++;
   }
 
+  public void addByeScore(Double byeScore) {
+    aantalBye++;
+    this.byeScore       += byeScore;
+  }
+
   public void addTieBreakScore(Double tieBreakScore) {
     this.tieBreakScore  += tieBreakScore;
   }
@@ -161,7 +169,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
    *   1 De meeste punten.
    *   2 De minste partijen.
    *   3 De hoogste tieBreakScore
-   *   4 De 'kleinste' naam
+   *   4 Laagste byeScore
+   *   5 De 'kleinste' naam
    * De grootste moet als eerste in de lijst komen.
    * @param other
    * @return
@@ -169,8 +178,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   @Override
   public int compareTo(Spelerinfo other) {
     return new CompareToBuilder().append(other.punten, punten)
-                                 .append(partijen, other.partijen)
+                                 .append(partijen + aantalBye,
+                                         other.partijen + other.aantalBye)
                                  .append(other.tieBreakScore, tieBreakScore)
+                                 .append(byeScore, other.byeScore)
                                  .append(naam.toUpperCase(),
                                          other.naam.toUpperCase())
                                  .toComparison();
@@ -197,6 +208,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public String getAlias() {
     return alias;
+  }
+
+  public Double getByeScore() {
+    return byeScore;
   }
 
   public Date getEerstePartij() {
@@ -347,31 +362,31 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public void setAlias(String alias) {
-    this.alias = alias;
+    this.alias            = alias;
   }
 
   public void setEerstePartij(Date eerstePartij) {
     if (null == eerstePartij) {
-      this.eerstePartij = null;
+      this.eerstePartij   = null;
     } else {
-      this.eerstePartij = new Date(eerstePartij.getTime());
+      this.eerstePartij   = new Date(eerstePartij.getTime());
     }
   }
 
   public void setElo(Integer elo) {
-    this.elo = elo;
+    this.elo              = elo;
   }
 
   public void setElogroei(Integer elogroei) {
-    this.elogroei  = elogroei;
+    this.elogroei         = elogroei;
   }
 
   public void setEmail(String email) {
-    this.email = email;
+    this.email            = email;
   }
 
   public void setHeenronde(Boolean heenronde) {
-    this.heenronde  = heenronde;
+    this.heenronde        = heenronde;
   }
 
   public void setLaatstePartij(Date laatstePartij) {
@@ -383,75 +398,75 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public void setLandKode(String landKode) {
-    this.landKode = landKode;
+    this.landKode         = landKode;
   }
 
   public void setMaxDatum(Date maxDatum) {
     if (null == maxDatum) {
-      this.maxDatum = null;
+      this.maxDatum       = null;
     } else {
-      this.maxDatum = new Date(maxDatum.getTime());
+      this.maxDatum       = new Date(maxDatum.getTime());
     }
   }
 
   public void setMaxElo(Integer maxElo) {
-    this.maxElo = maxElo;
+    this.maxElo           = maxElo;
   }
 
   public void setMinDatum(Date minDatum) {
     if (null == minDatum) {
-      this.minDatum = null;
+      this.minDatum       = null;
     } else {
-      this.minDatum = new Date(minDatum.getTime());
+      this.minDatum       = new Date(minDatum.getTime());
     }
   }
 
   public void setMinElo(Integer minElo) {
-    this.minElo = minElo;
+    this.minElo           = minElo;
   }
 
   public void setNaam(String naam) {
-    this.naam = DoosUtils.nullToEmpty(naam);
+    this.naam             = DoosUtils.nullToEmpty(naam);
   }
 
   public void setOfficieel(Date officieel) {
     if (null == officieel) {
-      this.officieel  = null;
+      this.officieel      = null;
     } else {
-      this.officieel  = new Date(officieel.getTime());
+      this.officieel      = new Date(officieel.getTime());
     }
   }
 
   public void setPartijen(Integer partijen) {
     if (null == partijen) {
-      this.partijen = 0;
+      this.partijen       = 0;
     } else {
-      this.partijen = partijen;
+      this.partijen       = partijen;
     }
   }
 
   public void setPunten(Double punten) {
     if (null == punten) {
-      this.punten = 0.0d;
+      this.punten         = 0.0d;
     } else {
-      this.punten   = punten;
+      this.punten         = punten;
     }
   }
 
   public void setSpelerId(Integer spelerId) {
-    this.spelerId   = spelerId;
+    this.spelerId         = spelerId;
   }
 
   public void setSpelerSeq(Integer spelerSeq) {
-    this.spelerSeq  = spelerSeq;
+    this.spelerSeq        = spelerSeq;
   }
 
   public void setTerugronde(Boolean terugronde) {
-    this.terugronde = terugronde;
+    this.terugronde       = terugronde;
   }
 
   public void setTelefoon(String telefoon) {
-    this.telefoon   = DoosUtils.nullToEmpty(telefoon);
+    this.telefoon         = DoosUtils.nullToEmpty(telefoon);
   }
 
   public void setTieBreakScore(Double tieBreakScore) {
@@ -473,6 +488,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
         .append("ELO: ").append(elo).append(", ")
         .append("punten: ").append(punten).append(", ")
         .append("partijen: ").append(partijen).append(", ")
+        .append("byeScore: ").append(byeScore).append(", ")
         .append("tieBreakScore: ").append(tieBreakScore).append(", ")
         .append("alias: ").append(alias).append(", ")
         .append("email: ").append(email).append(")").toString();

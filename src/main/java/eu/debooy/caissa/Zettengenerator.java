@@ -17,6 +17,7 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.ZetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ import java.util.logging.Logger;
 /**
  * @author Marco de Booij
  */
-// TODO Rokade aanpassen aan schaak960.
 public class Zettengenerator {
   private final List<Zet>   zetten        = new ArrayList<>();
   private       boolean     korteRokade   = false;
@@ -39,8 +39,11 @@ public class Zettengenerator {
   private       int[]       bord          = new int[120];
   private       int         enPassant     = 0;
   private       int         koning;
-  private       int         kortetoren;
-  private       int         langetoren;
+  private final int         kortetoren;
+  private final int         kortekoning   = CaissaUtils.externToIntern("g1");
+  private final int         langetoren;
+  private final int         langekoning   = CaissaUtils.externToIntern("c1");
+  private       int         rokadekoning;
   private       int         schaakDoel;
   private final int[]       loop          = {9, 11, -9, -11, 10, 1, -1, -10,
                                               19, 21, 12, 8, -21, -19, -12, -8};
@@ -58,7 +61,7 @@ public class Zettengenerator {
       langeRokade = fen.getWitLangeRokade();
       langetoren  = CaissaUtils.externToIntern(fen.getWitLangeToren());
     } else {
-      // Verminder de torenpositie met 70 ivm bordwissel.
+      // Verminder de torenpositie met 70 ivm bordwissel (=witte korte toren).
       korteRokade = fen.getZwartKorteRokade();
       kortetoren  = CaissaUtils.externToIntern(fen.getZwartKorteToren()) - 70;
       langeRokade = fen.getZwartLangeRokade();
@@ -195,13 +198,14 @@ public class Zettengenerator {
       }
 
       // Verzet bij rokade ook de toren.
-      if (stuk == 'K') {
+      if (stuk == 'K' && stukNaar == CaissaConstants.TOREN) {
+        zet.setRokade(true);
         rokadeHeen(vanVeld, naarVeld);
       }
       zet.setSchaak(isSchaak());
 
       // Zet bij rokade de toren terug.
-      if (stuk == 'K') {
+      if (stuk == 'K' && stukNaar == CaissaConstants.TOREN) {
         rokadeTerug(vanVeld, naarVeld);
       }
       if (promotieStuk != ' ') {
@@ -274,7 +278,7 @@ public class Zettengenerator {
     return zetten.size();
   }
 
-  public List<String> getNieuweStellingen() {
+  public List<String> getNieuweStellingen() throws FenException {
     List<String>  stellingen  = new ArrayList<>();
 
     for (Zet  zet: zetten) {
@@ -309,28 +313,38 @@ public class Zettengenerator {
     return aanvalTorenDame(schaakDoel, 1);
  }
 
-  private boolean kanRokeren(int koning, int toren) {
+  private boolean kanRokeren(int koning, int rokadekoning) {
     if (aangevallen(koning)) {
       return false;
     }
 
-    var max     = Math.max(koning, toren);
-    var min     = Math.min(koning, toren);
-    var rokade  = true;
+    int min;
+    int max;
+    var rokade      = true;
+    int rokadetoren;
 
-    for (var i = min+1; i < max; i++) {
-      if (bord[i] != 0) {
+    // Zijn alle velden leeg? Koning en 'rokadetoren' mogen er staan.
+    if (rokadekoning == kortekoning) {
+      min         = Math.min(koning, rokadekoning-1);
+      max         = Math.max(kortetoren, rokadekoning);
+      rokadetoren = kortetoren;
+    } else {
+      min         = Math.min(langetoren, rokadekoning-1);
+      max         = Math.max(koning, rokadekoning);
+      rokadetoren = langetoren;
+    }
+    for (var i = min; i <= max; i++) {
+      if (bord[i] != 0
+          && bord[i] != CaissaConstants.KONING
+          && i != rokadetoren) {
         rokade  = false;
       }
     }
 
-    if (min == koning) {
-      max = 27;
-    } else {
-      max = koning;
-      min = 23;
-    }
-    for (var i = min; i < max+1; i++) {
+    // Komt koning schaak te staan?
+    min = Math.min(koning, rokadekoning);
+    max = Math.max(koning, rokadekoning);
+    for (var i = min; i <= max; i++) {
       if (aangevallen(i)) {
         rokade  = false;
       }
@@ -450,37 +464,44 @@ public class Zettengenerator {
         && !langeRokade) {
       return;
     }
-
     if (korteRokade
-        && kanRokeren(koning, kortetoren)) {
-        addZet('K', koning, 27, 0);
+        && kanRokeren(koning, kortekoning)) {
+        addZet('K', koning, kortekoning, CaissaConstants.TOREN);
     }
 
     if (langeRokade
-        && kanRokeren(koning, langetoren)) {
-        addZet('K', koning, 23, 0);
+        && kanRokeren(koning, langekoning)) {
+        addZet('K', koning, langekoning, CaissaConstants.TOREN);
     }
   }
 
   private void rokadeHeen(int vanVeld, int naarVeld) {
-    if (vanVeld - naarVeld == -2) {
-      bord[vanVeld+1] = bord[vanVeld+3];
-      bord[vanVeld+3] = 0;
+    bord[vanVeld]   = 0;
+    bord[naarVeld]  = 0;
+    rokadekoning    = koning;
+    koning          = kortekoning;
+    if (vanVeld - naarVeld < 0) {
+      bord[kortekoning]   = CaissaConstants.KONING;
+      bord[kortekoning-1] = CaissaConstants.TOREN;
     }
     if (vanVeld - naarVeld == 2) {
-      bord[vanVeld-1] = bord[vanVeld-4];
-      bord[vanVeld-4] = 0;
+      bord[langekoning]   = CaissaConstants.KONING;
+      bord[langekoning+1] = CaissaConstants.TOREN;
     }
   }
 
   private void rokadeTerug(int vanVeld, int naarVeld) {
-    if (vanVeld - naarVeld == -2) {
-      bord[vanVeld+3] = bord[vanVeld+1];
-      bord[vanVeld+1] = 0;
-    }
-    if (vanVeld - naarVeld == 2) {
-      bord[vanVeld-4] = bord[vanVeld-1];
-      bord[vanVeld-1] = 0;
+    koning  = rokadekoning;
+    if (vanVeld - naarVeld < 0) {
+      bord[kortekoning]   = 0;
+      bord[kortekoning+1] = 0;
+      bord[rokadekoning]  = CaissaConstants.KONING;
+      bord[kortetoren]    = CaissaConstants.TOREN;
+    } else {
+      bord[langekoning]   = 0;
+      bord[langekoning-1] = 0;
+      bord[rokadekoning]  = CaissaConstants.KONING;
+      bord[langetoren]    = CaissaConstants.TOREN;
     }
   }
 

@@ -39,6 +39,7 @@ public class CompetitieTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       CompetitieTest.class.getClassLoader();
 
+  private static final  String  BST_COMP_DZ = "competitieDZ.json";
   private static final  String  BST_COMP_M  = "competitiem.json";
   private static final  String  BST_COMP_MF = "competitiemf.json";
   private static final  String  BST_COMP_3  = "competitie3.json";
@@ -61,7 +62,7 @@ public class CompetitieTest extends BatchTest {
                                      BST_COMP_4, BST_COMP_41, BST_COMP_4E,
                                      BST_COMP_4H, BST_COMP_4T, BST_COMP_5,
                                      BST_COMP_51, BST_COMP_5H, BST_COMP_5T,
-                                     BST_COMP_M, BST_COMP_MF});
+                                     BST_COMP_M, BST_COMP_MF, BST_COMP_DZ});
   }
 
   @BeforeClass
@@ -98,6 +99,8 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_M);
       kopieerBestand(CLASSLOADER, BST_COMP_MF,
                      getTemp() + File.separator + BST_COMP_MF);
+      kopieerBestand(CLASSLOADER, BST_COMP_DZ,
+                     getTemp() + File.separator + BST_COMP_DZ);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
       throw new BestandException(e);
@@ -107,7 +110,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig3() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
 
       assertTrue(competitie.isDubbel());
@@ -125,7 +128,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig3E() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3E);
 
       assertFalse(competitie.isDubbel());
@@ -144,7 +147,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig3M() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3M);
 
       fail("Er had een CompetitieException moeten wezen.");
@@ -158,7 +161,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig4() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_4);
 
       assertTrue(competitie.isDubbel());
@@ -176,7 +179,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig4E() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_4E);
 
       assertFalse(competitie.isDubbel());
@@ -195,7 +198,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig41() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_41);
 
       assertTrue(competitie.isDubbel());
@@ -213,7 +216,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig4H() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_4H);
 
       assertTrue(competitie.isDubbel());
@@ -231,7 +234,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig4T() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_4T);
 
       assertTrue(competitie.isDubbel());
@@ -249,7 +252,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig5() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_5);
 
       assertTrue(competitie.isDubbel());
@@ -267,7 +270,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig51() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_51);
 
       assertTrue(competitie.isDubbel());
@@ -285,7 +288,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig5H() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_5H);
 
       assertTrue(competitie.isDubbel());
@@ -303,7 +306,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondig5T() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_5T);
 
       assertTrue(competitie.isDubbel());
@@ -321,7 +324,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondigM() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_M);
 
       assertFalse(competitie.isDubbel());
@@ -340,7 +343,7 @@ public class CompetitieTest extends BatchTest {
   @Test
   public void testDubbelrondigMF() {
     try {
-      Competitie  competitie  =
+      var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_MF);
 
       fail("Er had een CompetitieException moeten wezen.");
@@ -348,6 +351,29 @@ public class CompetitieTest extends BatchTest {
       var errno = resourceBundle.getString(Competitie.ERR_KALENDER)
                                 .split(" ")[0];
       assertTrue(e.getLocalizedMessage().startsWith(errno));
+    }
+  }
+
+  @Test
+  public void testDubbelZwitsers() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_DZ);
+
+      assertTrue(competitie.isDubbel());
+      assertFalse(competitie.isEnkel());
+      assertEquals(Integer.valueOf(7),
+                   Integer.valueOf(competitie.getSpelers().size()));
+      assertEquals(Integer.valueOf(3),
+                   Integer.valueOf(competitie.getSpeeldata().size()));
+      assertEquals(Integer.valueOf(3), competitie.getRondes());
+      assertEquals(4.0, competitie.getPuntenWinst());
+      assertEquals(2.0, competitie.getPuntenRemise());
+      assertEquals(1.0, competitie.getPuntenVerlies());
+      assertEquals(3.0, competitie.getPuntenBye());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
     }
   }
 }

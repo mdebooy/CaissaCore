@@ -49,7 +49,9 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  ERR_MATCH         = "cmp.error.match";
   public static final String  ERR_MATCHSPELERS  = "cmp.error.match.spelers";
   public static final String  ERR_RONDES        = "cmp.error.rondes";
+  public static final String  ERR_PUNTEN        = "cmp.error.punten";
   public static final String  ERR_SPELERS       = "cmp.error.spelers";
+  public static final String  ERR_TIEBREAK      = "cmp.error.tiebreak";
   public static final String  ERR_TYPE          = "cmp.error.type";
 
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
@@ -69,10 +71,12 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  JSON_TAG_SPELER_HEENRONDE   = "heenronde";
   public static final String  JSON_TAG_SPELER_LANDKODE    = "landkode";
   public static final String  JSON_TAG_SPELER_NAAM        = "naam";
+  public static final String  JSON_TAG_PUNTEN             = "punten";
   public static final String  JSON_TAG_SPELER_SPELERID    = "id";
   public static final String  JSON_TAG_SPELER_SPELERSEQ   = "seq";
   public static final String  JSON_TAG_SPELER_TELEFOON    = "telefoon";
   public static final String  JSON_TAG_SPELER_TERUGRONDE  = "terugronde";
+  public static final String  JSON_TAG_TIEBREAK           = "tiebreak";
   public static final String  JSON_TAG_TOERNOOITYPE       = "toernooitype";
 
   public static final String  MIS_EVENT     = "cmp.mis.event";
@@ -82,21 +86,29 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  MIS_TAG       = "cmp.mis.jsontag";
   public static final String  MIS_TYPE      = "cmp.mis.type";
 
-  public static final Integer TOERNOOI_MATCH    = 0;
-  public static final Integer TOERNOOI_ENKEL    = 1;
-  public static final Integer TOERNOOI_DUBBEL   = 2;
-  public static final Integer TOERNOOI_ZWITSERS = 3;
+  public static final Integer TOERNOOI_MATCH            = 0;
+  public static final Integer TOERNOOI_ENKEL            = 1;
+  public static final Integer TOERNOOI_DUBBEL           = 2;
+  public static final Integer TOERNOOI_ZWITSERS         = 3;
+  public static final Integer TOERNOOI_DUBBEL_ZWITSERS  = 4;
 
   private static final  List<Integer> roundrobin  =
       Arrays.asList(TOERNOOI_ENKEL, TOERNOOI_DUBBEL);
+  private static final  List<String>  tiebreaks   =
+      Arrays.asList(CaissaConstants.TIEBREAK_SB, CaissaConstants.TIEBREAK_WP);
   private static final  List<Integer> types       =
       Arrays.asList(TOERNOOI_MATCH, TOERNOOI_ENKEL, TOERNOOI_DUBBEL,
-                    TOERNOOI_ZWITSERS);
+                    TOERNOOI_ZWITSERS, TOERNOOI_DUBBEL_ZWITSERS);
 
-  private JSONObject        toernooi;
+  private Spelerinfo        bye           = new Spelerinfo();
+  private Double            puntenBye     = 0.0;
+  private Double            puntenRemise  = 0.5;
+  private Double            puntenVerlies = 0.0;
+  private Double            puntenWinst   = 1.0;
   private Integer           rondes;
   private List<Date>        speeldata;
   private List<Spelerinfo>  spelers;
+  private JSONObject        toernooi;
   private Integer           type;
 
   public Competitie(String jsonbestand) throws CompetitieException {
@@ -113,6 +125,12 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       validate();
     } catch (BestandException | ParseException e) {
       throw new CompetitieException(e.getLocalizedMessage());
+    }
+    if (metBye()) {
+      bye.setNaam(CaissaConstants.BYE);
+      bye.setSpelerId(spelers.get(spelers.size() - 1).getSpelerId() + 1);
+      bye.setSpelerSeq(spelers.get(spelers.size() - 1)
+                                     .getSpelerSeq() + 1);
     }
   }
 
@@ -200,6 +218,22 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return MessageFormat.format(resourceBundle.getString(MIS_TAG), tag);
   }
 
+  public Double getPuntenBye() {
+    return puntenBye;
+  }
+
+  public Double getPuntenRemise() {
+    return puntenRemise;
+  }
+
+  public Double getPuntenVerlies() {
+    return puntenVerlies;
+  }
+
+  public Double getPuntenWinst() {
+    return puntenWinst;
+  }
+
   public Integer getRondes() {
     return rondes;
   }
@@ -210,6 +244,41 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public List<Date> getSpeeldata() {
     return new ArrayList<>(speeldata);
+  }
+
+  public Spelerinfo getSpeler(Integer seq) {
+    if (seq == spelers.size()) {
+      return bye;
+    }
+
+    return spelers.get(seq);
+  }
+
+  public Spelerinfo getSpeler(String naam) {
+    if (CaissaConstants.BYE.equalsIgnoreCase(naam)) {
+      return bye;
+    }
+
+    return spelers.stream()
+                  .filter(speler -> speler.getNaam().equals(naam))
+                  .findFirst()
+                  .orElse(new Spelerinfo());
+  }
+
+  public int getSpelerIndex(String naam) {
+    if (CaissaConstants.BYE.equalsIgnoreCase(naam)) {
+      return -1;
+    }
+
+    var index = -1;
+
+    for (var i = 0; i < spelers.size(); i++) {
+      if (spelers.get(i).getNaam().equals(naam)) {
+        index = i;
+      }
+    }
+
+    return index;
   }
 
   public List<Spelerinfo> getSpelers() {
@@ -224,8 +293,60 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return "";
   }
 
+  public String getTiebreak() {
+    if (!toernooi.containsKey(JSON_TAG_TIEBREAK)) {
+      return CaissaConstants.TIEBREAK_SB;
+    }
+
+    return (String) toernooi.get(JSON_TAG_TIEBREAK);
+  }
+
   public Integer getType() {
     return type;
+  }
+
+  public String getUitslag(String uitslag) {
+    return getUitslag(uitslag, false);
+  }
+
+  public String getUitslag(String uitslag, boolean bye) {
+    if (uitslag.equals(CaissaConstants.PARTIJ_BEZIG)) {
+      return uitslag;
+    }
+
+    if (puntenWinst.equals(1.0)
+        && puntenRemise.equals(0.5)
+        && puntenVerlies.equals(0.0)
+        && !metBye()) {
+      return uitslag;
+    }
+
+    var wit   = 0;
+    var zwart = 0;
+    if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
+      if (bye) {
+        wit   = puntenBye.intValue();
+        zwart = 0;
+      } else {
+        wit   = puntenWinst.intValue();
+        zwart = puntenVerlies.intValue();
+    }
+    }
+    if (uitslag.equals(CaissaConstants.PARTIJ_REMISE)) {
+      wit   = puntenRemise.intValue();
+      zwart = puntenRemise.intValue();
+    }
+    if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
+      if (bye) {
+        wit   = 0;
+        zwart = puntenBye.intValue();
+      } else {
+        wit   = puntenVerlies.intValue();
+        zwart = puntenWinst.intValue();
+      }
+    }
+
+    return String.format("%d-%d", wit, zwart);
   }
 
   @Override
@@ -234,7 +355,8 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public boolean isDubbel() {
-    return type.equals(TOERNOOI_DUBBEL);
+    return type.equals(TOERNOOI_DUBBEL)
+        || type.equals(TOERNOOI_DUBBEL_ZWITSERS);
   }
 
   public boolean isEnkel() {
@@ -251,7 +373,24 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public boolean isZwitsers() {
-    return type.equals(TOERNOOI_ZWITSERS);
+    return type.equals(TOERNOOI_ZWITSERS)
+        || type.equals(TOERNOOI_DUBBEL_ZWITSERS);
+  }
+
+  public final boolean metBye() {
+    return !puntenBye.equals(0.0);
+  }
+
+  public void sorteerOpNaam() {
+    spelers.sort(new Spelerinfo.ByNaamComparator());
+  }
+
+  public void sorteerOpSeq() {
+    spelers.sort(new Spelerinfo.BySpelerSeqComparator());
+  }
+
+  public void sorteerOpStand() {
+    Collections.sort(spelers);
   }
 
   private void validate() throws CompetitieException {
@@ -259,6 +398,8 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
     validateEvent(fouten);
     validateEventdate(fouten);
+    validatePunten(fouten);
+    validateTiebreak(fouten);
 
     var correct = validateType(fouten);
 
@@ -294,6 +435,30 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     }
   }
 
+  private void validatePunten(List<String> fouten) {
+     if (!toernooi.containsKey(JSON_TAG_PUNTEN)) {
+      return;
+    }
+
+    var punten  = ((String) toernooi.get(JSON_TAG_PUNTEN)).split(";");
+    if (punten.length < 3
+        || punten.length > 4) {
+      fouten.add(resourceBundle.getString(ERR_PUNTEN));
+      return;
+    }
+
+    try {
+      puntenWinst   = Double.valueOf(punten[0]);
+      puntenRemise  = Double.valueOf(punten[1]);
+      puntenVerlies = Double.valueOf(punten[2]);
+      if (punten.length == 4) {
+        puntenBye   = Double.valueOf(punten[3]);
+      }
+    } catch (NumberFormatException e) {
+      fouten.add(resourceBundle.getString(ERR_PUNTEN));
+    }
+  }
+
   private void validateRondes(List<String> fouten) {
     if (toernooi.containsKey(JSON_TAG_RONDES)) {
       rondes  = getInteger(JSON_TAG_RONDES);
@@ -301,13 +466,13 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       rondes  = null;
     }
 
-    if (type.equals(TOERNOOI_MATCH)) {
+    if (isMatch()) {
         validateRondesMatch(fouten);
     }
     if (isRoundrobin()) {
         validateRondesRoundRobin(fouten);
     }
-    if (type.equals(TOERNOOI_ZWITSERS)) {
+    if (isZwitsers()) {
         validateRondesZwitsers(fouten);
     }
   }
@@ -353,8 +518,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   private void validateRondesZwitsers(List<String> fouten) {
     if (null == rondes) {
-      fouten.add(resourceBundle.getString(MIS_RONDES));
-      return;
+      rondes  = speeldata.size();
     }
 
     if (rondes.compareTo(1) < 0) {
@@ -378,6 +542,20 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     if (!rondes.equals(teSpelen)) {
       fouten.add(MessageFormat.format(resourceBundle.getString(ERR_SPELERS),
                                       teSpelen, rondes));
+    }
+  }
+
+  private void validateTiebreak(List<String> fouten) {
+     if (!toernooi.containsKey(JSON_TAG_TIEBREAK)) {
+      return;
+    }
+
+    var tiebreak  = (String) toernooi.get(JSON_TAG_TIEBREAK);
+
+    if (!tiebreaks.contains(tiebreak)) {
+      fouten.add(
+          MessageFormat.format(resourceBundle.getString(ERR_TIEBREAK),
+                               tiebreak));
     }
   }
 
@@ -406,7 +584,8 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       if (ronde.containsKey(JSON_TAG_KALENDER_RONDE)
           && ronde.containsKey(JSON_TAG_KALENDER_DATUM)) {
         speeldata.add(Datum.toDate(ronde.get(Competitie.JSON_TAG_KALENDER_DATUM)
-                                        .toString()));
+                                        .toString(),
+                                   CaissaConstants.DEF_DATUMFORMAAT));
       }
     }
   }

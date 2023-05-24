@@ -16,7 +16,9 @@
  */
 package eu.debooy.caissa;
 
+import static eu.debooy.caissa.FEN.resourceBundle;
 import eu.debooy.caissa.exceptions.FenException;
+import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
@@ -70,32 +72,39 @@ public class FEN implements Serializable {
 
   public static final String  ERR_AANZET    = "fen.aanzet.incorrect";
   public static final String  ERR_ENPASSANT = "fen.ep.incorrect";
+  public static final String  ERR_ROKADE    = "fen.rokade.incorrect";
   public static final String  ERR_ZET       = "fen.zet.incorrect";
 
   protected static  ResourceBundle  resourceBundle  =
       ResourceBundle.getBundle("CaissaCore");
 
-  private       char    aanZet            = 'w';
+  private       char    aanZet            = CaissaConstants.WIT;
   private final int[]   bord              = new int[120];
+  private       boolean schaak960         = false;
   private       String  enPassant         = "-";
   private final String  eol               = System.lineSeparator();
   private       Integer halvezetten       = 0;
-  private final char    kortetoren;
-  private final char    langetoren;
+  private       char    koninglijn;
+  private       char    kortetoren        = '@';
+  private       char    langetoren        = '@';
   private       String  positie           = BEGINSTELLING;
-  private       Boolean witKorteRokade    = true;
-  private       Boolean witLangeRokade    = true;
+  private       Boolean witKorteRokade;
+  private       Boolean witLangeRokade;
   private       Integer zetnummer         = 1;
-  private       Boolean zwartKorteRokade  = true;
-  private       Boolean zwartLangeRokade  = true;
+  private       Boolean zwartKorteRokade;
+  private       Boolean zwartLangeRokade;
 
   public FEN() {
-    kortetoren  = 'h';
-    langetoren  = 'a';
     positieToBord();
+    kortetoren        = 'h';
+    langetoren        = 'a';
+    witKorteRokade    = true;
+    witLangeRokade    = true;
+    zwartKorteRokade  = true;
+    zwartLangeRokade  = true;
   }
 
-  public FEN(String fen) {
+  public FEN(String fen) throws FenException {
     var veld    = fen.split(" ");
 
     positie     = veld[0];
@@ -105,13 +114,10 @@ public class FEN implements Serializable {
     enPassant   = veld[3];
     halvezetten = Integer.valueOf(veld[4]);
     zetnummer   = Integer.valueOf(veld[5]);
-
-    kortetoren  = 'h';
-    langetoren  = 'a';
   }
 
   private void aanZetWit(int veldVan, int veldNaar, int stukVan) {
-    aanZet  = 'b';
+    aanZet  = CaissaConstants.ZWART;
     if (veldVan == 21
         && stukVan == CaissaConstants.TOREN) {
       witLangeRokade  = false;
@@ -208,7 +214,7 @@ public class FEN implements Serializable {
 
   private boolean checkEnPassant(String enPassant) {
     if ("abcdefgh".indexOf(enPassant.charAt(0)) < 0
-        || enPassant.charAt(1) != (aanZet == 'w' ? '6' : '3')) {
+        || enPassant.charAt(1) != (aanZet == CaissaConstants.WIT ? '6' : '3')) {
       return false;
     }
     var intern  = CaissaUtils.externToIntern(enPassant);
@@ -216,7 +222,7 @@ public class FEN implements Serializable {
     if (bord[intern] != 0) {
       return false;
     }
-    return bord[intern + (aanZet == 'w' ? -10 : +10)] == pion;
+    return bord[intern + (aanZet == CaissaConstants.WIT ? -10 : +10)] == pion;
   }
 
   public void doeEnPassant(int veldVan, int veldNaar, int stukVan) {
@@ -246,7 +252,7 @@ public class FEN implements Serializable {
 
     if (zet.getPromotieStuk() != ' ') {
       stukVan = CaissaUtils.zoekStuk(zet.getPromotieStuk());
-      if (aanZet == 'b') {
+      if (aanZet == CaissaConstants.ZWART) {
         stukVan *= -1;
       }
     }
@@ -284,7 +290,7 @@ public class FEN implements Serializable {
     String    beginstelling;
     String    eindstelling;
     List<Zet> zetten;
-    if (aanZet == 'w'
+    if (aanZet == CaissaConstants.WIT
         && zetnummer.equals(fen.zetnummer)) {
       zetten  = new Zettengenerator(new FEN(getFen())).getZetten();
       beginstelling = getFen();
@@ -371,16 +377,32 @@ public class FEN implements Serializable {
     var rochade = new StringBuilder();
 
     if (Boolean.TRUE.equals(witKorteRokade)) {
-      rochade.append("K");
+      if (schaak960) {
+        rochade.append(Character.toUpperCase(kortetoren));
+      } else {
+        rochade.append("K");
+      }
     }
     if (Boolean.TRUE.equals(witLangeRokade)) {
-      rochade.append("Q");
+      if (schaak960) {
+        rochade.append(Character.toUpperCase(langetoren));
+      } else {
+        rochade.append("Q");
+      }
     }
     if (Boolean.TRUE.equals(zwartKorteRokade)) {
-      rochade.append("k");
+      if (schaak960) {
+        rochade.append(kortetoren);
+      } else {
+        rochade.append("k");
+      }
     }
     if (Boolean.TRUE.equals(zwartLangeRokade)) {
-      rochade.append("q");
+      if (schaak960) {
+        rochade.append(langetoren);
+      } else {
+        rochade.append("q");
+      }
     }
     if (rochade.length() == 0) {
       rochade.append('-');
@@ -450,6 +472,9 @@ public class FEN implements Serializable {
           bord[(9-i)*10+kolom]  = (CaissaConstants.STUKKEN
                                                   .toLowerCase()
                                                   .indexOf(ch) + 1) * -1;
+          if (ch == 'k') {
+            koninglijn  = (char) (kolom+96);
+          }
         } else if (CaissaConstants.STUKKEN.indexOf(ch) > -1) {
             bord[(9-i)*10+kolom]  = CaissaConstants.STUKKEN.indexOf(ch) + 1;
         } else if ("12345678".indexOf(ch) > -1) {
@@ -525,11 +550,114 @@ public class FEN implements Serializable {
     positieToBord();
   }
 
-  private void setRokade(String rokade) {
-    witKorteRokade    = rokade.indexOf('K') != -1;
-    witLangeRokade    = rokade.indexOf('Q') != -1;
-    zwartKorteRokade  = rokade.indexOf('k') != -1;
-    zwartLangeRokade  = rokade.indexOf('q') != -1;
+  private void setRokade(String rokade) throws FenException {
+    if (DoosUtils.isBlankOrNull(rokade)) {
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ROKADE), rokade));
+    }
+
+    witKorteRokade    = false;
+    witLangeRokade    = false;
+    zwartKorteRokade  = false;
+    zwartLangeRokade  = false;
+
+    if (rokade.equals("-")) {
+      return;
+    }
+
+    var uniek         = DoosUtils.uniekeCharacters(rokade.toLowerCase());
+    if (uniek.length() > 2) {
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ROKADE), rokade));
+    }
+    if (uniek.length() == 1
+        && !(uniek.equals("k") || uniek.equals("q"))) {
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ROKADE), rokade));
+    }
+
+    var rokades       = rokade.toCharArray();
+    for (var i = 0; i < rokades.length; i++) {
+      if (rokades[i] == Character.toUpperCase(rokades[i])) {
+        setRokadewit(Character.toLowerCase(rokades[i]), koninglijn, rokade);
+      } else {
+        setRokadezwart(rokades[i], koninglijn, rokade);
+      }
+    }
+  }
+
+  private void setRokadewit(char lijn, char koninglijn, String rokade)
+      throws FenException {
+    if (lijn == koninglijn) {
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ROKADE), rokade));
+    }
+
+    if (lijn == 'k') {
+      kortetoren      = 'h';
+      witKorteRokade  = true;
+      return;
+    }
+    if (lijn == 'q') {
+      langetoren      = 'a';
+      witLangeRokade  = true;
+      return;
+    }
+
+    if (lijn > koninglijn
+        && CaissaConstants.FEN_KORTEROKADE.indexOf(lijn) != -1) {
+      kortetoren      = lijn;
+      schaak960       = true;
+      witKorteRokade  = true;
+      return;
+    }
+    if (lijn < koninglijn
+            && CaissaConstants.FEN_LANGEROKADE.indexOf(lijn) != -1) {
+      langetoren      = lijn;
+      schaak960       = true;
+      witLangeRokade  = true;
+      return;
+    }
+
+    throw new FenException(MessageFormat.format(
+        resourceBundle.getString(ERR_ROKADE), rokade));
+  }
+
+  private void setRokadezwart(char lijn, char koninglijn, String rokade)
+      throws FenException {
+    if (lijn == koninglijn) {
+      throw new FenException(MessageFormat.format(
+          resourceBundle.getString(ERR_ROKADE), rokade));
+    }
+
+    if (lijn == 'k') {
+      kortetoren        = 'h';
+      zwartKorteRokade  = true;
+      return;
+    }
+    if (lijn == 'q') {
+      langetoren        = 'a';
+      zwartLangeRokade  = true;
+      return;
+    }
+
+    if (lijn < koninglijn
+            && CaissaConstants.FEN_LANGEROKADE.indexOf(lijn) != -1) {
+      langetoren        = lijn;
+      schaak960         = true;
+      zwartLangeRokade  = true;
+      return;
+    }
+    if (lijn > koninglijn
+        && CaissaConstants.FEN_KORTEROKADE.indexOf(lijn) != -1) {
+      kortetoren        = lijn;
+      schaak960         = true;
+      zwartKorteRokade  = true;
+      return;
+    }
+
+    throw new FenException(MessageFormat.format(
+        resourceBundle.getString(ERR_ROKADE), rokade));
   }
 
   public void setWitKorteRokade(Boolean witKorteRokade) {
