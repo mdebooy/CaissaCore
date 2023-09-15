@@ -138,8 +138,14 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     Integer teSpelen;
 
     if (isRoundrobin()) {
-      teSpelen = (spelers.size() + (spelers.size()%2) - 1)
-                  * (isDubbel() ? 2 : 1);
+      var aantal  = (int) spelers.stream()
+                                 .filter(Spelerinfo::inHeenronde).count();
+      teSpelen    = aantal + (aantal%2) - 1;
+      if (isDubbel()) {
+        aantal    = (int) spelers.stream()
+                                 .filter(Spelerinfo::inTerugronde).count();
+        teSpelen += aantal + (aantal%2) -1;
+      }
     } else {
       teSpelen  = rondes;
     }
@@ -470,7 +476,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
         validateRondesMatch(fouten);
     }
     if (isRoundrobin()) {
-        validateRondesRoundRobin(fouten);
+        validateRondesRoundrobin(fouten);
     }
     if (isZwitsers()) {
         validateRondesZwitsers(fouten);
@@ -495,7 +501,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     }
   }
 
-  private void validateRondesRoundRobin(List<String> fouten) {
+  private void validateRondesRoundrobin(List<String> fouten) {
     if (null == rondes) {
       rondes  = berekenRondes();
     }

@@ -276,9 +276,9 @@ public class CompetitieTest extends BatchTest {
       assertTrue(competitie.isDubbel());
       assertEquals(Integer.valueOf(5),
                    Integer.valueOf(competitie.getSpelers().size()));
-      assertEquals(Integer.valueOf(10),
+      assertEquals(Integer.valueOf(6),
                    Integer.valueOf(competitie.getSpeeldata().size()));
-      assertEquals(Integer.valueOf(10), competitie.getRondes());
+      assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -294,9 +294,9 @@ public class CompetitieTest extends BatchTest {
       assertTrue(competitie.isDubbel());
       assertEquals(Integer.valueOf(5),
                    Integer.valueOf(competitie.getSpelers().size()));
-      assertEquals(Integer.valueOf(10),
+      assertEquals(Integer.valueOf(8),
                    Integer.valueOf(competitie.getSpeeldata().size()));
-      assertEquals(Integer.valueOf(10), competitie.getRondes());
+      assertEquals(Integer.valueOf(8), competitie.getRondes());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -312,9 +312,9 @@ public class CompetitieTest extends BatchTest {
       assertTrue(competitie.isDubbel());
       assertEquals(Integer.valueOf(5),
                    Integer.valueOf(competitie.getSpelers().size()));
-      assertEquals(Integer.valueOf(10),
+      assertEquals(Integer.valueOf(8),
                    Integer.valueOf(competitie.getSpeeldata().size()));
-      assertEquals(Integer.valueOf(10), competitie.getRondes());
+      assertEquals(Integer.valueOf(8), competitie.getRondes());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
