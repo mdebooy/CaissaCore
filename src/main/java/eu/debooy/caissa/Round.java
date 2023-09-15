@@ -45,6 +45,10 @@ public class Round implements Comparable<Round>, Serializable {
     this.ronde = ronde;
   }
 
+  public Integer getRonde() {
+    return Integer.valueOf(getRound().split("\\.")[0]);
+  }
+
   public String getRound() {
     return ronde;
   }
