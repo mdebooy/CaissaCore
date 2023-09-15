@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -138,14 +139,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     Integer teSpelen;
 
     if (isRoundrobin()) {
-      var aantal  = (int) spelers.stream()
-                                 .filter(Spelerinfo::inHeenronde).count();
-      teSpelen    = aantal + (aantal%2) - 1;
-      if (isDubbel()) {
-        aantal    = (int) spelers.stream()
-                                 .filter(Spelerinfo::inTerugronde).count();
-        teSpelen += aantal + (aantal%2) -1;
-      }
+      teSpelen  = getAantalHeenrondes() + getAantalTerugrondes();
     } else {
       teSpelen  = rondes;
     }
@@ -182,6 +176,22 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     }
 
     return new Object();
+  }
+
+  public Integer getAantalHeenrondes() {
+    var aantal  = spelers.stream().filter(Spelerinfo::inHeenronde).count();
+
+    return (int) (aantal + (aantal%2) - 1);
+  }
+
+  public Integer getAantalTerugrondes() {
+    if (!isDubbel()) {
+      return 0;
+    }
+
+    var aantal  = spelers.stream().filter(Spelerinfo::inTerugronde).count();
+
+    return (int) (aantal + (aantal%2) - 1);
   }
 
   public String getEvent() {
@@ -289,6 +299,20 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public List<Spelerinfo> getSpelers() {
     return new ArrayList<>(spelers);
+  }
+
+  public List<Spelerinfo> getSpelersHeenronde() {
+    return spelers.stream().filter(Spelerinfo::inHeenronde)
+                  .collect(Collectors.toList());
+  }
+
+  public List<Spelerinfo> getSpelersTerugronde() {
+    if (!isDubbel()) {
+      return new ArrayList();
+    }
+
+    return spelers.stream().filter(Spelerinfo::inTerugronde)
+                  .collect(Collectors.toList());
   }
 
   public String getString(String sleutel) {

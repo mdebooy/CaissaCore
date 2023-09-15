@@ -304,6 +304,27 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
+  public void testDubbelrondig5HSpelers() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_5H);
+
+      var spelersH  = competitie.getSpelersHeenronde();
+      var spelersT  = competitie.getSpelersTerugronde();
+      var rondesH   = competitie.getAantalHeenrondes();
+      var rondesT   = competitie.getAantalTerugrondes();
+
+      assertEquals(5, spelersH.size());
+      assertEquals(4, spelersT.size());
+      assertEquals(5, rondesH.intValue());
+      assertEquals(3, rondesT.intValue());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
   public void testDubbelrondig5T() {
     try {
       var competitie  =
@@ -315,6 +336,27 @@ public class CompetitieTest extends BatchTest {
       assertEquals(Integer.valueOf(8),
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(8), competitie.getRondes());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testDubbelrondig5TSpelers() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_5T);
+
+      var spelersH  = competitie.getSpelersHeenronde();
+      var spelersT  = competitie.getSpelersTerugronde();
+      var rondesH   = competitie.getAantalHeenrondes();
+      var rondesT   = competitie.getAantalTerugrondes();
+
+      assertEquals(4, spelersH.size());
+      assertEquals(5, spelersT.size());
+      assertEquals(3, rondesH.intValue());
+      assertEquals(5, rondesT.intValue());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
