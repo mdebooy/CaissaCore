@@ -16,7 +16,6 @@
  */
 package eu.debooy.caissa;
 
-import static eu.debooy.caissa.FEN.resourceBundle;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;

@@ -78,6 +78,17 @@ public class RoundTest extends TestCase {
   }
 
   @Test
+  public void testGetRonde() {
+    var round1  = new Round("1.2");
+    var round2  = new Round("2");
+    var round3  = new Round("3.2");
+
+    assertEquals(1, round1.getRonde().intValue());
+    assertEquals(2, round2.getRonde().intValue());
+    assertEquals(3, round3.getRonde().intValue());
+  }
+
+  @Test
   public void testGetRound() {
     var round = new Round("1");
 
