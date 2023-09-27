@@ -51,23 +51,24 @@ public final class CaissaUtils {
 
   private static void berekenSBscore(double[][] matrix,
                                      Competitie competitie) {
-    var dubbel    = competitie.getHeenTerug();
-    var kolommen  = matrix[0].length;
-    var noSpelers = competitie.getSpelers().size();
+    var deelnemers  = competitie.getDeelnemers();
+    var dubbel      = competitie.getHeenTerug();
+    var kolommen    = matrix[0].length;
+    var noSpelers   = competitie.getDeelnemers().size();
 
     for (var i = 0; i < noSpelers; i++) {
       Double  sbScore = 0.0;
       for (var j = 0; j < kolommen; j++) {
         if (!competitie.isMatch()
             && matrix[i][j] == competitie.getPuntenWinst()) {
-          sbScore += competitie.getSpeler(j / dubbel).getPunten();
+          sbScore += deelnemers.get(j / dubbel).getPunten();
         }
         if (!competitie.isMatch()
             && matrix[i][j] == competitie.getPuntenRemise()) {
-          sbScore += competitie.getSpeler(j / dubbel).getPunten() * 0.5;
+          sbScore += deelnemers.get(j / dubbel).getPunten() * 0.5;
         }
       }
-      competitie.getSpeler(i).setTieBreakScore(sbScore);
+      deelnemers.get(i).setTieBreakScore(sbScore);
     }
   }
 
@@ -312,6 +313,22 @@ public final class CaissaUtils {
     bye.setSpelerSeq(Integer.MAX_VALUE);
 
     return bye;
+  }
+
+  public static int getSpelerIndex(String naam, List<Spelerinfo> spelers) {
+    if (CaissaConstants.BYE.equalsIgnoreCase(naam)) {
+      return -1;
+    }
+
+    var index = -1;
+
+    for (var i = 0; i < spelers.size(); i++) {
+      if (spelers.get(i).getNaam().equals(naam)) {
+        index = i;
+      }
+    }
+
+    return index;
   }
 
   public static char getStuk(int stukcode) {
@@ -652,9 +669,13 @@ public final class CaissaUtils {
                                                      competitie.getType()))) {
       return;
     }
+
     var kolomW  = ronde - 1;
     var kolomZ  = ronde - 1;
-    if (!competitie.isMatch()) {
+    spelers = competitie.getDeelnemers();
+    iWit    = getSpelerIndex(wit, spelers);
+    iZwart  = getSpelerIndex(zwart, spelers);
+    if (competitie.isDubbel()) {
       kolomW  = iZwart * dubbel;
       kolomZ  = iWit * dubbel + dubbel - 1;
     }
@@ -768,7 +789,7 @@ public final class CaissaUtils {
   public static double[][] vulToernooiMatrix(Collection<PGN> partijen,
                                              Competitie competitie,
                                              boolean sorteerOpStand) {
-    var noSpelers = competitie.getSpelers().size();
+    var noSpelers = competitie.getDeelnemers().size();
     var kolommen  =
         (competitie.isMatch() ? partijen.size()
                               : noSpelers * competitie.getHeenTerug());

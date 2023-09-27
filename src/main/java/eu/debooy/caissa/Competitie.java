@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -192,6 +193,11 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     var aantal  = spelers.stream().filter(Spelerinfo::inTerugronde).count();
 
     return (int) (aantal + (aantal%2) - 1);
+  }
+
+  public List<Spelerinfo> getDeelnemers() {
+    return spelers.stream().filter(Predicate.not(Spelerinfo::isBye))
+                  .collect(Collectors.toList());
   }
 
   public String getEvent() {

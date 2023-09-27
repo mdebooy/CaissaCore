@@ -361,6 +361,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     return terugronde;
   }
 
+  public Boolean isBye() {
+    return naam.equalsIgnoreCase(CaissaConstants.BYE);
+  }
+
   public void setAlias(String alias) {
     this.alias            = alias;
   }
