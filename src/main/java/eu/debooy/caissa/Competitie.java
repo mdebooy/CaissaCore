@@ -314,7 +314,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public List<Spelerinfo> getSpelersTerugronde() {
     if (!isDubbel()) {
-      return new ArrayList();
+      return new ArrayList<>();
     }
 
     return spelers.stream().filter(Spelerinfo::inTerugronde)
