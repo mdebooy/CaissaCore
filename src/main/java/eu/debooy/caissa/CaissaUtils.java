@@ -670,8 +670,8 @@ public final class CaissaUtils {
       return;
     }
 
-    var kolomW  = ronde - 1;
-    var kolomZ  = ronde - 1;
+    var kolomW  = iZwart;
+    var kolomZ  = iWit;
     spelers = competitie.getDeelnemers();
     iWit    = getSpelerIndex(wit, spelers);
     iZwart  = getSpelerIndex(zwart, spelers);
