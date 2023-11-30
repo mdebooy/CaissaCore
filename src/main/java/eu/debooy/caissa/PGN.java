@@ -385,6 +385,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getZuivereZetten() {
+  // TODO Kijk of dit wel juist is.
     if (!zuivereZetten.isEmpty()
         && zetten.isEmpty()) {
       return zuivereZetten;

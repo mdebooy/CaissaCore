@@ -212,6 +212,25 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return isDubbel() ? 2 : 1;
   }
 
+  public String getInhaaldatum(Partij partij) {
+    var inhalen     = getInhaalpartijen();
+    var inhaaldatum = "-";
+    for (var item : inhalen) {
+      var ptij  = (JSONObject) item;
+      if (Integer.valueOf(ptij.get("ronde").toString())
+                 .equals(partij.getRonde().getRonde())
+          && ptij.get("wit").toString().equals(partij.getWitspeler().getNaam())
+          && ptij.get("zwart").toString()
+                 .equals(partij.getZwartspeler().getNaam())) {
+        var datum   = ptij.get("datum").toString().split("/");
+        inhaaldatum = String.format("%s/%s", datum[0], datum[1]);
+        break;
+      }
+    }
+
+    return inhaaldatum;
+  }
+
   public JSONArray getInhaalpartijen() {
     if (toernooi.containsKey(JSON_TAG_INHALEN)) {
       return (JSONArray) toernooi.get(JSON_TAG_INHALEN);

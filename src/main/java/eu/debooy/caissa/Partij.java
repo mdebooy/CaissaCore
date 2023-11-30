@@ -88,6 +88,11 @@ public class Partij implements Comparable<Partij> {
     return forfait;
   }
 
+  public boolean isGespeeld() {
+    return DoosUtils.isNotBlankOrNull(uitslag)
+        && !uitslag.equals(CaissaConstants.PARTIJ_BEZIG);
+  }
+
   public boolean isRanked() {
     return ranked;
   }
