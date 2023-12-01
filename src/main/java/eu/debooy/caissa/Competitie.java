@@ -59,6 +59,8 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
   public static final String  JSON_TAG_EVENT              = "event";
   public static final String  JSON_TAG_INHALEN            = "inhalen";
+  public static final String  JSON_TAG_INHALEN_WIT        = "wit";
+  public static final String  JSON_TAG_INHALEN_ZWART      = "zwart";
   public static final String  JSON_TAG_KALENDER           = "kalender";
   public static final String  JSON_TAG_KALENDER_DATUM     = "datum";
   public static final String  JSON_TAG_KALENDER_EXTRA     = "extra";
@@ -217,12 +219,13 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     var inhaaldatum = "-";
     for (var item : inhalen) {
       var ptij  = (JSONObject) item;
-      if (Integer.valueOf(ptij.get("ronde").toString())
+      if (Integer.valueOf(ptij.get(JSON_TAG_KALENDER_RONDE).toString())
                  .equals(partij.getRonde().getRonde())
-          && ptij.get("wit").toString().equals(partij.getWitspeler().getNaam())
-          && ptij.get("zwart").toString()
+          && ptij.get(JSON_TAG_INHALEN_WIT).toString()
+                 .equals(partij.getWitspeler().getNaam())
+          && ptij.get(JSON_TAG_INHALEN_ZWART).toString()
                  .equals(partij.getZwartspeler().getNaam())) {
-        var datum   = ptij.get("datum").toString().split("/");
+        var datum   = ptij.get(JSON_TAG_KALENDER_DATUM).toString().split("/");
         inhaaldatum = String.format("%s/%s", datum[0], datum[1]);
         break;
       }

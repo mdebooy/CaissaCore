@@ -472,7 +472,7 @@ public final class CaissaUtils {
           if (lijn.startsWith("[")) {
             throw new PgnException(MessageFormat.format(
                 resourceBundle.getString(PGN.ERR_BESTAND),
-                                   lijnnummer));
+                lijnnummer));
           }
           zetten.append(lijn.trim());
           if (!lijn.endsWith(".")) {
@@ -490,19 +490,8 @@ public final class CaissaUtils {
           zetten.append(lijn.trim());
         }
 
-        if (null != uitslag) {
-          var resultaat = zetten.toString().trim();
-          partij.setZetten(
-              resultaat.substring(0, resultaat.length() - uitslag.length())
-                       .trim());
-
-          if (partij.isValid()) {
-            partijen.add(partij);
-          } else {
-            throw
-                new PgnException(resourceBundle.getString(PGN.ERR_PGN_INVALID));
-          }
-        }
+        laadPgnBestandZetten(zetten.toString().trim(), uitslag,
+                             partij, partijen);
 
         if (input.hasNext()) {
           lijn  = input.next();
@@ -518,6 +507,26 @@ public final class CaissaUtils {
     }
 
     return partijen;
+  }
+
+  private static void laadPgnBestandZetten(String zetten, String uitslag,
+                                            PGN partij,
+                                            Collection<PGN> partijen)
+      throws PgnException {
+    if (null == uitslag) {
+      return;
+    }
+
+    partij.setZetten(
+        zetten.substring(0, zetten.length() - uitslag.length())
+                 .trim());
+
+    if (partij.isValid()) {
+      partijen.add(partij);
+    } else {
+      throw
+          new PgnException(resourceBundle.getString(PGN.ERR_PGN_INVALID));
+    }
   }
 
   public static void maakUniek(List<Zet> zetten) {
@@ -645,18 +654,17 @@ public final class CaissaUtils {
     }
 
     if (partij.isBye()) {
-      if (competitie.metBye() && telUitslag) {
-        if (competitie.getPuntenBye() != 0.0) {
-          if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
-            competitie.getSpeler(iWit).addByeScore(competitie.getPuntenBye());
-            telPunten(telUitslag, spelers, iWit, competitie.getPuntenBye(),
-                      iZwart, 0.0);
-          }
-          if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
-            competitie.getSpeler(iZwart).addByeScore(competitie.getPuntenBye());
-            telPunten(telUitslag, spelers, iWit, 0.0,
-                      iZwart, competitie.getPuntenBye());
-          }
+      if (competitie.metBye() && telUitslag
+          && competitie.getPuntenBye() != 0.0) {
+        if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
+          competitie.getSpeler(iWit).addByeScore(competitie.getPuntenBye());
+          telPunten(telUitslag, spelers, iWit, competitie.getPuntenBye(),
+                    iZwart, 0.0);
+        }
+        if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
+          competitie.getSpeler(iZwart).addByeScore(competitie.getPuntenBye());
+          telPunten(telUitslag, spelers, iWit, 0.0,
+                    iZwart, competitie.getPuntenBye());
         }
       }
       return;

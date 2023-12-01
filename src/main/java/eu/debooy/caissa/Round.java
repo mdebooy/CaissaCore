@@ -79,7 +79,7 @@ public class Round implements Comparable<Round>, Serializable {
       }
     }
 
-    return Integer.valueOf(thisRound.length).compareTo(otherRound.length);
+    return Integer.compare(thisRound.length, otherRound.length);
   }
 
   @Override

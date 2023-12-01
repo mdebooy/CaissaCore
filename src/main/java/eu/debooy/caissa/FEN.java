@@ -373,41 +373,45 @@ public class FEN implements Serializable {
   }
 
   protected String getRokade() {
-    var rochade = new StringBuilder();
+    return schaak960 ? getRokade960() : getRokadeKlassiek();
+  }
+
+  private String getRokade960() {
+    var rokade  = new StringBuilder();
 
     if (Boolean.TRUE.equals(witKorteRokade)) {
-      if (schaak960) {
-        rochade.append(Character.toUpperCase(kortetoren));
-      } else {
-        rochade.append("K");
-      }
+      rokade.append(Character.toUpperCase(kortetoren));
     }
     if (Boolean.TRUE.equals(witLangeRokade)) {
-      if (schaak960) {
-        rochade.append(Character.toUpperCase(langetoren));
-      } else {
-        rochade.append("Q");
-      }
+      rokade.append(Character.toUpperCase(langetoren));
     }
     if (Boolean.TRUE.equals(zwartKorteRokade)) {
-      if (schaak960) {
-        rochade.append(kortetoren);
-      } else {
-        rochade.append("k");
-      }
+      rokade.append(kortetoren);
     }
     if (Boolean.TRUE.equals(zwartLangeRokade)) {
-      if (schaak960) {
-        rochade.append(langetoren);
-      } else {
-        rochade.append("q");
-      }
-    }
-    if (rochade.length() == 0) {
-      rochade.append('-');
+      rokade.append(langetoren);
     }
 
-    return rochade.toString();
+    return rokade.isEmpty() ? "-" : rokade.toString();
+  }
+
+  private String getRokadeKlassiek() {
+    var rokade  = new StringBuilder();
+
+    if (Boolean.TRUE.equals(witKorteRokade)) {
+      rokade.append('K');
+    }
+    if (Boolean.TRUE.equals(witLangeRokade)) {
+      rokade.append('Q');
+    }
+    if (Boolean.TRUE.equals(zwartKorteRokade)) {
+      rokade.append('k');
+    }
+    if (Boolean.TRUE.equals(zwartLangeRokade)) {
+      rokade.append('q');
+    }
+
+    return rokade.isEmpty() ? "-" : rokade.toString();
   }
 
   public Boolean getWitKorteRokade() {
@@ -451,7 +455,7 @@ public class FEN implements Serializable {
     return getFen().hashCode();
   }
 
-  private void positieToBord() {
+  private void leegBord() {
     for (var i = 0; i<120; i++) {
       bord[i]  = 7;
     }
@@ -461,6 +465,10 @@ public class FEN implements Serializable {
         bord[i*10+j]  = 0;
       }
     }
+  }
+
+  private void positieToBord() {
+    leegBord();
 
     String[]  rij = positie.split("/");
     for (var i = 0; i < 8; i++) {
