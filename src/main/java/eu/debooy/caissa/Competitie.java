@@ -18,6 +18,7 @@ package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.doosutils.Datum;
+import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.access.JsonBestand;
 import eu.debooy.doosutils.exception.BestandException;
 import java.io.Serializable;
@@ -32,6 +33,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -58,6 +60,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
   public static final String  JSON_TAG_EVENT              = "event";
+  public static final String  JSON_TAG_INHAALRONDE        = "inhaalronde";
   public static final String  JSON_TAG_INHALEN            = "inhalen";
   public static final String  JSON_TAG_INHALEN_WIT        = "wit";
   public static final String  JSON_TAG_INHALEN_ZWART      = "zwart";
@@ -105,6 +108,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
                     TOERNOOI_ZWITSERS, TOERNOOI_DUBBEL_ZWITSERS);
 
   private Spelerinfo        bye           = new Spelerinfo();
+  private List<Date>        inhaaldata;
   private Double            puntenBye     = 0.0;
   private Double            puntenRemise  = 0.5;
   private Double            puntenVerlies = 0.0;
@@ -119,9 +123,10 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     try (var invoer = new JsonBestand.Builder()
                                      .setBestand(jsonbestand)
                                      .build()) {
-      toernooi  = invoer.read();
-      speeldata = new ArrayList<>();
-      spelers   = new ArrayList<>();
+      inhaaldata  = new ArrayList<>();
+      speeldata   = new ArrayList<>();
+      spelers     = new ArrayList<>();
+      toernooi    = invoer.read();
 
       vulSpelers();
       vulSpeeldata();
@@ -150,6 +155,19 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return teSpelen;
   }
 
+  private void checkInhaalpartij(JSONObject inhaalpartij) {
+    if (!inhaalpartij.containsKey(JSON_TAG_INHAALRONDE)) {
+      return;
+    }
+
+    inhaalpartij.put(JSON_TAG_KALENDER_DATUM,
+                     Datum.fromDate(inhaaldata.get(
+                        ((Long) inhaalpartij.get(JSON_TAG_INHAALRONDE))
+                            .intValue() - 1),
+                                    DoosConstants.DATUM_SLASH));
+    inhaalpartij.remove(JSON_TAG_INHAALRONDE);
+  }
+
   @Override
   public int compareTo(Competitie other) {
     return getEvent().compareTo(other.getEvent());
@@ -171,6 +189,18 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
     var competitie = (Competitie) other;
     return getEvent().equals(competitie.getEvent());
+  }
+
+  private Date  formatDatum(String datum) {
+    var date  = new Date();
+
+    try {
+      date  = Datum.toDate(datum, DoosConstants.DATUM_SLASH);
+    } catch (ParseException ex) {
+      // Geef de datum van vandaag terug;
+    }
+
+    return date;
   }
 
   public Object get(String sleutel) {
@@ -214,6 +244,10 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return isDubbel() ? 2 : 1;
   }
 
+  public List<Date> getInhaaldata() {
+    return new ArrayList<>(inhaaldata);
+  }
+
   public String getInhaaldatum(Partij partij) {
     var inhalen     = getInhaalpartijen();
     var inhaaldatum = "-";
@@ -235,11 +269,39 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public JSONArray getInhaalpartijen() {
+    var inhaalpartijen  = new JSONArray();
     if (toernooi.containsKey(JSON_TAG_INHALEN)) {
-      return (JSONArray) toernooi.get(JSON_TAG_INHALEN);
+      var               partijen  = (JSONArray) toernooi.get(JSON_TAG_INHALEN);
+      List<JSONObject>  json      = new ArrayList<>();
+      for (var i = 0; i < partijen.size(); i++) {
+        checkInhaalpartij((JSONObject) partijen.get(i));
+        json.add((JSONObject) partijen.get(i));
+      }
+
+      Collections.sort(json, (JSONObject partij1,
+                              JSONObject partij2) -> new CompareToBuilder()
+              .append(formatDatum(partij1.get(JSON_TAG_KALENDER_DATUM)
+                                         .toString()),
+                      formatDatum(partij2.get(JSON_TAG_KALENDER_DATUM)
+                                         .toString()))
+              .append(partij1.get(JSON_TAG_KALENDER_RONDE),
+                      partij2.get(JSON_TAG_KALENDER_RONDE))
+              .append(partij1.get(JSON_TAG_INHALEN_WIT).toString()
+                                                       .toUpperCase(),
+                      partij2.get(JSON_TAG_INHALEN_WIT).toString()
+                                                       .toUpperCase())
+              .append(partij1.get(JSON_TAG_INHALEN_ZWART).toString()
+                                                         .toUpperCase(),
+                      partij2.get(JSON_TAG_INHALEN_ZWART).toString()
+                                                         .toUpperCase())
+              .toComparison());
+
+      for (var i = 0; i < partijen.size(); i++) {
+        inhaalpartijen.add(json.get(i));
+      }
     }
 
-    return new JSONArray();
+    return inhaalpartijen;
   }
 
   public Integer getInteger(String sleutel) {
@@ -644,6 +706,13 @@ public class Competitie implements Comparable<Competitie>, Serializable {
         speeldata.add(Datum.toDate(ronde.get(Competitie.JSON_TAG_KALENDER_DATUM)
                                         .toString(),
                                    CaissaConstants.DEF_DATUMFORMAAT));
+      }
+      if (ronde.containsKey(JSON_TAG_KALENDER_INHAAL)
+          && ronde.containsKey(JSON_TAG_KALENDER_DATUM)) {
+        inhaaldata.add(Datum
+                          .toDate(ronde.get(Competitie.JSON_TAG_KALENDER_DATUM)
+                                       .toString(),
+                                  CaissaConstants.DEF_DATUMFORMAAT));
       }
     }
   }

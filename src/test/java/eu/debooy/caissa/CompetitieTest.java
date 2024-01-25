@@ -43,6 +43,12 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_M  = "competitiem.json";
   private static final  String  BST_COMP_MF = "competitiemf.json";
   private static final  String  BST_COMP_3  = "competitie3.json";
+  private static final  String  BST_COMP_31 = "competitie3_1.json";
+  private static final  String  BST_COMP_32 = "competitie3_2.json";
+  private static final  String  BST_COMP_33= "competitie3_3.json";
+  private static final  String  BST_COMP_34 = "competitie3_4.json";
+  private static final  String  BST_COMP_35 = "competitie3_5.json";
+  private static final  String  BST_COMP_36 = "competitie3_6.json";
   private static final  String  BST_COMP_3E = "competitie3e.json";
   private static final  String  BST_COMP_3M = "competitie3m.json";
   private static final  String  BST_COMP_4  = "competitie4.json";
@@ -55,10 +61,17 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_5H = "competitie5heen.json";
   private static final  String  BST_COMP_5T = "competitie5terug.json";
 
+  private static final  String  TST_INHAALPARTIJ1 =
+      "{\"datum\":\"19\\/10\\/2021\",\"wit\":\"Speler, Bob\",\"ronde\":1,\"zwart\":\"Speler, Carol\"}";
+  private static final  String  TST_INHAALPARTIJ2 =
+      "{\"datum\":\"16\\/11\\/2021\",\"wit\":\"Speler, Carol\",\"ronde\":1,\"zwart\":\"Speler, Bob\"}";
+
   @AfterClass
   public static void afterClass() {
     verwijderBestanden(getTemp() + File.separator,
-                       new String[] {BST_COMP_3, BST_COMP_3E, BST_COMP_3M,
+                       new String[] {BST_COMP_3, BST_COMP_31, BST_COMP_32,
+                                     BST_COMP_33, BST_COMP_34, BST_COMP_35,
+                                     BST_COMP_36, BST_COMP_3E, BST_COMP_3M,
                                      BST_COMP_4, BST_COMP_41, BST_COMP_4E,
                                      BST_COMP_4H, BST_COMP_4T, BST_COMP_5,
                                      BST_COMP_51, BST_COMP_5H, BST_COMP_5T,
@@ -73,6 +86,18 @@ public class CompetitieTest extends BatchTest {
     try {
       kopieerBestand(CLASSLOADER, BST_COMP_3,
                      getTemp() + File.separator + BST_COMP_3);
+      kopieerBestand(CLASSLOADER, BST_COMP_31,
+                     getTemp() + File.separator + BST_COMP_31);
+      kopieerBestand(CLASSLOADER, BST_COMP_32,
+                     getTemp() + File.separator + BST_COMP_32);
+      kopieerBestand(CLASSLOADER, BST_COMP_33,
+                     getTemp() + File.separator + BST_COMP_33);
+      kopieerBestand(CLASSLOADER, BST_COMP_34,
+                     getTemp() + File.separator + BST_COMP_34);
+      kopieerBestand(CLASSLOADER, BST_COMP_35,
+                     getTemp() + File.separator + BST_COMP_35);
+      kopieerBestand(CLASSLOADER, BST_COMP_36,
+                     getTemp() + File.separator + BST_COMP_36);
       kopieerBestand(CLASSLOADER, BST_COMP_3E,
                      getTemp() + File.separator + BST_COMP_3E);
       kopieerBestand(CLASSLOADER, BST_COMP_3M,
@@ -119,6 +144,9 @@ public class CompetitieTest extends BatchTest {
       assertEquals(Integer.valueOf(6),
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(1, competitie.getInhaalpartijen().size());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -413,6 +441,100 @@ public class CompetitieTest extends BatchTest {
       assertEquals(2.0, competitie.getPuntenRemise());
       assertEquals(1.0, competitie.getPuntenVerlies());
       assertEquals(3.0, competitie.getPuntenBye());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInhaal1() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_31);
+
+      assertEquals(2, competitie.getInhaalpartijen().size());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInhaal2() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_32);
+
+      assertEquals(2, competitie.getInhaalpartijen().size());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInhaal3() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_33);
+
+      assertEquals(2, competitie.getInhaalpartijen().size());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInhaal4() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_34);
+
+      assertEquals(2, competitie.getInhaalpartijen().size());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInhaal5() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_35);
+
+      assertEquals(2, competitie.getInhaalpartijen().size());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ2,
+                   competitie.getInhaalpartijen().get(1).toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInhaal6() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_36);
+
+      assertEquals(2, competitie.getInhaalpartijen().size());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ2,
+                   competitie.getInhaalpartijen().get(1).toString());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());

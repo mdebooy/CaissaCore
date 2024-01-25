@@ -10,7 +10,11 @@
     ],
     "inhalen": [
       { "ronde": 1,
-        "datum": "19/10/2021",
+        "inhaalronde": 2,
+        "wit": "Speler, Carol",
+        "zwart": "Speler, Bob"},
+      { "ronde": 1,
+        "inhaalronde": 1,
         "wit": "Speler, Bob",
         "zwart": "Speler, Carol"}
     ],
