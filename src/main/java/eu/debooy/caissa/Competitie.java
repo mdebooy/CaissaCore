@@ -19,6 +19,7 @@ package eu.debooy.caissa;
 import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosConstants;
+import eu.debooy.doosutils.DoosUtils;
 import eu.debooy.doosutils.access.JsonBestand;
 import eu.debooy.doosutils.exception.BestandException;
 import java.io.Serializable;
@@ -26,6 +27,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -135,6 +137,54 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     } catch (BestandException | ParseException e) {
       throw new CompetitieException(e.getLocalizedMessage());
     }
+
+    if (metBye()) {
+      bye.setNaam(CaissaConstants.BYE);
+      bye.setSpelerId(spelers.get(spelers.size() - 1).getSpelerId() + 1);
+      bye.setSpelerSeq(spelers.get(spelers.size() - 1)
+                                     .getSpelerSeq() + 1);
+    }
+  }
+
+  public Competitie(Collection<PGN> partijen, Integer type)
+      throws CompetitieException {
+    List<String>  deelnemers  = new ArrayList<>();
+
+    inhaaldata  = new ArrayList<>();
+    speeldata   = new ArrayList<>();
+    spelers     = new ArrayList<>();
+    toernooi    = new JSONObject();
+
+    var info    = partijen.iterator().next();
+    toernooi.put(JSON_TAG_EVENT, info.getTag(PGN.PGNTAG_EVENT));
+    toernooi.put(JSON_TAG_SITE, info.getTag(PGN.PGNTAG_SITE));
+    toernooi.put(JSON_TAG_EVENTDATE, info.getTag(PGN.PGNTAG_EVENTDATE));
+    toernooi.put(JSON_TAG_TOERNOOITYPE, type.longValue());
+
+    partijen.forEach(partij -> {
+      var wit   = partij.getWhite();
+      var zwart = partij.getBlack();
+
+      if (!deelnemers.contains(wit)) {
+        deelnemers.add(wit);
+      }
+      if (!deelnemers.contains(zwart)) {
+        deelnemers.add(zwart);
+      }
+    });
+
+    var jsontag = new JSONArray();
+    for (var i = 0; i < deelnemers.size(); i++) {
+      var deelnemer = new JSONObject();
+      deelnemer.put(JSON_TAG_SPELER_NAAM, deelnemers.get(i));
+      jsontag.add(deelnemer);
+    }
+
+    toernooi.put(JSON_TAG_SPELERS, jsontag);
+
+    vulSpelers();
+    validate();
+
     if (metBye()) {
       bye.setNaam(CaissaConstants.BYE);
       bye.setSpelerId(spelers.get(spelers.size() - 1).getSpelerId() + 1);
@@ -511,6 +561,27 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public void sorteerOpStand() {
     Collections.sort(spelers);
+  }
+
+  @Override
+  public String toString() {
+    var eol       = DoosUtils.getEol();
+    var resultaat = new StringBuilder();
+
+    resultaat.append(JSON_TAG_EVENT).append(": ").append(getEvent())
+             .append(eol);
+    resultaat.append(JSON_TAG_SITE).append(": ").append(getSite()).append(eol);
+    resultaat.append(JSON_TAG_EVENTDATE).append(": ").append(getEventdate())
+             .append(eol);
+    resultaat.append(JSON_TAG_TOERNOOITYPE).append(": ").append(getType())
+             .append(eol);
+    resultaat.append(JSON_TAG_SPELERS).append(": ").append(eol);
+    spelers.forEach(speler -> {
+      resultaat.append("   ").append(JSON_TAG_SPELER_NAAM).append(": ")
+               .append(speler.getNaam()).append(eol);
+    });
+
+    return resultaat.toString();
   }
 
   private void validate() throws CompetitieException {

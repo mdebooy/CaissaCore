@@ -17,6 +17,7 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CompetitieException;
+import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.io.File;
@@ -39,27 +40,28 @@ public class CompetitieTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       CompetitieTest.class.getClassLoader();
 
-  private static final  String  BST_COMP_DZ = "competitieDZ.json";
-  private static final  String  BST_COMP_M  = "competitiem.json";
-  private static final  String  BST_COMP_MF = "competitiemf.json";
-  private static final  String  BST_COMP_3  = "competitie3.json";
-  private static final  String  BST_COMP_31 = "competitie3_1.json";
-  private static final  String  BST_COMP_32 = "competitie3_2.json";
-  private static final  String  BST_COMP_33= "competitie3_3.json";
-  private static final  String  BST_COMP_34 = "competitie3_4.json";
-  private static final  String  BST_COMP_35 = "competitie3_5.json";
-  private static final  String  BST_COMP_36 = "competitie3_6.json";
-  private static final  String  BST_COMP_3E = "competitie3e.json";
-  private static final  String  BST_COMP_3M = "competitie3m.json";
-  private static final  String  BST_COMP_4  = "competitie4.json";
-  private static final  String  BST_COMP_41 = "competitie4-1.json";
-  private static final  String  BST_COMP_4E = "competitie4e.json";
-  private static final  String  BST_COMP_4H = "competitie4heen.json";
-  private static final  String  BST_COMP_4T = "competitie4terug.json";
-  private static final  String  BST_COMP_5  = "competitie5.json";
-  private static final  String  BST_COMP_51 = "competitie5-1.json";
-  private static final  String  BST_COMP_5H = "competitie5heen.json";
-  private static final  String  BST_COMP_5T = "competitie5terug.json";
+  private static final  String  BST_COMP_DZ   = "competitieDZ.json";
+  private static final  String  BST_COMP_M    = "competitiem.json";
+  private static final  String  BST_COMP_MF   = "competitiemf.json";
+  private static final  String  BST_COMP_3    = "competitie3.json";
+  private static final  String  BST_COMP_31   = "competitie3_1.json";
+  private static final  String  BST_COMP_32   = "competitie3_2.json";
+  private static final  String  BST_COMP_33   = "competitie3_3.json";
+  private static final  String  BST_COMP_34   = "competitie3_4.json";
+  private static final  String  BST_COMP_35   = "competitie3_5.json";
+  private static final  String  BST_COMP_36   = "competitie3_6.json";
+  private static final  String  BST_COMP_3E   = "competitie3e.json";
+  private static final  String  BST_COMP_3M   = "competitie3m.json";
+  private static final  String  BST_COMP_4    = "competitie4.json";
+  private static final  String  BST_COMP_41   = "competitie4-1.json";
+  private static final  String  BST_COMP_4E   = "competitie4e.json";
+  private static final  String  BST_COMP_4H   = "competitie4heen.json";
+  private static final  String  BST_COMP_4T   = "competitie4terug.json";
+  private static final  String  BST_COMP_5    = "competitie5.json";
+  private static final  String  BST_COMP_51   = "competitie5-1.json";
+  private static final  String  BST_COMP_5H   = "competitie5heen.json";
+  private static final  String  BST_COMP_5T   = "competitie5terug.json";
+  private static final  String  BST_COMP_PGN  = "competitie_pgn.pgn";
 
   private static final  String  TST_INHAALPARTIJ1 =
       "{\"datum\":\"19\\/10\\/2021\",\"wit\":\"Speler, Bob\",\"ronde\":1,\"zwart\":\"Speler, Carol\"}";
@@ -75,7 +77,8 @@ public class CompetitieTest extends BatchTest {
                                      BST_COMP_4, BST_COMP_41, BST_COMP_4E,
                                      BST_COMP_4H, BST_COMP_4T, BST_COMP_5,
                                      BST_COMP_51, BST_COMP_5H, BST_COMP_5T,
-                                     BST_COMP_M, BST_COMP_MF, BST_COMP_DZ});
+                                     BST_COMP_M, BST_COMP_MF, BST_COMP_DZ,
+                                     BST_COMP_PGN});
   }
 
   @BeforeClass
@@ -126,6 +129,8 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_MF);
       kopieerBestand(CLASSLOADER, BST_COMP_DZ,
                      getTemp() + File.separator + BST_COMP_DZ);
+      kopieerBestand(CLASSLOADER, BST_COMP_PGN,
+                     getTemp() + File.separator + BST_COMP_PGN);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
       throw new BestandException(e);
@@ -535,6 +540,24 @@ public class CompetitieTest extends BatchTest {
                    competitie.getInhaalpartijen().get(0).toString());
       assertEquals(TST_INHAALPARTIJ2,
                    competitie.getInhaalpartijen().get(1).toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testInit() throws PgnException {
+    var partijen  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + BST_COMP_PGN);
+
+    try {
+      var competitie  = new Competitie(partijen, 2);
+
+      assertTrue(competitie.getInhaalpartijen().isEmpty());
+      assertTrue(competitie.getKalender().isEmpty());
+      assertEquals(3, competitie.getSpelers().size());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
