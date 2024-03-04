@@ -547,7 +547,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testInit() throws PgnException {
+  public void testConstructor2() throws PgnException {
     var partijen  =
         CaissaUtils.laadPgnBestand(getTemp() + File.separator
                                     + BST_COMP_PGN);
@@ -558,6 +558,54 @@ public class CompetitieTest extends BatchTest {
       assertTrue(competitie.getInhaalpartijen().isEmpty());
       assertTrue(competitie.getKalender().isEmpty());
       assertEquals(3, competitie.getSpelers().size());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testConstructors1() throws PgnException {
+    var partijen  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + BST_COMP_PGN);
+
+    try {
+      var metPgn  = new Competitie(partijen, 2);
+      var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      assertEquals(metPgn.getDeelnemers().size(),
+                   metJson.getDeelnemers().size());
+      assertEquals(metPgn.getAantalHeenrondes(), metJson.getAantalHeenrondes());
+      assertEquals(metPgn.getAantalTerugrondes(),
+                   metJson.getAantalTerugrondes());
+      assertEquals(metPgn.getEvent(), metJson.getEvent());
+      assertEquals(metPgn.getEventdate(), metJson.getEventdate());
+      assertEquals(metPgn.getSite(), metJson.getSite());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testConstructors2() throws PgnException {
+    var partijen  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + BST_COMP_PGN);
+
+    try {
+      var metPgn  = new Competitie(partijen, 2);
+      var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      assertEquals(metPgn.getDeelnemers().size(),
+                   metJson.getDeelnemers().size());
+
+      var deelnemers  = metPgn.getDeelnemers();
+      deelnemers.forEach(deelnemer -> {
+        assertEquals(deelnemer.getNaam(),
+                     metJson.getSpeler(deelnemer.getNaam()).getNaam());
+      });
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
