@@ -155,6 +155,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     partijen++;
   }
 
+  public void addPartij(Integer partijen) {
+    this.partijen       += partijen;
+  }
+
   public void addByeScore(Double byeScore) {
     aantalBye++;
     this.byeScore       += byeScore;

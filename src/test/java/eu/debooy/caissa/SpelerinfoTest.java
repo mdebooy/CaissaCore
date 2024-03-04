@@ -107,6 +107,20 @@ public class SpelerinfoTest extends TestCase {
   }
 
   @Test
+  public void testAdd() {
+    var spelerinfo  = new Spelerinfo();
+
+    spelerinfo.setPartijen(1);
+    spelerinfo.addPartij(14);
+
+    assertTrue(15==spelerinfo.getPartijen());
+
+    spelerinfo.addPartij();
+
+    assertTrue(16==spelerinfo.getPartijen());
+  }
+
+  @Test
   public void testAlias() {
     var spelerinfo  = new Spelerinfo();
 
