@@ -182,8 +182,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   @Override
   public int compareTo(Spelerinfo other) {
     return new CompareToBuilder().append(other.punten, punten)
-                                 .append(partijen + aantalBye,
-                                         other.partijen + other.aantalBye)
+                                 .append(getSorteerPartijen(),
+                                         other.getSorteerPartijen())
                                  .append(other.tieBreakScore, tieBreakScore)
                                  .append(byeScore, other.byeScore)
                                  .append(naam.toUpperCase(),
@@ -288,6 +288,14 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Double getPunten() {
     return punten;
+  }
+
+  private Integer getSorteerPartijen() {
+    if (partijen == 0) {
+      return Integer.MAX_VALUE;
+    }
+
+    return partijen;
   }
 
   public Integer getSpelerId() {

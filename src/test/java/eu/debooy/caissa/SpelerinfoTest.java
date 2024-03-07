@@ -16,7 +16,10 @@
  */
 package eu.debooy.caissa;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.json.simple.JSONObject;
@@ -49,6 +52,7 @@ public class SpelerinfoTest extends TestCase {
   private Spelerinfo  spelerinfo6;
   private Spelerinfo  spelerinfo7;
   private Spelerinfo  spelerinfo8;
+  private Spelerinfo  spelerinfo9;
 
   @Before
   @Override
@@ -62,6 +66,7 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo6 = new Spelerinfo();
     spelerinfo7 = new Spelerinfo();
     spelerinfo8 = new Spelerinfo();
+    spelerinfo9 = new Spelerinfo();
 
     spelerinfo1.setNaam(JANSEN_JAN);
     spelerinfo1.setPartijen(10);
@@ -104,6 +109,12 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo8.setPartijen(10);
     spelerinfo8.setPunten(8.5);
     spelerinfo8.setTieBreakScore(20.0);
+
+    spelerinfo9.setPartijen(1);
+    spelerinfo9.setPunten(0.0);
+    spelerinfo9.setSpelerId(9);
+    spelerinfo9.setSpelerSeq(9);
+    spelerinfo9.setTieBreakScore(0.0);
   }
 
   @Test
@@ -1359,6 +1370,27 @@ public class SpelerinfoTest extends TestCase {
     assertFalse(spelerinfo.inRonde(1, 4, 3));
     assertFalse(spelerinfo.inRonde(3, 4, 3));
     assertFalse(spelerinfo.inRonde(5, 4, 3));
+  }
+
+  @Test
+  public void testSorteer1() {
+    List<Spelerinfo>  spelers = new ArrayList<>();
+
+    spelers.add(spelerinfo0);
+    spelers.add(spelerinfo1);
+    spelers.add(spelerinfo2);
+    spelers.add(spelerinfo3);
+    spelers.add(spelerinfo4);
+    spelers.add(spelerinfo5);
+    spelers.add(spelerinfo6);
+    spelers.add(spelerinfo7);
+    spelers.add(spelerinfo8);
+    spelers.add(spelerinfo9);
+
+    Collections.sort(spelers);
+
+    assertEquals(spelerinfo1.getSpelerId(), spelers.get(3).getSpelerId());
+    assertEquals(spelerinfo9.getSpelerId(), spelers.get(7).getSpelerId());
   }
 
   @Test
