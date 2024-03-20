@@ -124,11 +124,11 @@ public class SpelerinfoTest extends TestCase {
     spelerinfo.setPartijen(1);
     spelerinfo.addPartij(14);
 
-    assertTrue(15==spelerinfo.getPartijen());
+    assertEquals((Object) 15, spelerinfo.getPartijen());
 
     spelerinfo.addPartij();
 
-    assertTrue(16==spelerinfo.getPartijen());
+    assertEquals((Object) 16, spelerinfo.getPartijen());
   }
 
   @Test

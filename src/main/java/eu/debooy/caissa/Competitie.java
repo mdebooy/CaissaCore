@@ -247,7 +247,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     try {
       date  = Datum.toDate(datum, DoosConstants.DATUM_SLASH);
     } catch (ParseException ex) {
-      // Geef de datum van vandaag terug;
+      // Geen probleem.
     }
 
     return date;
@@ -576,10 +576,9 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     resultaat.append(JSON_TAG_TOERNOOITYPE).append(": ").append(getType())
              .append(eol);
     resultaat.append(JSON_TAG_SPELERS).append(": ").append(eol);
-    spelers.forEach(speler -> {
+    spelers.forEach(speler ->
       resultaat.append("   ").append(JSON_TAG_SPELER_NAAM).append(": ")
-               .append(speler.getNaam()).append(eol);
-    });
+               .append(speler.getNaam()).append(eol));
 
     return resultaat.toString();
   }

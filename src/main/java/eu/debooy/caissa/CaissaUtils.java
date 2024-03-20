@@ -628,12 +628,27 @@ public final class CaissaUtils {
     return String.valueOf(result);
   }
 
+  private static void verwerkBye(int iWit, int iZwart, String uitslag,
+                                 Competitie competitie, boolean telUitslag) {
+    if (competitie.metBye() && telUitslag
+        && competitie.getPuntenBye() != 0.0) {
+      if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
+        competitie.getSpeler(iWit).addByeScore(competitie.getPuntenBye());
+        telPunten(telUitslag, competitie.getSpelers(), iWit,
+                  competitie.getPuntenBye(), iZwart, 0.0);
+      }
+      if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
+        competitie.getSpeler(iZwart).addByeScore(competitie.getPuntenBye());
+        telPunten(telUitslag, competitie.getSpelers(), iWit, 0.0,
+                  iZwart, competitie.getPuntenBye());
+      }
+    }
+  }
+
   private static void verwerkPartijInMatrix(PGN partij, double[][] matrix,
                                             Competitie competitie,
                                             boolean telUitslag) {
     var dubbel    = competitie.getHeenTerug();
-    var spelers   = competitie.getSpelers();
-    var noSpelers = spelers.size();
     var rondes    = matrix[0].length;
     var wit       = partij.getTag(PGN.PGNTAG_WHITE);
     var zwart     = partij.getTag(PGN.PGNTAG_BLACK);
@@ -654,23 +669,11 @@ public final class CaissaUtils {
     }
 
     if (partij.isBye()) {
-      if (competitie.metBye() && telUitslag
-          && competitie.getPuntenBye() != 0.0) {
-        if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
-          competitie.getSpeler(iWit).addByeScore(competitie.getPuntenBye());
-          telPunten(telUitslag, spelers, iWit, competitie.getPuntenBye(),
-                    iZwart, 0.0);
-        }
-        if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
-          competitie.getSpeler(iZwart).addByeScore(competitie.getPuntenBye());
-          telPunten(telUitslag, spelers, iWit, 0.0,
-                    iZwart, competitie.getPuntenBye());
-        }
-      }
+      verwerkBye(iWit, iZwart, uitslag, competitie, telUitslag);
       return;
     }
 
-    if (ronde > noSpelers
+    if (ronde > competitie.getSpelers().size()
         && (!competitie.getSpeler(iWit).inRonde(ronde, rondes,
                                                 competitie.getType())
             || !competitie.getSpeler(iZwart).inRonde(ronde, rondes,
@@ -680,7 +683,7 @@ public final class CaissaUtils {
 
     var kolomW  = iZwart;
     var kolomZ  = iWit;
-    spelers = competitie.getDeelnemers();
+    var spelers = competitie.getDeelnemers();
     iWit    = getSpelerIndex(wit, spelers);
     iZwart  = getSpelerIndex(zwart, spelers);
     if (competitie.isDubbel()) {
