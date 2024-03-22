@@ -53,6 +53,10 @@ public class Partij implements Comparable<Partij> {
   }
 
   public Round getRonde() {
+    if (null == ronde) {
+      return new Round();
+    }
+
     return ronde;
   }
 

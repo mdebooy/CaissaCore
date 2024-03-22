@@ -451,6 +451,19 @@ public class SpelerinfoTest extends TestCase {
   }
 
   @Test
+  public void testEquals() {
+    var instance  = new Spelerinfo();
+
+    assertEquals(spelerinfo1, spelerinfo1);
+    assertNotEquals(spelerinfo1, null);
+    assertNotEquals(spelerinfo1, TestConstants.ALICE);
+    assertNotEquals(spelerinfo1, instance);
+
+    instance.setSpelerId(spelerinfo1.getSpelerId());
+    assertEquals(spelerinfo1, instance);
+  }
+
+  @Test
   public void testHashCode() {
     assertEquals(1, spelerinfo1.hashCode());
   }

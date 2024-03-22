@@ -17,6 +17,8 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CaissaException;
+import java.util.Set;
+import java.util.TreeSet;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -47,10 +49,10 @@ public class SpeelrondeTest extends TestCase {
     speler06  = new Spelerinfo();
     spelerbye = new Spelerinfo();
 
-    speler01.setNaam("Speler, Alice");
-    speler02.setNaam("Speler, Bob");
-    speler03.setNaam("Speler, Carol");
-    speler04.setNaam("Speler, Dave");
+    speler01.setNaam(TestConstants.ALICE);
+    speler02.setNaam(TestConstants.BOB);
+    speler03.setNaam(TestConstants.CAROL);
+    speler04.setNaam(TestConstants.DAVE);
     speler05.setNaam("Speler, Eve");
     speler06.setNaam("Speler, Frank");
     spelerbye.setNaam(CaissaConstants.BYE);
@@ -231,6 +233,61 @@ public class SpeelrondeTest extends TestCase {
     assertEquals(Integer.valueOf(2), inhaalronde.getAantalPartijen());
     assertEquals(Integer.valueOf(1), inhaalronde.getRonde());
     assertEquals(TestConstants.RUSHDATUM, inhaalronde.getSpeeldatum());
+    assertTrue(inhaalronde.hasSpeler(TestConstants.ALICE));
+  }
+
+  @Test
+  public void testByRonde() {
+    var speelronde1 = new Speelronde();
+    var speelronde2 = new Speelronde();
+    var speelronde3 = new Speelronde();
+
+    speelronde1.setRonde(1);
+    speelronde1.setSpeeldatum(TestConstants.RUSHDATUM);
+    speelronde2.setRonde(1);
+    speelronde2.setSpeeldatum(TestConstants.RUSHJAAR);
+    speelronde3.setRonde(2);
+
+    Set<Speelronde>  rondes = new TreeSet<>(new Speelronde.ByRonde());
+    rondes.add(speelronde3);
+    rondes.add(speelronde2);
+    rondes.add(speelronde1);
+
+    var tabel = new Speelronde[rondes.size()];
+    System.arraycopy(rondes.toArray(), 0, tabel, 0, rondes.size());
+    assertEquals(speelronde1.getRonde(), tabel[0].getRonde());
+    assertEquals(speelronde1.getSpeeldatum(), tabel[0].getSpeeldatum());
+    assertEquals(speelronde2.getRonde(), tabel[1].getRonde());
+    assertEquals(speelronde2.getSpeeldatum(), tabel[1].getSpeeldatum());
+    assertEquals(speelronde3.getRonde(), tabel[2].getRonde());
+    assertEquals(speelronde3.getSpeeldatum(), tabel[2].getSpeeldatum());
+  }
+
+  @Test
+  public void testBySpeeldatum() {
+    var speelronde1 = new Speelronde();
+    var speelronde2 = new Speelronde();
+    var speelronde3 = new Speelronde();
+
+    speelronde1.setRonde(1);
+    speelronde1.setSpeeldatum(TestConstants.RUSHDATUM);
+    speelronde2.setRonde(1);
+    speelronde2.setSpeeldatum(TestConstants.RUSHJAAR);
+    speelronde3.setRonde(2);
+
+    Set<Speelronde>  rondes = new TreeSet<>(new Speelronde.BySpeeldatum());
+    rondes.add(speelronde3);
+    rondes.add(speelronde2);
+    rondes.add(speelronde1);
+
+    var tabel = new Speelronde[rondes.size()];
+    System.arraycopy(rondes.toArray(), 0, tabel, 0, rondes.size());
+    assertEquals(speelronde1.getRonde(), tabel[0].getRonde());
+    assertEquals(speelronde1.getSpeeldatum(), tabel[0].getSpeeldatum());
+    assertEquals(speelronde2.getRonde(), tabel[1].getRonde());
+    assertEquals(speelronde2.getSpeeldatum(), tabel[1].getSpeeldatum());
+    assertEquals(speelronde3.getRonde(), tabel[2].getRonde());
+    assertEquals(speelronde3.getSpeeldatum(), tabel[2].getSpeeldatum());
   }
 
   @Test
@@ -309,6 +366,7 @@ public class SpeelrondeTest extends TestCase {
 
     assertEquals(Integer.valueOf(0), inhaalronde.getAantalPartijen());
     assertTrue(inhaalronde.getPartijen().isEmpty());
+    assertFalse(inhaalronde.hasSpeler(TestConstants.BOB));
     assertNull(inhaalronde.getRonde());
     assertEquals(CaissaConstants.DEF_EINDDATUM, inhaalronde.getSpeeldatum());
     assertEquals("Speelronde (ronde: null, speeldatum: 9999.99.99, "

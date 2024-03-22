@@ -16,6 +16,7 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.doosutils.DoosUtils;
 import java.io.Serializable;
 
 /**
@@ -46,6 +47,9 @@ public class Round implements Comparable<Round>, Serializable {
   }
 
   public Integer getRonde() {
+    if (DoosUtils.isBlankOrNull(ronde)) {
+      return -1;
+    }
     return Integer.valueOf(getRound().split("\\.")[0]);
   }
 

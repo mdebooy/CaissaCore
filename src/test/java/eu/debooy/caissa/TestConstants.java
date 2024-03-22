@@ -32,5 +32,10 @@ public class TestConstants {
 
   public static final String  TST_TAAL  = "nl";
 
+  public static final String  ALICE = "Speler, Alice";
+  public static final String  BOB   = "Speler, Bob";
+  public static final String  CAROL = "Speler, Carol";
+  public static final String  DAVE  = "Speler, Dave";
+
   private TestConstants() {}
 }

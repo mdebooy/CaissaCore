@@ -19,6 +19,7 @@ import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.caissa.exceptions.ZetException;
+import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.io.File;
@@ -29,6 +30,7 @@ import java.util.Set;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -294,6 +296,28 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
+  public void testIsMat1() {
+    try {
+      var fen = new FEN("8/8/8/8/5K1k/8/8/7R b - - 0 1");
+
+      assertTrue(CaissaUtils.isMat(fen));
+    } catch (FenException e) {
+      fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testIsMat2() {
+    try {
+      var fen = new FEN("8/8/8/8/5K1k/8/8/6R1 w - - 0 1");
+
+      assertFalse(CaissaUtils.isMat(fen));
+    } catch (FenException e) {
+      fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
   public void testPgnZettenToChessTheatre()
       throws FenException, PgnException, ZetException {
     var pgnZetten     =
@@ -311,5 +335,15 @@ public class CaissaUtilsTest extends BatchTest {
         + "19N16. 3q. 37Q8. 11.16n 28R31. 3.15q 58.1R 12.15r 28R31. .2r 37.6Q "
         + "19.39q 53K8. 51q7. 45K7. 44q6. 44K. 3.r 4R23. 4k.";
     assertEquals(chessTheatre, CaissaUtils.pgnZettenToChessTheatre(pgnZetten));
+  }
+
+  @Test
+  public void testGetToernooitype() {
+    assertEquals((Object) Competitie.TOERNOOI_ENKEL,
+                 (Object) CaissaUtils.getToernooitype(DoosConstants.WAAR));
+    assertEquals((Object) Competitie.TOERNOOI_DUBBEL,
+                 (Object) CaissaUtils.getToernooitype(DoosConstants.ONWAAR));
+    assertEquals((Object) Competitie.TOERNOOI_MATCH,
+                 (Object) CaissaUtils.getToernooitype("X"));
   }
 }

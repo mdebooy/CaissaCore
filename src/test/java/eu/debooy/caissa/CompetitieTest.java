@@ -18,6 +18,9 @@ package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.PgnException;
+import eu.debooy.doosutils.Datum;
+import eu.debooy.doosutils.DoosConstants;
+import eu.debooy.doosutils.DoosUtils;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.io.File;
@@ -28,6 +31,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -430,6 +434,72 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
+  public void testConstructor2() throws PgnException {
+    var partijen  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + BST_COMP_PGN);
+
+    try {
+      var competitie  = new Competitie(partijen, 2);
+
+      assertTrue(competitie.getInhaalpartijen().isEmpty());
+      assertTrue(competitie.getKalender().isEmpty());
+      assertEquals(3, competitie.getSpelers().size());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testConstructors1() throws PgnException {
+    var partijen  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + BST_COMP_PGN);
+
+    try {
+      var metPgn  = new Competitie(partijen, 2);
+      var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      assertEquals(metPgn.getDeelnemers().size(),
+                   metJson.getDeelnemers().size());
+      assertEquals(metPgn.getAantalHeenrondes(), metJson.getAantalHeenrondes());
+      assertEquals(metPgn.getAantalTerugrondes(),
+                   metJson.getAantalTerugrondes());
+      assertEquals(metPgn.getEvent(), metJson.getEvent());
+      assertEquals(metPgn.getEventdate(), metJson.getEventdate());
+      assertEquals(metPgn.getSite(), metJson.getSite());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testConstructors2() throws PgnException {
+    var partijen  =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + BST_COMP_PGN);
+
+    try {
+      var metPgn  = new Competitie(partijen, 2);
+      var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      assertEquals(metPgn.getDeelnemers().size(),
+                   metJson.getDeelnemers().size());
+
+      var deelnemers  = metPgn.getDeelnemers();
+      deelnemers.forEach(deelnemer -> {
+        assertEquals(deelnemer.getNaam(),
+                     metJson.getSpeler(deelnemer.getNaam()).getNaam());
+      });
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
   public void testDubbelZwitsers() {
     try {
       var competitie  =
@@ -446,6 +516,90 @@ public class CompetitieTest extends BatchTest {
       assertEquals(2.0, competitie.getPuntenRemise());
       assertEquals(1.0, competitie.getPuntenVerlies());
       assertEquals(3.0, competitie.getPuntenBye());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testgetSpeler1() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var speler      = competitie.getSpeler(2);
+
+      assertEquals(TestConstants.CAROL, speler.getNaam());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testgetSpeler2() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var speler      = competitie.getSpeler(3);
+
+      assertTrue(DoosUtils.isBlankOrNull(speler.getNaam()));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testgetSpeler3() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var speler      = competitie.getSpeler(TestConstants.CAROL);
+
+      assertEquals(TestConstants.CAROL, speler.getNaam());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testgetSpeler4() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var speler      = competitie.getSpeler(TestConstants.DAVE);
+
+      assertTrue(DoosUtils.isBlankOrNull(speler.getNaam()));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testgetSpelerIndex1() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var speler      = competitie.getSpelerIndex(TestConstants.CAROL);
+
+      assertEquals(2, speler);
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testgetSpelerIndex2() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var speler      = competitie.getSpelerIndex(TestConstants.DAVE);
+
+      assertEquals(-1, speler);
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -547,17 +701,19 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testConstructor2() throws PgnException {
-    var partijen  =
-        CaissaUtils.laadPgnBestand(getTemp() + File.separator
-                                    + BST_COMP_PGN);
-
+  public void testInhaal7() {
     try {
-      var competitie  = new Competitie(partijen, 2);
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var inhaalDatum = competitie.getInhaaldata();
 
-      assertTrue(competitie.getInhaalpartijen().isEmpty());
-      assertTrue(competitie.getKalender().isEmpty());
-      assertEquals(3, competitie.getSpelers().size());
+      assertEquals(3, inhaalDatum.size());
+      assertEquals("19/10/2021", Datum.fromDate(inhaalDatum.get(0),
+                                                DoosConstants.DATUM_SLASH));
+      assertEquals("16/11/2021", Datum.fromDate(inhaalDatum.get(1),
+                                                DoosConstants.DATUM_SLASH));
+      assertEquals("23/11/2021", Datum.fromDate(inhaalDatum.get(2),
+                                                DoosConstants.DATUM_SLASH));
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -565,23 +721,20 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testConstructors1() throws PgnException {
-    var partijen  =
-        CaissaUtils.laadPgnBestand(getTemp() + File.separator
-                                    + BST_COMP_PGN);
-
+  public void testInhaal8() {
     try {
-      var metPgn  = new Competitie(partijen, 2);
-      var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var wit         = new Spelerinfo();
+      var zwart       = new Spelerinfo();
+      wit.setNaam("Speler, Bob");
+      zwart.setNaam("Speler, Carol");
+      var partij      = new Partij();
+      partij.setWitspeler(wit);
+      partij.setZwartspeler(zwart);
+      var inhaalDatum = competitie.getInhaaldatum(partij);
 
-      assertEquals(metPgn.getDeelnemers().size(),
-                   metJson.getDeelnemers().size());
-      assertEquals(metPgn.getAantalHeenrondes(), metJson.getAantalHeenrondes());
-      assertEquals(metPgn.getAantalTerugrondes(),
-                   metJson.getAantalTerugrondes());
-      assertEquals(metPgn.getEvent(), metJson.getEvent());
-      assertEquals(metPgn.getEventdate(), metJson.getEventdate());
-      assertEquals(metPgn.getSite(), metJson.getSite());
+      assertEquals("-", inhaalDatum);
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -589,23 +742,68 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testConstructors2() throws PgnException {
-    var partijen  =
-        CaissaUtils.laadPgnBestand(getTemp() + File.separator
-                                    + BST_COMP_PGN);
-
+  public void testInhaal9() {
     try {
-      var metPgn  = new Competitie(partijen, 2);
-      var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var ronde       = new Round("1");
+      var wit         = new Spelerinfo();
+      var zwart       = new Spelerinfo();
+      wit.setNaam("Speler, Bob");
+      zwart.setNaam("Speler, Alice");
+      var partij      = new Partij();
+      partij.setRonde(ronde);
+      partij.setWitspeler(wit);
+      partij.setZwartspeler(zwart);
+      var inhaalDatum = competitie.getInhaaldatum(partij);
 
-      assertEquals(metPgn.getDeelnemers().size(),
-                   metJson.getDeelnemers().size());
+      assertEquals("-", inhaalDatum);
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
 
-      var deelnemers  = metPgn.getDeelnemers();
-      deelnemers.forEach(deelnemer -> {
-        assertEquals(deelnemer.getNaam(),
-                     metJson.getSpeler(deelnemer.getNaam()).getNaam());
-      });
+  @Test
+  public void testInhaal10() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var ronde       = new Round("1");
+      var wit         = new Spelerinfo();
+      var zwart       = new Spelerinfo();
+      wit.setNaam("Speler, Bob");
+      zwart.setNaam("Speler, Carol");
+      var partij      = new Partij();
+      partij.setRonde(ronde);
+      partij.setWitspeler(wit);
+      partij.setZwartspeler(zwart);
+      var inhaalDatum = competitie.getInhaaldatum(partij);
+
+      assertEquals("19/10", inhaalDatum);
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testKalender1() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var kalender    = competitie.getKalender();
+
+      assertEquals(9, kalender.size());
+      assertEquals("28/09/2021",
+          ((JSONObject) kalender.get(0))
+              .get(Competitie.JSON_TAG_KALENDER_DATUM));
+      assertEquals("26/10/2021",
+          ((JSONObject) kalender.get(4))
+              .get(Competitie.JSON_TAG_KALENDER_DATUM));
+      assertEquals("23/11/2021",
+          ((JSONObject) kalender.get(8))
+              .get(Competitie.JSON_TAG_KALENDER_DATUM));
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
