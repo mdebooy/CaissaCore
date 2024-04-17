@@ -501,9 +501,7 @@ public final class CaissaUtils {
         }
       }
     } catch (BestandException e) {
-      throw new PgnException(MessageFormat.format(
-          resourceBundle.getString(PGN.ERR_BESTAND_EXCEPTION),
-          e.getLocalizedMessage()));
+      throw new PgnException(e.getLocalizedMessage());
     }
 
     return partijen;
