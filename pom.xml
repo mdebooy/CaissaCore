@@ -8,7 +8,7 @@
   </parent>
   <groupId>eu.debooy.caissa</groupId>
   <artifactId>caissa-core</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Caissa (Core)</name>
   <description>Verschillende Caissa Core Classes.</description>
@@ -16,7 +16,7 @@
   <scm>
     <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaissaCore.git</connection>
     <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaissaCore.git</developerConnection>
-    <tag>caissa-core-0.2.0</tag>
+    <tag>caissa-core-0.1.13</tag>
   </scm>
 
   <developers>
