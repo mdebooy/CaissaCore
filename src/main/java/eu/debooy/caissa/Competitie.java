@@ -128,7 +128,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       inhaaldata  = new ArrayList<>();
       speeldata   = new ArrayList<>();
       spelers     = new ArrayList<>();
-      toernooi    = invoer.read();
+      toernooi    = (JSONObject) invoer.read();
 
       vulSpelers();
       vulSpeeldata();

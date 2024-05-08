@@ -4,11 +4,11 @@
   <parent>
     <groupId>eu.debooy.maven</groupId>
     <artifactId>pom</artifactId>
-    <version>2.4.4-SNAPSHOT</version>
+    <version>3.0.0</version>
   </parent>
   <groupId>eu.debooy.caissa</groupId>
   <artifactId>caissa-core</artifactId>
-  <version>0.1.16-SNAPSHOT</version>
+  <version>0.2.0</version>
   <packaging>jar</packaging>
   <name>Caissa (Core)</name>
   <description>Verschillende Caissa Core Classes.</description>
@@ -16,7 +16,7 @@
   <scm>
     <connection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaissaCore.git</connection>
     <developerConnection>scm:git:ssh://ptah.debooy.eu/srv/git/debooy/CaissaCore.git</developerConnection>
-    <tag>caissa-core-0.1.13</tag>
+    <tag>caissa-core-0.2.0</tag>
   </scm>
 
   <developers>
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>eu.debooy.doosutils</groupId>
       <artifactId>doosutils-core</artifactId>
-      <version>2.1.5-SNAPSHOT</version>
+      <version>2.2.0</version>
       <optional>true</optional>
     </dependency>
     <dependency>
