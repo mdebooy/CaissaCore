@@ -45,6 +45,7 @@ public class CompetitieTest extends BatchTest {
       CompetitieTest.class.getClassLoader();
 
   private static final  String  BST_COMP_DZ   = "competitieDZ.json";
+  private static final  String  BST_COMP_DZA  = "competitieDZa.json";
   private static final  String  BST_COMP_M    = "competitiem.json";
   private static final  String  BST_COMP_MF   = "competitiemf.json";
   private static final  String  BST_COMP_3    = "competitie3.json";
@@ -82,7 +83,7 @@ public class CompetitieTest extends BatchTest {
                                      BST_COMP_4H, BST_COMP_4T, BST_COMP_5,
                                      BST_COMP_51, BST_COMP_5H, BST_COMP_5T,
                                      BST_COMP_M, BST_COMP_MF, BST_COMP_DZ,
-                                     BST_COMP_PGN});
+                                     BST_COMP_DZA, BST_COMP_PGN});
   }
 
   @BeforeClass
@@ -133,6 +134,8 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_MF);
       kopieerBestand(CLASSLOADER, BST_COMP_DZ,
                      getTemp() + File.separator + BST_COMP_DZ);
+      kopieerBestand(CLASSLOADER, BST_COMP_DZA,
+                     getTemp() + File.separator + BST_COMP_DZA);
       kopieerBestand(CLASSLOADER, BST_COMP_PGN,
                      getTemp() + File.separator + BST_COMP_PGN);
     } catch (IOException e) {
@@ -500,7 +503,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testDubbelZwitsers() {
+  public void testDubbelZwitsers1() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_DZ);
@@ -512,10 +515,77 @@ public class CompetitieTest extends BatchTest {
       assertEquals(Integer.valueOf(3),
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(3), competitie.getRondes());
-      assertEquals(4.0, competitie.getPuntenWinst());
-      assertEquals(2.0, competitie.getPuntenRemise());
-      assertEquals(1.0, competitie.getPuntenVerlies());
-      assertEquals(3.0, competitie.getPuntenBye());
+      assertEquals(4.0, competitie.getPunten(CaissaConstants.PARTIJ_WIT_WINT,
+                                             true));
+      assertEquals(2.0, competitie.getPunten(CaissaConstants.PARTIJ_REMISE,
+                                             true));
+      assertEquals(1.0, competitie.getPunten(CaissaConstants.PARTIJ_ZWART_WINT,
+                                             true));
+      assertEquals(3.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_WIT_WINT,
+                                                true));
+      assertEquals(0.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_REMISE,
+                                                true));
+      assertEquals(0.0,
+                   competitie.getPuntenBye(CaissaConstants.PARTIJ_ZWART_WINT,
+                                           true));
+      assertEquals(1.0, competitie.getPunten(CaissaConstants.PARTIJ_WIT_WINT,
+                                             false));
+      assertEquals(2.0, competitie.getPunten(CaissaConstants.PARTIJ_REMISE,
+                                             false));
+      assertEquals(4.0, competitie.getPunten(CaissaConstants.PARTIJ_ZWART_WINT,
+                                             false));
+      assertEquals(0.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_WIT_WINT,
+                                                false));
+      assertEquals(0.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_REMISE,
+                                                false));
+      assertEquals(3.0,
+                   competitie.getPuntenBye(CaissaConstants.PARTIJ_ZWART_WINT,
+                                           false));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testDubbelZwitsers2() {
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_DZA);
+
+      assertTrue(competitie.isDubbel());
+      assertFalse(competitie.isEnkel());
+      assertEquals(Integer.valueOf(7),
+                   Integer.valueOf(competitie.getSpelers().size()));
+      assertEquals(Integer.valueOf(3),
+                   Integer.valueOf(competitie.getSpeeldata().size()));
+      assertEquals(Integer.valueOf(3), competitie.getRondes());
+      assertEquals(6.0, competitie.getPunten(CaissaConstants.PARTIJ_WIT_WINT,
+                                             true));
+      assertEquals(5.0, competitie.getPunten(CaissaConstants.PARTIJ_REMISE,
+                                             true));
+      assertEquals(4.0, competitie.getPunten(CaissaConstants.PARTIJ_ZWART_WINT,
+                                             true));
+      assertEquals(3.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_WIT_WINT,
+                                                true));
+      assertEquals(2.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_REMISE,
+                                                true));
+      assertEquals(1.0,
+                   competitie.getPuntenBye(CaissaConstants.PARTIJ_ZWART_WINT,
+                                           true));
+      assertEquals(4.0, competitie.getPunten(CaissaConstants.PARTIJ_WIT_WINT,
+                                             false));
+      assertEquals(5.0, competitie.getPunten(CaissaConstants.PARTIJ_REMISE,
+                                             false));
+      assertEquals(6.0, competitie.getPunten(CaissaConstants.PARTIJ_ZWART_WINT,
+                                             false));
+      assertEquals(1.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_WIT_WINT,
+                                                false));
+      assertEquals(2.0, competitie.getPuntenBye(CaissaConstants.PARTIJ_REMISE,
+                                                false));
+      assertEquals(3.0,
+                   competitie.getPuntenBye(CaissaConstants.PARTIJ_ZWART_WINT,
+                                           false));
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());

@@ -111,10 +111,8 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   private Spelerinfo        bye           = new Spelerinfo();
   private List<Date>        inhaaldata;
-  private Double            puntenBye     = 0.0;
-  private Double            puntenRemise  = 0.5;
-  private Double            puntenVerlies = 0.0;
-  private Double            puntenWinst   = 1.0;
+  private Double[]          punten        =
+      new Double[] {1.0, 0.5, 0.0, 0.0, 0.0, 0.0};
   private Integer           rondes;
   private List<Date>        speeldata;
   private List<Spelerinfo>  spelers;
@@ -374,20 +372,46 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return MessageFormat.format(resourceBundle.getString(MIS_TAG), tag);
   }
 
-  public Double getPuntenBye() {
-    return puntenBye;
+  public Double getPunten(String uitslag, boolean isWit) {
+    switch (uitslag) {
+      case CaissaConstants.PARTIJ_WIT_WINT:
+        if (isWit) {
+          return punten[0];
+        } else {
+          return punten[2];
+        }
+      case CaissaConstants.PARTIJ_REMISE:
+        return punten[1];
+      case CaissaConstants.PARTIJ_ZWART_WINT:
+        if (isWit) {
+          return punten[2];
+        } else {
+          return punten[0];
+        }
+      default:
+        return 0.0;
+    }
   }
 
-  public Double getPuntenRemise() {
-    return puntenRemise;
-  }
-
-  public Double getPuntenVerlies() {
-    return puntenVerlies;
-  }
-
-  public Double getPuntenWinst() {
-    return puntenWinst;
+  public Double getPuntenBye(String uitslag, boolean isWit) {
+    switch (uitslag) {
+      case CaissaConstants.PARTIJ_WIT_WINT:
+        if (isWit) {
+          return punten[3];
+        } else {
+          return punten[5];
+        }
+      case CaissaConstants.PARTIJ_REMISE:
+        return punten[4];
+      case CaissaConstants.PARTIJ_ZWART_WINT:
+        if (isWit) {
+          return punten[5];
+        } else {
+          return punten[3];
+        }
+      default:
+        return 0.0;
+    }
   }
 
   public Integer getRondes() {
@@ -475,44 +499,50 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return type;
   }
 
-  public String getUitslag(String uitslag) {
-    return getUitslag(uitslag, false);
-  }
+  public String getUitslag(Partij partij) {
+    if (!partij.isGespeeld())
+      return partij.getUitslag();
 
-  public String getUitslag(String uitslag, boolean bye) {
-    if (uitslag.equals(CaissaConstants.PARTIJ_BEZIG)) {
-      return uitslag;
-    }
-
-    if (puntenWinst.equals(1.0)
-        && puntenRemise.equals(0.5)
-        && puntenVerlies.equals(0.0)
+    if (punten[0].equals(1.0)
+        && punten[1].equals(0.5)
+        && punten[2].equals(0.0)
         && !metBye()) {
-      return uitslag;
+      return partij.getUitslag();
     }
 
-    var wit   = 0;
-    var zwart = 0;
-    if (uitslag.equals(CaissaConstants.PARTIJ_WIT_WINT)) {
-      if (bye) {
-        wit   = puntenBye.intValue();
-        zwart = 0;
+    var wit       = 0;
+    var witBye    = CaissaConstants.BYE
+                                   .equalsIgnoreCase(partij.getWitspeler()
+                                                           .getNaam());
+    var zwart     = 0;
+    var zwartBye  = CaissaConstants.BYE
+                                   .equalsIgnoreCase(partij.getZwartspeler()
+                                                           .getNaam());
+    if (partij.getUitslag().equals(CaissaConstants.PARTIJ_WIT_WINT)) {
+      if (partij.isBye()) {
+        wit   = witBye   ? 0 : punten[3].intValue();
+        zwart = zwartBye ? 0 : punten[5].intValue();
       } else {
-        wit   = puntenWinst.intValue();
-        zwart = puntenVerlies.intValue();
+        wit   = punten[0].intValue();
+        zwart = punten[2].intValue();
+      }
     }
-    }
-    if (uitslag.equals(CaissaConstants.PARTIJ_REMISE)) {
-      wit   = puntenRemise.intValue();
-      zwart = puntenRemise.intValue();
-    }
-    if (uitslag.equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
-      if (bye) {
-        wit   = 0;
-        zwart = puntenBye.intValue();
+    if (partij.getUitslag().equals(CaissaConstants.PARTIJ_REMISE)) {
+      if (partij.isBye()) {
+        wit   = witBye   ? 0 : punten[4].intValue();
+        zwart = zwartBye ? 0 : punten[4].intValue();
       } else {
-        wit   = puntenVerlies.intValue();
-        zwart = puntenWinst.intValue();
+        wit   = punten[1].intValue();
+        zwart = punten[1].intValue();
+      }
+    }
+    if (partij.getUitslag().equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
+      if (partij.isBye()) {
+        wit   = witBye   ? 0 : punten[5].intValue();
+        zwart = zwartBye ? 0 : punten[3].intValue();
+      } else {
+        wit   = punten[2].intValue();
+        zwart = punten[0].intValue();
       }
     }
 
@@ -548,7 +578,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public final boolean metBye() {
-    return !puntenBye.equals(0.0);
+    return !punten[3].equals(0.0);
   }
 
   public void sorteerOpNaam() {
@@ -630,22 +660,20 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       return;
     }
 
-    var punten  = ((String) toernooi.get(JSON_TAG_PUNTEN)).split(";");
-    if (punten.length < 3
-        || punten.length > 4) {
+    var tagPunten = ((String) toernooi.get(JSON_TAG_PUNTEN)).split(";");
+    if (tagPunten.length < 3
+        || tagPunten.length > 6) {
       fouten.add(resourceBundle.getString(ERR_PUNTEN));
       return;
     }
 
     try {
-      puntenWinst   = Double.valueOf(punten[0]);
-      puntenRemise  = Double.valueOf(punten[1]);
-      puntenVerlies = Double.valueOf(punten[2]);
-      if (punten.length == 4) {
-        puntenBye   = Double.valueOf(punten[3]);
+      for (var i = 0; i < tagPunten.length; i++) {
+        punten[i] = Double.valueOf(tagPunten[i]);
       }
     } catch (NumberFormatException e) {
       fouten.add(resourceBundle.getString(ERR_PUNTEN));
+      fouten.add(e.getLocalizedMessage());
     }
   }
 
