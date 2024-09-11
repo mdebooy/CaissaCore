@@ -31,6 +31,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private static final long serialVersionUID = 1L;
 
   private Integer aantalBye     = 0;
+  private String  achternaam    = "";
+  private String  adres;
   private String  alias;
   private Double  byeScore      = 0.0;
   private Date    eerstePartij;
@@ -44,21 +46,30 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   private Integer maxElo;
   private Date    minDatum;
   private Integer minElo;
-  private String  naam          = "";
   private Date    officieel;
   private Integer partijen      = 0;
+  private String  plaats;
   private Double  punten        = 0.0;
   private Integer spelerSeq;
   private Integer spelerId;
   private String  telefoon;
   private Boolean terugronde    = true;
   private Double  tieBreakScore = 0.0;
+  private String  voornaam      = "";
 
   public Spelerinfo() {}
 
   public Spelerinfo(JSONObject spelerinfo) {
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_ACHTERNAAM)) {
+      achternaam  =
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_ACHTERNAAM).toString();
+    }
+    if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_ADRES)) {
+      adres       =
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_ADRES).toString();
+    }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_ALIAS)) {
-      alias         =
+      alias       =
           spelerinfo.get(Competitie.JSON_TAG_SPELER_ALIAS).toString();
     }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_ELO)) {
@@ -67,7 +78,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
                                     .toString());
     }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_EMAIL)) {
-      email         =
+      email       =
           spelerinfo.get(Competitie.JSON_TAG_SPELER_EMAIL).toString();
     }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_HEENRONDE)) {
@@ -75,12 +86,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
           (boolean) spelerinfo.get(Competitie.JSON_TAG_SPELER_HEENRONDE);
     }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_LANDKODE)) {
-      landKode      =
+      landKode    =
           spelerinfo.get(Competitie.JSON_TAG_SPELER_LANDKODE).toString();
     }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_NAAM)) {
-      naam          =
-          spelerinfo.get(Competitie.JSON_TAG_SPELER_NAAM).toString();
+      setNaam(spelerinfo.get(Competitie.JSON_TAG_SPELER_NAAM).toString());
+    }
+     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_PLAATS)) {
+      plaats      =
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_PLAATS).toString();
     }
     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_TERUGRONDE)) {
       terugronde  =
@@ -102,9 +116,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
       telefoon    =
             spelerinfo.get(Competitie.JSON_TAG_SPELER_TELEFOON).toString();
     }
-  }
+     if (spelerinfo.containsKey(Competitie.JSON_TAG_SPELER_VOORNAAM)) {
+      voornaam    =
+          spelerinfo.get(Competitie.JSON_TAG_SPELER_VOORNAAM).toString();
+    }
+ }
 
   public Spelerinfo(Spelerinfo spelerinfo) {
+    achternaam    = spelerinfo.getAchternaam();
+    adres         = spelerinfo.getAdres();
     alias         = spelerinfo.getAlias();
     byeScore      = spelerinfo.getByeScore();
     eerstePartij  = spelerinfo.getEerstePartij();
@@ -117,14 +137,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     maxElo        = spelerinfo.getMaxElo();
     minDatum      = spelerinfo.getMinDatum();
     minElo        = spelerinfo.getMinElo();
-    naam          = spelerinfo.getNaam();
     officieel     = spelerinfo.getOfficieel();
     partijen      = spelerinfo.getPartijen();
+    plaats        = spelerinfo.getPlaats();
     punten        = spelerinfo.getPunten();
     spelerId      = spelerinfo.getSpelerId();
     spelerSeq     = spelerinfo.getSpelerSeq();
     telefoon      = spelerinfo.getTelefoon();
     tieBreakScore = spelerinfo.getTieBreakScore();
+    voornaam      = spelerinfo.getVoornaam();
   }
 
   public static class ByNaamComparator
@@ -186,8 +207,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
                                          other.getSorteerPartijen())
                                  .append(other.tieBreakScore, tieBreakScore)
                                  .append(byeScore, other.byeScore)
-                                 .append(naam.toUpperCase(),
-                                         other.naam.toUpperCase())
+                                 .append(getNaam().toUpperCase(),
+                                         other.getNaam().toUpperCase())
                                  .toComparison();
   }
 
@@ -205,9 +226,11 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public String getAchternaam() {
-    String[] delen = naam.split(",");
+    return achternaam;
+  }
 
-    return delen[0].trim();
+  public String getAdres() {
+    return adres;
   }
 
   public String getAlias() {
@@ -271,7 +294,11 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public String getNaam() {
-    return naam;
+    if (achternaam.isEmpty() || voornaam.isEmpty()) {
+      return (achternaam+voornaam).strip();
+    }
+
+    return String.format("%s, %s", achternaam, voornaam);
   }
 
   public Date getOfficieel() {
@@ -284,6 +311,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
 
   public Integer getPartijen() {
     return partijen;
+  }
+
+  public String getPlaats() {
+    return plaats;
   }
 
   public Double getPunten() {
@@ -315,18 +346,11 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public String getVolledigenaam() {
-    var delen = naam.split(",");
-    if (delen.length == 1) {
-      return naam;
-    }
-
-    return delen[1].trim() + " " + delen[0].trim();
+    return (voornaam + " " + achternaam).strip();
   }
 
   public String getVoornaam() {
-    String[] delen = naam.split(",");
-
-    return delen[delen.length-1].trim();
+    return voornaam;
   }
 
   @Override
@@ -374,7 +398,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public Boolean isBye() {
-    return naam.equalsIgnoreCase(CaissaConstants.BYE);
+    return getNaam().equalsIgnoreCase(CaissaConstants.BYE);
+  }
+
+  public void setAchternaam(String achternaam) {
+    this.achternaam       = DoosUtils.nullToEmpty(achternaam).strip();
+  }
+
+  public void setAdres(String adres) {
+    this.adres            = adres.strip();
   }
 
   public void setAlias(String alias) {
@@ -441,8 +473,15 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     this.minElo           = minElo;
   }
 
-  public void setNaam(String naam) {
-    this.naam             = DoosUtils.nullToEmpty(naam);
+  public final void setNaam(String naam) {
+    var deel              = DoosUtils.nullToEmpty(naam).split(",");
+
+      achternaam  = deel[0].strip();
+      if (deel.length > 1) {
+        voornaam  = deel[1].strip();
+      } else {
+        voornaam  = "";
+      }
   }
 
   public void setOfficieel(Date officieel) {
@@ -459,6 +498,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     } else {
       this.partijen       = partijen;
     }
+  }
+
+  public void setPlaats(String plaats) {
+    this.plaats           = DoosUtils.nullToEmpty(plaats).strip();
   }
 
   public void setPunten(Double punten) {
@@ -482,7 +525,7 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   }
 
   public void setTelefoon(String telefoon) {
-    this.telefoon         = DoosUtils.nullToEmpty(telefoon);
+    this.telefoon         = DoosUtils.nullToEmpty(telefoon).strip();
   }
 
   public void setTieBreakScore(Double tieBreakScore) {
@@ -493,13 +536,17 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     }
   }
 
+  public void setVoornaam(String voornaam) {
+    this.voornaam         = DoosUtils.nullToEmpty(voornaam).strip();
+  }
+
   @Override
   public String toString() {
     return new StringBuilder()
         .append("Spelerinfo data (")
         .append("SpelerID: ").append(spelerId).append(", ")
         .append("SpelerSeq: ").append(spelerSeq).append(", ")
-        .append("naam: [").append(naam).append("], ")
+        .append("naam: [").append(getNaam()).append("], ")
         .append("landkode: ").append(landKode).append(", ")
         .append("ELO: ").append(elo).append(", ")
         .append("punten: ").append(punten).append(", ")

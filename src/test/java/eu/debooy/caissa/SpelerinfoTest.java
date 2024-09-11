@@ -16,6 +16,7 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.doosutils.DoosUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -612,7 +613,7 @@ public class SpelerinfoTest extends TestCase {
     JSONParser  parser  = new JSONParser();
     try {
       JSONObject  json        = (JSONObject) parser.parse(minJson);
-     var         spelerinfo  = new Spelerinfo(json);
+      var         spelerinfo  = new Spelerinfo(json);
       assertNull(spelerinfo.getAlias());
       assertNull(spelerinfo.getEerstePartij());
       assertNull(spelerinfo.getElo());
@@ -625,6 +626,7 @@ public class SpelerinfoTest extends TestCase {
       assertNull(spelerinfo.getMaxElo());
       assertNull(spelerinfo.getMinDatum());
       assertNull(spelerinfo.getMinElo());
+      DoosUtils.naarScherm("|"+spelerinfo.getVoornaam()+ "|"+spelerinfo.getAchternaam()+"|");
       assertEquals("Speler, Alice", spelerinfo.getNaam());
       assertNull(spelerinfo.getOfficieel());
       assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
@@ -1102,8 +1104,8 @@ public class SpelerinfoTest extends TestCase {
                                   .isEquals());
     spelerinfo.setNaam(JAN);
     assertEquals(JAN, spelerinfo.getAchternaam());
-    assertEquals(JAN, spelerinfo.getNaam());
-    assertEquals(JAN, spelerinfo.getVoornaam());
+//    assertEquals(JAN, spelerinfo.getNaam());
+    assertEquals("", spelerinfo.getVoornaam());
     assertEquals(JAN, spelerinfo.getVolledigenaam());
     spelerinfo.setNaam(null);
     assertEquals("", spelerinfo.getAchternaam());

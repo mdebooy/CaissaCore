@@ -74,12 +74,16 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  JSON_TAG_RONDES             = "rondes";
   public static final String  JSON_TAG_SITE               = "site";
   public static final String  JSON_TAG_SPELERS            = "spelers";
+  public static final String  JSON_TAG_SPELER_ACHTERNAAM  = "achternaam";
+  public static final String  JSON_TAG_SPELER_ADRES       = "adres";
   public static final String  JSON_TAG_SPELER_ALIAS       = "alias";
   public static final String  JSON_TAG_SPELER_ELO         = "elo";
   public static final String  JSON_TAG_SPELER_EMAIL       = "email";
   public static final String  JSON_TAG_SPELER_HEENRONDE   = "heenronde";
   public static final String  JSON_TAG_SPELER_LANDKODE    = "landkode";
   public static final String  JSON_TAG_SPELER_NAAM        = "naam";
+  public static final String  JSON_TAG_SPELER_PLAATS      = "plaats";
+  public static final String  JSON_TAG_SPELER_VOORNAAM    = "voornaam";
   public static final String  JSON_TAG_PUNTEN             = "punten";
   public static final String  JSON_TAG_SPELER_SPELERID    = "id";
   public static final String  JSON_TAG_SPELER_SPELERSEQ   = "seq";
