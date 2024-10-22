@@ -345,6 +345,17 @@ public class FEN implements Serializable {
     return halvezetten;
   }
 
+  public String getKorteFen() {
+    var fen = new StringBuilder();
+
+    fen.append(getPositie()).append(" ");
+    fen.append(getAanZet()).append(" ");
+    fen.append(getRokade()).append(" ");
+    fen.append(getEnPassant());
+
+    return fen.toString();
+  }
+
   public String getKortePositie() {
     var kortePositie = new StringBuilder();
     var leeg  = 0;

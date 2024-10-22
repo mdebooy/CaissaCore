@@ -34,16 +34,18 @@ import org.junit.Test;
 public class FENTest extends BatchTest {
   public static final String  FEN_1E2E4  =
       "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
-  public static final String  FEN_1E7E5  =
+  public static final String  FEN_1E7E5   =
       "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2";
-  public static final String  FEN_2KE1E2 =
+  public static final String  FEN_2KE1E2  =
       "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR b kq - 1 2";
-  public static final String  FEN_2KE8E7 =
+  public static final String  FEN_2KE8E7  =
       "rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3";
-  public static final String  FEN_3D2D4  =
+  public static final String  FEN_3D2D4   =
       "rnbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3 0 3";
-  public static final String  FEN_FOUT   =
+  public static final String  FEN_FOUT    =
       "1nbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3 0 3";
+  public static final String  FEN_KORT    =
+      "rnbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3";
 
   private FEN fen;
 
@@ -124,6 +126,13 @@ public class FENTest extends BatchTest {
       assertEquals(resourceBundle.getString(FEN.ERR_ZET),
                    e.getMessage());
     }
+  }
+
+  @Test
+  public void testKorteFen() throws ZetException, FenException {
+    fen = new FEN(FEN_3D2D4);
+
+    assertEquals(FEN_KORT, fen.getKorteFen());
   }
 
   @Test
