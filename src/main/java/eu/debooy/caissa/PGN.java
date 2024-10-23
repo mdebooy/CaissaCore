@@ -260,6 +260,10 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public int getAantalZettenWit() {
+    if (getZuivereZetten().isEmpty()) {
+      return 0;
+    }
+
     return (getZuivereZetten().split(" ").length + 1) / 2;
   }
 
