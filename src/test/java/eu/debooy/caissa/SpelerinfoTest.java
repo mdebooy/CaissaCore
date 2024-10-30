@@ -16,12 +16,20 @@
  */
 package eu.debooy.caissa;
 
-import eu.debooy.doosutils.DoosUtils;
+import static eu.debooy.caissa.TestConstants.ALICE;
+import eu.debooy.doosutils.access.JsonBestand;
+import eu.debooy.doosutils.exception.BestandException;
+import eu.debooy.doosutils.test.BatchTest;
+import eu.debooy.doosutils.test.TestUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -34,7 +42,12 @@ import org.junit.Test;
 /**
  * @author Marco de Booij
  */
-public class SpelerinfoTest extends TestCase {
+public class SpelerinfoTest extends BatchTest {
+  protected static final  ClassLoader CLASSLOADER =
+      SpelerinfoTest.class.getClassLoader();
+
+  public static final String  BST_SPELERINFO_JSON = "spelerinfo.json";
+
   public static final String  ADAMS       = "Adams";
   public static final String  ADAMS_JAN   = "Adams, Jan";
   public static final String  DEVRIES_JAN = "de Vries, Jan";
@@ -42,7 +55,7 @@ public class SpelerinfoTest extends TestCase {
   public static final String  JAN_ADAMS   = "Jan Adams";
   public static final String  JANSEN_JAN  = "Jansen, Jan";
 
-  private final Date  datum       = new Date();
+  private final Date  datum = TestUtils.getRushDatum();
 
   private Spelerinfo  spelerinfo0;
   private Spelerinfo  spelerinfo1;
@@ -56,7 +69,6 @@ public class SpelerinfoTest extends TestCase {
   private Spelerinfo  spelerinfo9;
 
   @Before
-  @Override
   public void setUp() {
     spelerinfo0 = new Spelerinfo();
     spelerinfo1 = new Spelerinfo();
@@ -609,7 +621,7 @@ public class SpelerinfoTest extends TestCase {
 
   @Test
   public void testInit3() {
-    var         minJson = "{\"naam\": \"Speler, Alice\"}";
+    var         minJson = "{\"naam\": \"" + ALICE + "\"}";
     JSONParser  parser  = new JSONParser();
     try {
       JSONObject  json        = (JSONObject) parser.parse(minJson);
@@ -626,8 +638,7 @@ public class SpelerinfoTest extends TestCase {
       assertNull(spelerinfo.getMaxElo());
       assertNull(spelerinfo.getMinDatum());
       assertNull(spelerinfo.getMinElo());
-      DoosUtils.naarScherm("|"+spelerinfo.getVoornaam()+ "|"+spelerinfo.getAchternaam()+"|");
-      assertEquals("Speler, Alice", spelerinfo.getNaam());
+      assertEquals(ALICE, spelerinfo.getNaam());
       assertNull(spelerinfo.getOfficieel());
       assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
       assertEquals(0.0, spelerinfo.getPunten());
@@ -641,23 +652,19 @@ public class SpelerinfoTest extends TestCase {
 
   @Test
   public void testInit4() {
-    var         minJson = "{\"alias\": \"Caissa\", "
-                            + "\"elo\": 2112, "
-                            + "\"email\": \"alice@caissa.chess\", "
-                            + "\"heenronde\": false, "
-                            + "\"landkode\": \"bel\", "
-                            + "\"naam\": \"Speler, Alice\", "
-                            + "\"id\": 1221, "
-                            + "\"terugronde\": true}";
-    JSONParser  parser  = new JSONParser();
-    try {
-      JSONObject  json        = (JSONObject) parser.parse(minJson);
-     var         spelerinfo  = new Spelerinfo(json);
-      assertEquals("Caissa", spelerinfo.getAlias());
+    try (var invoer  =
+          new JsonBestand.Builder()
+                          .setBestand(BST_SPELERINFO_JSON)
+                          .setClassLoader(CLASSLOADER)
+                          .build()) {
+      var json        = (JSONObject) invoer.read();
+      var spelerinfo  = new Spelerinfo(json);
+      assertEquals("Caissastraat 10", spelerinfo.getAdres());
+      assertEquals("Alice01", spelerinfo.getAlias());
       assertNull(spelerinfo.getEerstePartij());
       assertEquals(Integer.valueOf(2112), spelerinfo.getElo());
       assertNull(spelerinfo.getElogroei());
-      assertEquals("alice@caissa.chess", spelerinfo.getEmail());
+      assertEquals("alice@caissa.eu", spelerinfo.getEmail());
       assertFalse(spelerinfo.inHeenronde());
       assertNull(spelerinfo.getLaatstePartij());
       assertEquals("bel", spelerinfo.getLandKode());
@@ -665,15 +672,18 @@ public class SpelerinfoTest extends TestCase {
       assertNull(spelerinfo.getMaxElo());
       assertNull(spelerinfo.getMinDatum());
       assertNull(spelerinfo.getMinElo());
-      assertEquals("Speler, Alice", spelerinfo.getNaam());
+      assertEquals(ALICE, spelerinfo.getNaam());
       assertNull(spelerinfo.getOfficieel());
       assertEquals(Integer.valueOf(0), spelerinfo.getPartijen());
+      assertEquals("4567 Schaakstad", spelerinfo.getPlaats());
       assertEquals(0.0, spelerinfo.getPunten());
+      assertEquals(Integer.valueOf(1), spelerinfo.getSpelerSeq());
       assertEquals(Integer.valueOf(1221), spelerinfo.getSpelerId());
+      assertEquals("0123/45.67.89", spelerinfo.getTelefoon());
       assertTrue(spelerinfo.inTerugronde());
       assertEquals(0.0, spelerinfo.getTieBreakScore());
-    } catch (ParseException e) {
-      fail("JSON parse exception: " + e.getLocalizedMessage());
+    } catch (BestandException e) {
+      fail(e.getLocalizedMessage());
     }
   }
 
@@ -1104,7 +1114,7 @@ public class SpelerinfoTest extends TestCase {
                                   .isEquals());
     spelerinfo.setNaam(JAN);
     assertEquals(JAN, spelerinfo.getAchternaam());
-//    assertEquals(JAN, spelerinfo.getNaam());
+    assertEquals(JAN, spelerinfo.getNaam());
     assertEquals("", spelerinfo.getVoornaam());
     assertEquals(JAN, spelerinfo.getVolledigenaam());
     spelerinfo.setNaam(null);

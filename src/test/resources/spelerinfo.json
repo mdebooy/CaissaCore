@@ -1,0 +1,14 @@
+{
+  "voornaam": "Alice",
+  "achternaam": "Speler",
+  "adres": "Caissastraat 10",
+  "plaats": "4567 Schaakstad",
+  "landkode": "bel",
+  "alias": "Alice01",
+  "elo": 2112,
+  "email": "alice@caissa.eu",
+  "id": 1221,
+  "seq": 1,
+  "telefoon": "0123/45.67.89",
+  "heenronde": false
+}

@@ -51,7 +51,9 @@ public class FENTest extends BatchTest {
 
   @BeforeClass
   public static void beforeClass() throws BestandException {
-    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
+    Locale.setDefault(new Locale.Builder()
+                                .setLanguage(TestConstants.TST_TAAL)
+                                .build());
     resourceBundle   = ResourceBundle.getBundle("CaissaCore",
                                                 Locale.getDefault());
   }
@@ -129,7 +131,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testKorteFen() throws ZetException, FenException {
+  public void testKorteFen() throws FenException {
     fen = new FEN(FEN_3D2D4);
 
     assertEquals(FEN_KORT, fen.getKorteFen());
