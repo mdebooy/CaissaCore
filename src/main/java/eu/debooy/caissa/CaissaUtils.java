@@ -428,86 +428,15 @@ public final class CaissaUtils {
 
   public static Collection<PGN> laadPgnBestand(String bestand, String charSet)
       throws PgnException {
-    var             lijnnummer  = 0;
-    Collection<PGN> partijen    = new ArrayList<>();
-
     try (var input = new TekstBestand.Builder()
                               .setBestand(bestand
                                   + (bestand.endsWith(BestandConstants.EXT_PGN)
                                         ? "" : BestandConstants.EXT_PGN))
                               .setCharset(charSet).build()) {
-      var eof   = false;
-      var lijn  = "";
-      if (input.hasNext()) {
-        lijn  = input.next();
-        lijnnummer++;
-      } else {
-        eof = true;
-      }
-      while (!eof) {
-        var partij  = new PGN();
-
-        // Zoek naar de eerste TAG
-        while (!eof && !lijn.startsWith("[")) {
-          if (input.hasNext()) {
-            lijn  = input.next();
-            lijnnummer++;
-          } else {
-            eof = true;
-          }
-        }
-
-        // Verwerk de TAGs
-        while (!eof && lijn.startsWith("[")) {
-          schrijfTag(partij, lijn);
-          if (input.hasNext()) {
-            lijn  = input.next();
-            lijnnummer++;
-          } else {
-            eof = true;
-          }
-        }
-
-        // Verwerk de zetten
-        var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
-        var zetten  = new StringBuilder();
-        while (!eof && !lijn.trim().endsWith(uitslag)) {
-          if (lijn.startsWith("[")) {
-            throw new PgnException(MessageFormat.format(
-                resourceBundle.getString(PGN.ERR_BESTAND),
-                lijnnummer));
-          }
-          zetten.append(lijn.trim());
-          if (!lijn.endsWith(".")) {
-            zetten.append(" ");
-          }
-          if (input.hasNext()) {
-            lijn  = input.next();
-            lijnnummer++;
-          } else {
-            eof = true;
-          }
-        }
-
-        if (!eof && lijn.trim().endsWith(uitslag)) {
-          zetten.append(lijn.trim());
-        }
-
-        laadPgnBestandZetten(zetten.toString().trim(), uitslag,
-                             partij, partijen);
-
-        if (input.hasNext()) {
-          lijn  = input.next();
-          lijnnummer++;
-        } else {
-          eof = true;
-        }
-      }
+      return verwerkBestand(input);
     } catch (BestandException e) {
       throw new PgnException(e.getLocalizedMessage());
     }
-
-    return partijen;
   }
 
   private static void laadPgnBestandZetten(String zetten, String uitslag,
@@ -629,10 +558,66 @@ public final class CaissaUtils {
     return String.valueOf(result);
   }
 
+  private static Collection<PGN> verwerkBestand(TekstBestand input)
+      throws BestandException, PgnException {
+    var             lijnnummer  = 0;
+    Collection<PGN> partijen    = new ArrayList<>();
+
+    while (input.hasNext()) {
+      var lijn  = input.next();
+      lijnnummer++;
+      var partij  = new PGN();
+
+      // Zoek naar de eerste TAG
+      while (input.hasNext() && !lijn.startsWith("[")) {
+        lijn  = input.next();
+        lijnnummer++;
+      }
+
+      // Is er nog een partij gevonden?
+      if (!input.hasNext()) {
+        break;
+      }
+
+      // Verwerk de TAGs
+      while (input.hasNext() && lijn.startsWith("[")) {
+        schrijfTag(partij, lijn);
+
+        lijn  = input.next();
+        lijnnummer++;
+      }
+
+      // Verwerk de zetten
+      var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
+      var zetten  = new StringBuilder();
+      while (input.hasNext() && !lijn.trim().endsWith(uitslag)) {
+        if (lijn.startsWith("[")) {
+          throw new PgnException(MessageFormat.format(
+              resourceBundle.getString(PGN.ERR_BESTAND),
+              lijnnummer));
+        }
+        zetten.append(lijn.trim());
+        if (!lijn.endsWith(".")) {
+          zetten.append(" ");
+        }
+
+        lijn  = input.next();
+        lijnnummer++;
+      }
+
+      if (lijn.trim().endsWith(uitslag)) {
+        zetten.append(lijn.trim());
+      }
+
+      laadPgnBestandZetten(zetten.toString().trim(), uitslag, partij, partijen);
+    }
+
+    return partijen;
+  }
+
   private static void verwerkBye(int iWit, int iZwart, String uitslag,
                                  Competitie competitie, boolean telUitslag) {
-    if (competitie.metBye() && telUitslag
-        && competitie.metBye()) {
+    if (competitie.metBye() && telUitslag) {
       if (iWit != -1) {
         var punten  = competitie.getPuntenBye(uitslag, true);
         competitie.getSpeler(iWit).addByeScore(punten);

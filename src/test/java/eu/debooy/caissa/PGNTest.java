@@ -61,8 +61,10 @@ public class PGNTest extends BatchTest {
 
   @BeforeClass
   public static void beforeClass() throws BestandException {
-    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
-    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+    Locale.setDefault(new Locale.Builder()
+                                .setLanguage(TestConstants.TST_TAAL)
+                                .build());
+    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
                                                 Locale.getDefault());
     try {
       kopieerBestand(CLASSLOADER,
@@ -146,49 +148,49 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
-  public void testMissingBlack() throws PgnException {
+  public void testMissingBlack() {
     pgn.deleteTag(PGN.PGNTAG_BLACK);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testMissingDate() throws PgnException {
+  public void testMissingDate() {
     pgn.deleteTag(PGN.PGNTAG_DATE);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testMissingEvent() throws PgnException {
+  public void testMissingEvent() {
     pgn.deleteTag(PGN.PGNTAG_EVENT);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testMissingResult() throws PgnException {
+  public void testMissingResult() {
     pgn.deleteTag(PGN.PGNTAG_RESULT);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testMissingRound() throws PgnException {
+  public void testMissingRound() {
     pgn.deleteTag(PGN.PGNTAG_ROUND);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testMissingSite() throws PgnException {
+  public void testMissingSite() {
     pgn.deleteTag(PGN.PGNTAG_SITE);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testMissingWhite() throws PgnException {
+  public void testMissingWhite() {
     pgn.deleteTag(PGN.PGNTAG_WHITE);
     assertFalse(pgn.isValid());
   }
 
   @Test
-  public void testRankedRated() throws PgnException {
+  public void testRankedRated() {
     assertTrue(pgn.isValid());
     assertTrue(pgn.isRanked());
     assertTrue(pgn.isRated());
@@ -280,7 +282,7 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
-  public void testValidity() throws PgnException {
+  public void testValidity() {
     assertTrue(pgn.isValid());
     pgn.deleteTag(PGN.PGNTAG_RESULT);
     assertFalse(pgn.isValid());

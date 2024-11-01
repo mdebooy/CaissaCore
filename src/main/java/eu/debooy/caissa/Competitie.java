@@ -514,43 +514,48 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       return partij.getUitslag();
     }
 
-    var wit       = 0;
     var witBye    = CaissaConstants.BYE
                                    .equalsIgnoreCase(partij.getWitspeler()
                                                            .getNaam());
-    var zwart     = 0;
     var zwartBye  = CaissaConstants.BYE
                                    .equalsIgnoreCase(partij.getZwartspeler()
                                                            .getNaam());
-    if (partij.getUitslag().equals(CaissaConstants.PARTIJ_WIT_WINT)) {
-      if (partij.isBye()) {
-        wit   = witBye   ? 0 : punten[3].intValue();
-        zwart = zwartBye ? 0 : punten[5].intValue();
-      } else {
-        wit   = punten[0].intValue();
-        zwart = punten[2].intValue();
-      }
+    if (partij.isBye()) {
+      return getUitslagBye(partij, witBye, zwartBye);
+    } else {
+      return getUitslagNormaal(partij);
     }
-    if (partij.getUitslag().equals(CaissaConstants.PARTIJ_REMISE)) {
-      if (partij.isBye()) {
-        wit   = witBye   ? 0 : punten[4].intValue();
-        zwart = zwartBye ? 0 : punten[4].intValue();
-      } else {
-        wit   = punten[1].intValue();
-        zwart = punten[1].intValue();
-      }
-    }
-    if (partij.getUitslag().equals(CaissaConstants.PARTIJ_ZWART_WINT)) {
-      if (partij.isBye()) {
-        wit   = witBye   ? 0 : punten[5].intValue();
-        zwart = zwartBye ? 0 : punten[3].intValue();
-      } else {
-        wit   = punten[2].intValue();
-        zwart = punten[0].intValue();
-      }
-    }
+  }
 
-    return String.format("%d-%d", wit, zwart);
+  private String getUitslagBye(Partij partij,
+                               boolean witBye, boolean zwartBye) {
+    switch (partij.getUitslag()) {
+      case CaissaConstants.PARTIJ_WIT_WINT:
+        return String.format("%d-%d", witBye   ? 0 : punten[3].intValue(),
+                                      zwartBye ? 0 : punten[5].intValue());
+      case CaissaConstants.PARTIJ_REMISE:
+        return String.format("%d-%d", witBye   ? 0 : punten[4].intValue(),
+                                      zwartBye ? 0 : punten[4].intValue());
+      case CaissaConstants.PARTIJ_ZWART_WINT:
+        return String.format("%d-%d", witBye   ? 0 : punten[5].intValue(),
+                                      zwartBye ? 0 : punten[3].intValue());
+      default: return "0-0";
+    }
+  }
+
+  private String getUitslagNormaal(Partij partij) {
+    switch (partij.getUitslag()) {
+      case CaissaConstants.PARTIJ_WIT_WINT:
+        return String.format("%d-%d", punten[0].intValue(),
+                                      punten[2].intValue());
+      case CaissaConstants.PARTIJ_REMISE:
+        return String.format("%d-%d", punten[1].intValue(),
+                                      punten[1].intValue());
+      case CaissaConstants.PARTIJ_ZWART_WINT:
+        return String.format("%d-%d", punten[2].intValue(),
+                                      punten[0].intValue());
+      default: return "0-0";
+    }
   }
 
   @Override

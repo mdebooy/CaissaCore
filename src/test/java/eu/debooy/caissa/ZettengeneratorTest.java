@@ -33,7 +33,7 @@ public class ZettengeneratorTest extends TestCase {
   }
 
   @Test
-  public void testBeginstand() throws CaissaException {
+  public void testBeginstand() {
     var zetten  = new Zettengenerator(new FEN());
 
     assertEquals(20, zetten.getAantalZetten());

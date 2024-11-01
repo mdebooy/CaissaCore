@@ -16,7 +16,6 @@
 package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.ZetException;
-import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -37,9 +36,11 @@ public class ZetTest extends BatchTest {
   private Zet zet;
 
   @BeforeClass
-  public static void beforeClass() throws BestandException {
-    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
-    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+  public static void beforeClass() {
+    Locale.setDefault(new Locale.Builder()
+                                .setLanguage(TestConstants.TST_TAAL)
+                                .build());
+    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
                                                 Locale.getDefault());
   }
 

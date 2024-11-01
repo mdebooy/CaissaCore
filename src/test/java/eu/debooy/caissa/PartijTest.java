@@ -17,7 +17,6 @@
 package eu.debooy.caissa;
 
 import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 

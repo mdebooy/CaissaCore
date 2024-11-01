@@ -27,6 +27,8 @@ public class TestConstants {
   public static final String  BST_EVENT_PGN         = "event.pgn";
   public static final String  BST_TEST_PGN          = "test.pgn";
 
+  public static final String  RESOURCEBUNDLE  = "CaissaCore";
+
   public static final String  RUSHDATUM = "2112.21.12";
   public static final String  RUSHJAAR  = "2112.??.??";
 
@@ -36,6 +38,8 @@ public class TestConstants {
   public static final String  BOB   = "Speler, Bob";
   public static final String  CAROL = "Speler, Carol";
   public static final String  DAVE  = "Speler, Dave";
+  public static final String  EVE   = "Speler, Eve";
+  public static final String  FRANK = "Speler, Frank";
 
   private TestConstants() {}
 }

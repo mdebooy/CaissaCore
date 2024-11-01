@@ -55,6 +55,7 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_34   = "competitie3_4.json";
   private static final  String  BST_COMP_35   = "competitie3_5.json";
   private static final  String  BST_COMP_36   = "competitie3_6.json";
+  private static final  String  BST_COMP_3BYE = "competitie3_bye.json";
   private static final  String  BST_COMP_3E   = "competitie3e.json";
   private static final  String  BST_COMP_3M   = "competitie3m.json";
   private static final  String  BST_COMP_4    = "competitie4.json";
@@ -73,23 +74,34 @@ public class CompetitieTest extends BatchTest {
   private static final  String  TST_INHAALPARTIJ2 =
       "{\"datum\":\"16\\/11\\/2021\",\"wit\":\"Speler, Carol\",\"ronde\":1,\"zwart\":\"Speler, Bob\"}";
 
+  private static final  Spelerinfo  alice = new Spelerinfo();
+  private static final  Spelerinfo  bob   = new Spelerinfo();
+  private static final  Spelerinfo  bye   = new Spelerinfo();
+
+
   @AfterClass
   public static void afterClass() {
     verwijderBestanden(getTemp() + File.separator,
                        new String[] {BST_COMP_3, BST_COMP_31, BST_COMP_32,
                                      BST_COMP_33, BST_COMP_34, BST_COMP_35,
-                                     BST_COMP_36, BST_COMP_3E, BST_COMP_3M,
-                                     BST_COMP_4, BST_COMP_41, BST_COMP_4E,
-                                     BST_COMP_4H, BST_COMP_4T, BST_COMP_5,
-                                     BST_COMP_51, BST_COMP_5H, BST_COMP_5T,
-                                     BST_COMP_M, BST_COMP_MF, BST_COMP_DZ,
-                                     BST_COMP_DZA, BST_COMP_PGN});
+                                     BST_COMP_36, BST_COMP_3BYE, BST_COMP_3E,
+                                     BST_COMP_3M, BST_COMP_4, BST_COMP_41,
+                                     BST_COMP_4E, BST_COMP_4H, BST_COMP_4T,
+                                     BST_COMP_5, BST_COMP_51, BST_COMP_5H,
+                                     BST_COMP_5T, BST_COMP_M, BST_COMP_MF,
+                                     BST_COMP_DZ, BST_COMP_DZA, BST_COMP_PGN});
   }
 
   @BeforeClass
   public static void beforeClass() throws BestandException {
-    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
-    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+    alice.setNaam(TestConstants.BOB);
+    bob.setNaam(TestConstants.ALICE);
+    bye.setNaam(CaissaConstants.BYE);
+
+    Locale.setDefault(new Locale.Builder()
+                                .setLanguage(TestConstants.TST_TAAL)
+                                .build());
+    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
                                                 Locale.getDefault());
     try {
       kopieerBestand(CLASSLOADER, BST_COMP_3,
@@ -106,6 +118,8 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_35);
       kopieerBestand(CLASSLOADER, BST_COMP_36,
                      getTemp() + File.separator + BST_COMP_36);
+      kopieerBestand(CLASSLOADER, BST_COMP_3BYE,
+                     getTemp() + File.separator + BST_COMP_3BYE);
       kopieerBestand(CLASSLOADER, BST_COMP_3E,
                      getTemp() + File.separator + BST_COMP_3E);
       kopieerBestand(CLASSLOADER, BST_COMP_3M,
@@ -185,6 +199,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
+  @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testDubbelrondig3M() {
     try {
       var competitie  =
@@ -423,6 +438,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
+  @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testDubbelrondigMF() {
     try {
       var competitie  =
@@ -593,7 +609,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testgetSpeler1() {
+  public void testGetSpeler1() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
@@ -607,7 +623,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testgetSpeler2() {
+  public void testGetSpeler2() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
@@ -621,7 +637,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testgetSpeler3() {
+  public void testGetSpeler3() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
@@ -635,7 +651,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testgetSpeler4() {
+  public void testGetSpeler4() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
@@ -649,7 +665,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testgetSpelerIndex1() {
+  public void testGetSpelerIndex1() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
@@ -663,7 +679,7 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testgetSpelerIndex2() {
+  public void testGetSpelerIndex2() {
     try {
       var competitie  =
           new Competitie(getTemp() + File.separator + BST_COMP_3);
@@ -874,6 +890,183 @@ public class CompetitieTest extends BatchTest {
       assertEquals("23/11/2021",
           ((JSONObject) kalender.get(8))
               .get(Competitie.JSON_TAG_KALENDER_DATUM));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testUitslag01() {
+    var partij  = new Partij();
+
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      partij.setWitspeler(alice);
+      partij.setZwartspeler(bob);
+
+      partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+      assertEquals(CaissaConstants.PARTIJ_BEZIG, competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_WIT_WINT);
+      assertEquals(CaissaConstants.PARTIJ_WIT_WINT,
+                   competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_REMISE);
+      assertEquals(CaissaConstants.PARTIJ_REMISE,
+                   competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_ZWART_WINT);
+      assertEquals(CaissaConstants.PARTIJ_ZWART_WINT,
+                   competitie.getUitslag(partij));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testUitslag02() {
+    var partij  = new Partij();
+
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      partij.setWitspeler(bye);
+      partij.setZwartspeler(bob);
+
+      partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+      assertEquals(CaissaConstants.PARTIJ_BEZIG, competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_WIT_WINT);
+      assertEquals(CaissaConstants.PARTIJ_WIT_WINT,
+                   competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_REMISE);
+      assertEquals(CaissaConstants.PARTIJ_REMISE,
+                   competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_ZWART_WINT);
+      assertEquals(CaissaConstants.PARTIJ_ZWART_WINT,
+                   competitie.getUitslag(partij));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testUitslag03() {
+    var partij  = new Partij();
+
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      partij.setWitspeler(alice);
+      partij.setZwartspeler(bye);
+
+      partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+      assertEquals(CaissaConstants.PARTIJ_BEZIG, competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_WIT_WINT);
+      assertEquals(CaissaConstants.PARTIJ_WIT_WINT,
+                   competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_REMISE);
+      assertEquals(CaissaConstants.PARTIJ_REMISE,
+                   competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_ZWART_WINT);
+      assertEquals(CaissaConstants.PARTIJ_ZWART_WINT,
+                   competitie.getUitslag(partij));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testUitslag11() {
+    var partij  = new Partij();
+
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3BYE);
+
+      partij.setWitspeler(alice);
+      partij.setZwartspeler(bob);
+
+      partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+      assertEquals(CaissaConstants.PARTIJ_BEZIG, competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_WIT_WINT);
+      assertEquals("3-1", competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_REMISE);
+      assertEquals("2-2", competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_ZWART_WINT);
+      assertEquals("1-3", competitie.getUitslag(partij));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testUitslag12() {
+    var partij  = new Partij();
+
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3BYE);
+
+      partij.setWitspeler(bye);
+      partij.setZwartspeler(bob);
+
+      partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+      assertEquals(CaissaConstants.PARTIJ_BEZIG, competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_WIT_WINT);
+      assertEquals("0-0", competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_REMISE);
+      assertEquals("0-1", competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_ZWART_WINT);
+      assertEquals("0-3",competitie.getUitslag(partij));
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException moeten wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testUitslag13() {
+    var partij  = new Partij();
+
+    try {
+      var competitie  =
+          new Competitie(getTemp() + File.separator + BST_COMP_3BYE);
+
+      partij.setWitspeler(alice);
+      partij.setZwartspeler(bye);
+
+      partij.setUitslag(CaissaConstants.PARTIJ_BEZIG);
+      assertEquals(CaissaConstants.PARTIJ_BEZIG, competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_WIT_WINT);
+      assertEquals("3-0", competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_REMISE);
+      assertEquals("1-0", competitie.getUitslag(partij));
+
+      partij.setUitslag(CaissaConstants.PARTIJ_ZWART_WINT);
+      assertEquals("0-0", competitie.getUitslag(partij));
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());

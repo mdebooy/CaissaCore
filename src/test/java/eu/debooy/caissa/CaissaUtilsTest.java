@@ -18,7 +18,6 @@ package eu.debooy.caissa;
 import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
-import eu.debooy.caissa.exceptions.ZetException;
 import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
@@ -90,8 +89,10 @@ public class CaissaUtilsTest extends BatchTest {
 
   @BeforeClass
   public static void beforeClass() throws BestandException {
-    Locale.setDefault(new Locale(TestConstants.TST_TAAL));
-    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+    Locale.setDefault(new Locale.Builder()
+                                .setLanguage(TestConstants.TST_TAAL)
+                                .build());
+    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
                                                 Locale.getDefault());
     try {
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE3,
@@ -318,8 +319,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testPgnZettenToChessTheatre()
-      throws FenException, PgnException, ZetException {
+  public void testPgnZettenToChessTheatre() throws PgnException {
     var pgnZetten     =
         "1.e4 e5 2.d4 exd4 3.Nf3 Nc6 4.Bc4 d6 5.O-O Bg4 6.c3 dxc3 7.Nxc3 Nf6 "
         + "8.Bg5 Ne5 9.Be2 Nxf3+ 10.Bxf3 Bxf3 11.Qxf3 Be7 12.Rad1 Qc8 13.Rfe1 "

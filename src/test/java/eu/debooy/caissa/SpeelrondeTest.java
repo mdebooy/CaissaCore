@@ -20,7 +20,6 @@ import eu.debooy.caissa.exceptions.CaissaException;
 import java.util.Set;
 import java.util.TreeSet;
 import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +52,8 @@ public class SpeelrondeTest extends TestCase {
     speler02.setNaam(TestConstants.BOB);
     speler03.setNaam(TestConstants.CAROL);
     speler04.setNaam(TestConstants.DAVE);
-    speler05.setNaam("Speler, Eve");
-    speler06.setNaam("Speler, Frank");
+    speler05.setNaam(TestConstants.EVE);
+    speler06.setNaam(TestConstants.FRANK);
     spelerbye.setNaam(CaissaConstants.BYE);
   }
 

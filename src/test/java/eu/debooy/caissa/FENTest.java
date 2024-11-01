@@ -17,7 +17,6 @@ package eu.debooy.caissa;
 
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.ZetException;
-import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -50,11 +49,11 @@ public class FENTest extends BatchTest {
   private FEN fen;
 
   @BeforeClass
-  public static void beforeClass() throws BestandException {
+  public static void beforeClass() {
     Locale.setDefault(new Locale.Builder()
                                 .setLanguage(TestConstants.TST_TAAL)
                                 .build());
-    resourceBundle   = ResourceBundle.getBundle("CaissaCore",
+    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
                                                 Locale.getDefault());
   }
 
@@ -89,6 +88,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
+  @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testGeefZet3() throws FenException {
     fen = new FEN();
     FEN fen2Ke8e7 = new FEN(FEN_2KE8E7);
@@ -103,6 +103,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
+  @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testGeefZet4() throws FenException {
     fen = new FEN();
     FEN fen3d2d4 = new FEN(FEN_3D2D4);
@@ -117,6 +118,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
+  @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testGeefZet5() throws FenException {
     fen = new FEN();
     FEN fenFout = new FEN(FEN_FOUT);
@@ -161,7 +163,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeE2e4() throws FenException, ZetException {
+  public void testDoeE2e4() throws ZetException {
     fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
     assertEquals('b', fen.getAanZet());
@@ -220,7 +222,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testDoeZetten() throws FenException, ZetException {
+  public void testDoeZetten() throws ZetException {
     fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
     fen.doeZet(new Zet(' ', 85, 65));
