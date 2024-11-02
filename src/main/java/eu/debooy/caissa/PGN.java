@@ -236,8 +236,10 @@ public class PGN implements Comparable<PGN>, Serializable {
 
     var pgn = (PGN) other;
     return new EqualsBuilder()
-                  .append(getTag(PGNTAG_DATE).replace('?', '0'),
-                          pgn.getTag(PGNTAG_DATE).replace('?', '0'))
+                  .append(DoosUtils.nullToEmpty(getTag(PGNTAG_DATE))
+                                   .replace('?', '0'),
+                          DoosUtils.nullToEmpty(pgn.getTag(PGNTAG_DATE))
+                                   .replace('?', '0'))
                   .append(getTag(PGNTAG_EVENT),
                           pgn.getTag(PGNTAG_EVENT))
                   .append(getTag(PGNTAG_SITE),
@@ -319,24 +321,19 @@ public class PGN implements Comparable<PGN>, Serializable {
     var eol     = getEol();
     var result  = new StringBuilder();
 
-    result.append(MessageFormat.format(FMT_PGNTAG, PGNTAG_EVENT,
-                                       tags.get(PGNTAG_EVENT)))
+    result.append(formatTag(PGNTAG_EVENT, tags.get(PGNTAG_EVENT)))
           .append(eol)
-          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_SITE,
-                                       tags.get(PGNTAG_SITE)))
+          .append(formatTag(PGNTAG_SITE,  tags.get(PGNTAG_SITE)))
           .append(eol)
-          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_DATE,
-                                       tags.get(PGNTAG_DATE)))
+          .append(formatTag(PGNTAG_DATE,  tags.get(PGNTAG_DATE)))
           .append(eol)
-          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_ROUND,
-                                       tags.get(PGNTAG_ROUND)))
+          .append(formatTag(PGNTAG_ROUND, tags.get(PGNTAG_ROUND)))
           .append(eol)
-          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_WHITE, getWhite()))
+          .append(formatTag(PGNTAG_WHITE, getWhite()))
           .append(eol)
-          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_BLACK, getBlack()))
+          .append(formatTag(PGNTAG_BLACK, getBlack()))
           .append(eol)
-          .append(MessageFormat.format(FMT_PGNTAG, PGNTAG_RESULT,
-                                       tags.get(PGNTAG_RESULT)))
+          .append(formatTag(PGNTAG_RESULT, tags.get(PGNTAG_RESULT)))
           .append(eol);
 
     return result.toString();
@@ -366,8 +363,7 @@ public class PGN implements Comparable<PGN>, Serializable {
     tags.entrySet().stream()
         .filter(map -> Arrays.binarySearch(sevenTagRoster, map.getKey()) < 0)
         .forEach(map ->
-            result.append(MessageFormat.format(FMT_PGNTAG,
-                                               map.getKey(), map.getValue()))
+            result.append(formatTag(map.getKey(), map.getValue()))
                   .append(getEol()));
 
     return result.toString();
