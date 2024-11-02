@@ -168,8 +168,9 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     }
   }
 
-  public void addPunt(Double punt) {
-    punten += punt;
+  public void addByeScore(Double byeScore) {
+    aantalBye++;
+    this.byeScore       += byeScore;
   }
 
   public void addPartij() {
@@ -180,9 +181,8 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     this.partijen       += partijen;
   }
 
-  public void addByeScore(Double byeScore) {
-    aantalBye++;
-    this.byeScore       += byeScore;
+  public void addPunt(Double punt) {
+    punten += punt;
   }
 
   public void addTieBreakScore(Double tieBreakScore) {
@@ -223,6 +223,10 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
     }
 
     return spelerId.equals(((Spelerinfo) other).spelerId);
+  }
+
+  public Integer getAantalBye() {
+    return aantalBye;
   }
 
   public String getAchternaam() {
@@ -476,12 +480,12 @@ public class Spelerinfo implements Comparable<Spelerinfo>, Serializable {
   public final void setNaam(String naam) {
     var deel              = DoosUtils.nullToEmpty(naam).split(",");
 
-      achternaam  = deel[0].strip();
-      if (deel.length > 1) {
-        voornaam  = deel[1].strip();
-      } else {
-        voornaam  = "";
-      }
+    setAchternaam(deel[0].strip());
+    if (deel.length > 1) {
+      setVoornaam(deel[1].strip());
+    } else {
+      setVoornaam("");
+    }
   }
 
   public void setOfficieel(Date officieel) {
