@@ -70,9 +70,9 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_PGN  = "competitie_pgn.pgn";
 
   private static final  String  TST_INHAALPARTIJ1 =
-      "{\"datum\":\"19\\/10\\/2021\",\"wit\":\"Speler, Bob\",\"ronde\":1,\"zwart\":\"Speler, Carol\"}";
+      "{\"datum\":\"16\\/11\\/2021\",\"wit\":\"Speler, Bob\",\"ronde\":1,\"zwart\":\"Speler, Carol\"}";
   private static final  String  TST_INHAALPARTIJ2 =
-      "{\"datum\":\"16\\/11\\/2021\",\"wit\":\"Speler, Carol\",\"ronde\":1,\"zwart\":\"Speler, Bob\"}";
+      "{\"datum\":\"19\\/10\\/2021\",\"wit\":\"Speler, Carol\",\"ronde\":4,\"zwart\":\"Speler, Bob\"}";
 
   private static final  Spelerinfo  alice = new Spelerinfo();
   private static final  Spelerinfo  bob   = new Spelerinfo();
@@ -714,8 +714,10 @@ public class CompetitieTest extends BatchTest {
           new Competitie(getTemp() + File.separator + BST_COMP_32);
 
       assertEquals(2, competitie.getInhaalpartijen().size());
-      assertEquals(TST_INHAALPARTIJ1,
+      assertEquals(TST_INHAALPARTIJ2,
                    competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(1).toString());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -729,8 +731,10 @@ public class CompetitieTest extends BatchTest {
           new Competitie(getTemp() + File.separator + BST_COMP_33);
 
       assertEquals(2, competitie.getInhaalpartijen().size());
-      assertEquals(TST_INHAALPARTIJ1,
+      assertEquals(TST_INHAALPARTIJ2,
                    competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(1).toString());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -744,8 +748,10 @@ public class CompetitieTest extends BatchTest {
           new Competitie(getTemp() + File.separator + BST_COMP_34);
 
       assertEquals(2, competitie.getInhaalpartijen().size());
-      assertEquals(TST_INHAALPARTIJ1,
+      assertEquals(TST_INHAALPARTIJ2,
                    competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ1,
+                   competitie.getInhaalpartijen().get(1).toString());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());
@@ -759,9 +765,9 @@ public class CompetitieTest extends BatchTest {
           new Competitie(getTemp() + File.separator + BST_COMP_35);
 
       assertEquals(2, competitie.getInhaalpartijen().size());
-      assertEquals(TST_INHAALPARTIJ1,
-                   competitie.getInhaalpartijen().get(0).toString());
       assertEquals(TST_INHAALPARTIJ2,
+                   competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ1,
                    competitie.getInhaalpartijen().get(1).toString());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
@@ -776,9 +782,9 @@ public class CompetitieTest extends BatchTest {
           new Competitie(getTemp() + File.separator + BST_COMP_36);
 
       assertEquals(2, competitie.getInhaalpartijen().size());
-      assertEquals(TST_INHAALPARTIJ1,
-                   competitie.getInhaalpartijen().get(0).toString());
       assertEquals(TST_INHAALPARTIJ2,
+                   competitie.getInhaalpartijen().get(0).toString());
+      assertEquals(TST_INHAALPARTIJ1,
                    competitie.getInhaalpartijen().get(1).toString());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
@@ -866,7 +872,7 @@ public class CompetitieTest extends BatchTest {
       partij.setZwartspeler(zwart);
       var inhaalDatum = competitie.getInhaaldatum(partij);
 
-      assertEquals("19/10", inhaalDatum);
+      assertEquals("16/11", inhaalDatum);
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException moeten wezen. "
             + e.getLocalizedMessage());

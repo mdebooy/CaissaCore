@@ -1,0 +1,14 @@
+[Event "-"]
+[Site "-"]
+[Date "????.??.??"]
+[Round "-"]
+[White "Speler, Alice"]
+[Black "Speler, Bob"]
+[Result "1-0"]
+[ECO "A09n"]
+
+1.e4 e5 2.d4 exd4 3.Pf3 Pc6 4.Lc4 d6 5.O-O Lg4 6.c3 dxc3 7.Pxc3 Pf6 8.Lg5 Pe5
+9.Le2 Pxf3+ 10.Lxf3 Lxf3 11.Dxf3 Le7 12.Tad1 Dc8 13.Tfe1 O-O 14.Dd3 Te8 15.f4
+Ph5 16.Lxe7 Txe7 17.Df3 Pf6 18.e5 dxe5 19.fxe5 Pd7 20.Dg3 c6 21.Tc1 De8 22.Pe4
+Kf8 23.Pd6 Dd8 24.Df4 Pxe5 25.Txe5 Dxd6 26.Tce1 Txe5 27.Txe5 Td8 28.De3 Dd1+
+29.Kf2 Dd2+ 30.Kf3 Dxe3+ 31.Kxe3 Te8 32.Txe8+ Kxe8 1-0

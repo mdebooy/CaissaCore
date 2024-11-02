@@ -9,12 +9,12 @@
       { "naam": "Speler, Carol"}
     ],
     "inhalen": [
-      { "ronde": 1,
-        "inhaalronde": 2,
+      { "ronde": 4,
+        "inhaalronde": 1,
         "wit": "Speler, Carol",
         "zwart": "Speler, Bob"},
       { "ronde": 1,
-        "inhaalronde": 1,
+        "inhaalronde": 2,
         "wit": "Speler, Bob",
         "zwart": "Speler, Carol"}
     ],

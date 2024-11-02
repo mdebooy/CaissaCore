@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.fail;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -56,6 +57,8 @@ public class PGNTest extends BatchTest {
                        new String[] {TestConstants.BST_COMMENTAAR_PGN,
                                      TestConstants.BST_DEFAULT_PGN,
                                      TestConstants.BST_EVENT_PGN,
+                                     TestConstants.BST_PARTIJ_PGN,
+                                     TestConstants.BST_PARTIJ_NL_PGN,
                                      TestConstants.BST_TEST_PGN});
   }
 
@@ -78,6 +81,13 @@ public class PGNTest extends BatchTest {
       kopieerBestand(CLASSLOADER,
                      TestConstants.BST_EVENT_PGN,
                      getTemp() + File.separator + TestConstants.BST_EVENT_PGN);
+      kopieerBestand(CLASSLOADER,
+                     TestConstants.BST_PARTIJ_PGN,
+                     getTemp() + File.separator + TestConstants.BST_PARTIJ_PGN);
+      kopieerBestand(CLASSLOADER,
+                     TestConstants.BST_PARTIJ_NL_PGN,
+                     getTemp() + File.separator
+                        + TestConstants.BST_PARTIJ_NL_PGN);
       kopieerBestand(CLASSLOADER,
                      TestConstants.BST_TEST_PGN,
                      getTemp() + File.separator + TestConstants.BST_TEST_PGN);
@@ -148,6 +158,31 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
+  public void testEquals() {
+    var instance  = new PGN();
+
+    assertEquals(pgn, pgn);
+    assertNotEquals(pgn, null);
+    assertNotEquals(pgn, PGN.PGNTAG_EVENT);
+    assertNotEquals(pgn, instance);
+
+    try {
+      instance.setTag(PGN.PGNTAG_DATE,    pgn.getTag(PGN.PGNTAG_DATE));
+      instance.setTag(PGN.PGNTAG_EVENT,   pgn.getTag(PGN.PGNTAG_EVENT));
+      instance.setTag(PGN.PGNTAG_SITE,    pgn.getTag(PGN.PGNTAG_SITE));
+      instance.setTag(PGN.PGNTAG_ROUND,   pgn.getTag(PGN.PGNTAG_ROUND));
+      instance.setTag(PGN.PGNTAG_WHITE,   pgn.getTag(PGN.PGNTAG_WHITE));
+      instance.setTag(PGN.PGNTAG_BLACK,   pgn.getTag(PGN.PGNTAG_BLACK));
+      instance.setTag(PGN.PGNTAG_RESULT,  pgn.getTag(PGN.PGNTAG_RESULT));
+      instance.setZetten(pgn.getZetten());
+    } catch (PgnException e) {
+      fail("Er had geen PgnException moeten wezen.");
+    }
+
+    assertEquals(pgn, instance);
+  }
+
+  @Test
   public void testMissingBlack() {
     pgn.deleteTag(PGN.PGNTAG_BLACK);
     assertFalse(pgn.isValid());
@@ -187,6 +222,19 @@ public class PGNTest extends BatchTest {
   public void testMissingWhite() {
     pgn.deleteTag(PGN.PGNTAG_WHITE);
     assertFalse(pgn.isValid());
+  }
+
+  @Test
+  public void testOnbekendeTag1() {
+    assertNull(pgn.getTag("DOOS"));
+  }
+
+  @Test
+  public void testOnbekendeTag2() {
+    int tags  = pgn.getTags().size();
+    pgn.deleteTag("DOOS");
+    assertTrue(pgn.isValid());
+    assertEquals(tags, pgn.getTags().size());
   }
 
   @Test
@@ -286,6 +334,17 @@ public class PGNTest extends BatchTest {
     assertTrue(pgn.isValid());
     pgn.deleteTag(PGN.PGNTAG_RESULT);
     assertFalse(pgn.isValid());
+  }
+
+  @Test
+  public void testZetten2() throws PgnException {
+    var partijEn  = CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                       + TestConstants.BST_PARTIJ_PGN);
+    var partijNl  = CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                       + TestConstants.BST_PARTIJ_NL_PGN);
+
+    assertEquals(partijEn.iterator().next().getZetten("nl"),
+                 partijNl.iterator().next().getZetten());
   }
 
   @Test

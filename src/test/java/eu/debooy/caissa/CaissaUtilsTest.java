@@ -43,6 +43,8 @@ public class CaissaUtilsTest extends BatchTest {
       CaissaUtilsTest.class.getClassLoader();
   protected static final  String      JSON_COMPETITIE3      =
       "competitie3.json";
+  protected static final  String      JSON_COMPETITIE3TB    =
+      "competitie3tb.json";
   protected static final  String      JSON_COMPETITIE4_1    =
       "competitie4-1.json";
   protected static final  String      JSON_COMPETITIE4      =
@@ -59,6 +61,9 @@ public class CaissaUtilsTest extends BatchTest {
       "competitie5heen.json";
   protected static final  String      JSON_COMPETITIE5TERUG =
       "competitie5terug.json";
+
+  protected static final  String      PGN_COMPETITIE3       =
+      "competitie3.pgn";
 
   public static final String[]  testrondes4   =
         {"1-4 2-3",
@@ -80,11 +85,12 @@ public class CaissaUtilsTest extends BatchTest {
   @AfterClass
   public static void afterClass() {
     verwijderBestanden(getTemp() + File.separator,
-                       new String[] {JSON_COMPETITIE3, JSON_COMPETITIE4_1,
-                                     JSON_COMPETITIE4, JSON_COMPETITIE4HEEN,
+                       new String[] {JSON_COMPETITIE3, JSON_COMPETITIE3TB,
+                                     JSON_COMPETITIE4_1, JSON_COMPETITIE4,
+                                     JSON_COMPETITIE4HEEN,
                                      JSON_COMPETITIE4TERUG, JSON_COMPETITIE5_1,
                                      JSON_COMPETITIE5, JSON_COMPETITIE5HEEN,
-                                     JSON_COMPETITIE5TERUG});
+                                     JSON_COMPETITIE5TERUG, PGN_COMPETITIE3});
   }
 
   @BeforeClass
@@ -97,6 +103,8 @@ public class CaissaUtilsTest extends BatchTest {
     try {
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE3,
                      getTemp() + File.separator + JSON_COMPETITIE3);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE3TB,
+                     getTemp() + File.separator + JSON_COMPETITIE3TB);
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE4_1,
                      getTemp() + File.separator + JSON_COMPETITIE4_1);
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE4,
@@ -113,9 +121,55 @@ public class CaissaUtilsTest extends BatchTest {
                      getTemp() + File.separator + JSON_COMPETITIE5HEEN);
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE5TERUG,
                      getTemp() + File.separator + JSON_COMPETITIE5TERUG);
+      kopieerBestand(CLASSLOADER, PGN_COMPETITIE3,
+                     getTemp() + File.separator + PGN_COMPETITIE3);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
       throw new BestandException(e);
+    }
+  }
+
+  @Test
+  public void testBerekenSBscore() {
+    Double[]  tieBreak      = {2.75, 3.0, 1.25};
+    try {
+      var competitie  =
+              new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
+      var partijen    = CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                                    + PGN_COMPETITIE3);
+      var matrix      = CaissaUtils.vulToernooiMatrix(partijen, competitie,
+                                                      true);
+      CaissaUtils.berekenTieBreakScore(matrix, competitie);
+
+      var spelers = competitie.getSpelers();
+      for (var i = 0; i < spelers.size(); i++) {
+        assertEquals(tieBreak[i], spelers.get(i).getTieBreakScore());
+      }
+    } catch (CompetitieException | PgnException e) {
+      fail(String.format("Er had geen %s moeten wezen.",
+                         e.getClass().getCanonicalName()));
+    }
+  }
+
+  @Test
+  public void testBerekenWeerstandspunten() {
+    Double[]  tieBreak      = {2.5, 3.0, 4.5};
+    try {
+      var competitie  =
+              new Competitie(getTemp() + File.separator + JSON_COMPETITIE3TB);
+      var partijen    = CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                                    + PGN_COMPETITIE3);
+      var matrix      = CaissaUtils.vulToernooiMatrix(partijen, competitie,
+                                                      true);
+      CaissaUtils.berekenTieBreakScore(matrix, competitie);
+
+      var spelers = competitie.getSpelers();
+      for (var i = 0; i < spelers.size(); i++) {
+        assertEquals(tieBreak[i], spelers.get(i).getTieBreakScore());
+      }
+    } catch (CompetitieException | PgnException e) {
+      fail(String.format("Er had geen %s moeten wezen.",
+                         e.getClass().getCanonicalName()));
     }
   }
 

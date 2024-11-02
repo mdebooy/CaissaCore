@@ -81,8 +81,10 @@ public class SpelerinfoTest extends BatchTest {
     spelerinfo8 = new Spelerinfo();
     spelerinfo9 = new Spelerinfo();
 
+    spelerinfo1.setAdres("Caissastraat 10");
     spelerinfo1.setNaam(JANSEN_JAN);
     spelerinfo1.setPartijen(10);
+    spelerinfo1.setPlaats("4567 Schaakstad");
     spelerinfo1.setPunten(8.5);
     spelerinfo1.setSpelerId(1);
     spelerinfo1.setSpelerSeq(1);
@@ -1530,6 +1532,55 @@ public class SpelerinfoTest extends BatchTest {
                                   .isEquals());
     spelerinfo.setSpelerSeq(null);
     assertNull(spelerinfo.getSpelerSeq());
+  }
+
+  @Test
+  public void testAddByeScore() {
+    var spelerinfo  = new Spelerinfo();
+
+    assertTrue(Integer.valueOf(0).equals(spelerinfo.getAantalBye()));
+    assertTrue(Double.valueOf(0).equals(spelerinfo.getByeScore()));
+    spelerinfo.addByeScore(2.0);
+    assertTrue(Integer.valueOf(1).equals(spelerinfo.getAantalBye()));
+    assertTrue(Double.valueOf(2).equals(spelerinfo.getByeScore()));
+    spelerinfo.addByeScore(4.0);
+    assertTrue(Integer.valueOf(2).equals(spelerinfo.getAantalBye()));
+    assertTrue(Double.valueOf(6).equals(spelerinfo.getByeScore()));
+  }
+
+  @Test
+  public void testAddPartij() {
+    var spelerinfo  = new Spelerinfo();
+
+    assertTrue(Integer.valueOf(0).equals(spelerinfo.getPartijen()));
+    spelerinfo.setPartijen(10);
+    assertTrue(Integer.valueOf(10).equals(spelerinfo.getPartijen()));
+    spelerinfo.addPartij();
+    assertTrue(Integer.valueOf(11).equals(spelerinfo.getPartijen()));
+    spelerinfo.addPartij(5);
+    assertTrue(Integer.valueOf(16).equals(spelerinfo.getPartijen()));
+  }
+
+  @Test
+  public void testAddPunten() {
+    var spelerinfo  = new Spelerinfo();
+
+    assertTrue(Double.valueOf(0).equals(spelerinfo.getPunten()));
+    spelerinfo.addPunt(3.0);
+    assertTrue(Double.valueOf(3).equals(spelerinfo.getPunten()));
+    spelerinfo.addPunt(5.0);
+    assertTrue(Double.valueOf(8).equals(spelerinfo.getPunten()));
+  }
+
+  @Test
+  public void testAddTieBreakScore() {
+    var spelerinfo  = new Spelerinfo();
+
+    assertTrue(Double.valueOf(0).equals(spelerinfo.getTieBreakScore()));
+    spelerinfo.addTieBreakScore(1.0);
+    assertTrue(Double.valueOf(1).equals(spelerinfo.getTieBreakScore()));
+    spelerinfo.addTieBreakScore(3.0);
+    assertTrue(Double.valueOf(4).equals(spelerinfo.getTieBreakScore()));
   }
 
   @Test

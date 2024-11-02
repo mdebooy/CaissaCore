@@ -82,28 +82,21 @@ public final class CaissaUtils {
                 berekenSBscore(matrix, competitie);
                 break;
       case CaissaConstants.TIEBREAK_WP:
-                berekenWeerstandspunten(matrix, competitie);
+                berekenWeerstandspunten(competitie);
                 break;
       default:
         break;
     }
   }
 
-  private static void berekenWeerstandspunten(double[][] matrix,
-                                             Competitie competitie) {
-    var dubbel    = competitie.getHeenTerug();
-    var kolommen  = matrix[0].length;
+  private static void berekenWeerstandspunten(Competitie competitie) {
     var noSpelers = competitie.getSpelers().size();
-
-    if (competitie.metBye()) {
-      kolommen--;
-    }
 
     for (var i = 0; i < noSpelers; i++) {
       Double weerstandspunten = 0.0;
-      for (var j = 0; j < kolommen; j++) {
-        if (!competitie.isMatch()) {
-          weerstandspunten += competitie.getSpeler(j / dubbel).getPunten();
+      for (var j = 0; j < noSpelers; j++) {
+        if (i != j && !competitie.isMatch()) {
+          weerstandspunten += competitie.getSpeler(j).getPunten();
         }
       }
       competitie.getSpeler(i).setTieBreakScore(weerstandspunten);
@@ -564,52 +557,7 @@ public final class CaissaUtils {
     Collection<PGN> partijen    = new ArrayList<>();
 
     while (input.hasNext()) {
-      var lijn  = input.next();
-      lijnnummer++;
-      var partij  = new PGN();
-
-      // Zoek naar de eerste TAG
-      while (input.hasNext() && !lijn.startsWith("[")) {
-        lijn  = input.next();
-        lijnnummer++;
-      }
-
-      // Is er nog een partij gevonden?
-      if (!input.hasNext()) {
-        break;
-      }
-
-      // Verwerk de TAGs
-      while (input.hasNext() && lijn.startsWith("[")) {
-        schrijfTag(partij, lijn);
-
-        lijn  = input.next();
-        lijnnummer++;
-      }
-
-      // Verwerk de zetten
-      var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
-      var zetten  = new StringBuilder();
-      while (input.hasNext() && !lijn.trim().endsWith(uitslag)) {
-        if (lijn.startsWith("[")) {
-          throw new PgnException(MessageFormat.format(
-              resourceBundle.getString(PGN.ERR_BESTAND),
-              lijnnummer));
-        }
-        zetten.append(lijn.trim());
-        if (!lijn.endsWith(".")) {
-          zetten.append(" ");
-        }
-
-        lijn  = input.next();
-        lijnnummer++;
-      }
-
-      if (lijn.trim().endsWith(uitslag)) {
-        zetten.append(lijn.trim());
-      }
-
-      laadPgnBestandZetten(zetten.toString().trim(), uitslag, partij, partijen);
+      lijnnummer  = verwerkPartij(input, lijnnummer, partijen);
     }
 
     return partijen;
@@ -631,6 +579,59 @@ public final class CaissaUtils {
                   iWit, 0.0, iZwart, punten);
       }
     }
+  }
+
+  private static int verwerkPartij(TekstBestand input, int lijnnummer,
+                                    Collection<PGN> partijen)
+      throws BestandException, PgnException {
+    var lijn    = input.next();
+    lijnnummer++;
+    var partij  = new PGN();
+
+    // Zoek naar de eerste TAG
+    while (input.hasNext() && !lijn.startsWith("[")) {
+      lijn  = input.next();
+      lijnnummer++;
+    }
+
+    // Is er nog een partij gevonden?
+    if (!input.hasNext()) {
+      return lijnnummer;
+    }
+
+    // Verwerk de TAGs
+    while (input.hasNext() && lijn.startsWith("[")) {
+      schrijfTag(partij, lijn);
+
+      lijn  = input.next();
+      lijnnummer++;
+    }
+
+    // Verwerk de zetten
+    var uitslag = partij.getTag(PGN.PGNTAG_RESULT);
+    var zetten  = new StringBuilder();
+    while (input.hasNext() && !lijn.trim().endsWith(uitslag)) {
+      if (lijn.startsWith("[")) {
+        throw new PgnException(MessageFormat.format(
+            resourceBundle.getString(PGN.ERR_BESTAND),
+            lijnnummer));
+      }
+      zetten.append(lijn.trim());
+      if (!lijn.endsWith(".")) {
+        zetten.append(" ");
+      }
+
+      lijn  = input.next();
+      lijnnummer++;
+    }
+
+    if (lijn.trim().endsWith(uitslag)) {
+      zetten.append(lijn.trim());
+    }
+
+    laadPgnBestandZetten(zetten.toString().trim(), uitslag, partij, partijen);
+
+    return lijnnummer;
   }
 
   private static void verwerkPartijInMatrix(PGN partij, double[][] matrix,
