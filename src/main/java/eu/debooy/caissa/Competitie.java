@@ -60,6 +60,8 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   public static final String  ERR_TIEBREAK      = "cmp.error.tiebreak";
   public static final String  ERR_TYPE          = "cmp.error.type";
 
+  public static final String  FMT_UITSLAG = "%d-%d";
+
   public static final String  JSON_TAG_EVENTDATE          = "eventdate";
   public static final String  JSON_TAG_EVENT              = "event";
   public static final String  JSON_TAG_INHAALRONDE        = "inhaalronde";
@@ -121,6 +123,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   private List<Date>        speeldata;
   private List<Spelerinfo>  spelers;
   private JSONObject        toernooi;
+  private String            tiebreak      = CaissaConstants.TIEBREAK_SB;
   private Integer           type;
 
   public Competitie(String jsonbestand) throws CompetitieException {
@@ -492,11 +495,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public String getTiebreak() {
-    if (!toernooi.containsKey(JSON_TAG_TIEBREAK)) {
-      return CaissaConstants.TIEBREAK_SB;
-    }
-
-    return (String) toernooi.get(JSON_TAG_TIEBREAK);
+    return tiebreak;
   }
 
   public Integer getType() {
@@ -531,14 +530,14 @@ public class Competitie implements Comparable<Competitie>, Serializable {
                                boolean witBye, boolean zwartBye) {
     switch (partij.getUitslag()) {
       case CaissaConstants.PARTIJ_WIT_WINT:
-        return String.format("%d-%d", witBye   ? 0 : punten[3].intValue(),
-                                      zwartBye ? 0 : punten[5].intValue());
+        return String.format(FMT_UITSLAG, witBye   ? 0 : punten[3].intValue(),
+                                          zwartBye ? 0 : punten[5].intValue());
       case CaissaConstants.PARTIJ_REMISE:
-        return String.format("%d-%d", witBye   ? 0 : punten[4].intValue(),
-                                      zwartBye ? 0 : punten[4].intValue());
+        return String.format(FMT_UITSLAG, witBye   ? 0 : punten[4].intValue(),
+                                          zwartBye ? 0 : punten[4].intValue());
       case CaissaConstants.PARTIJ_ZWART_WINT:
-        return String.format("%d-%d", witBye   ? 0 : punten[5].intValue(),
-                                      zwartBye ? 0 : punten[3].intValue());
+        return String.format(FMT_UITSLAG, witBye   ? 0 : punten[5].intValue(),
+                                          zwartBye ? 0 : punten[3].intValue());
       default: return "0-0";
     }
   }
@@ -546,14 +545,14 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   private String getUitslagNormaal(Partij partij) {
     switch (partij.getUitslag()) {
       case CaissaConstants.PARTIJ_WIT_WINT:
-        return String.format("%d-%d", punten[0].intValue(),
-                                      punten[2].intValue());
+        return String.format(FMT_UITSLAG, punten[0].intValue(),
+                                          punten[2].intValue());
       case CaissaConstants.PARTIJ_REMISE:
-        return String.format("%d-%d", punten[1].intValue(),
-                                      punten[1].intValue());
+        return String.format(FMT_UITSLAG, punten[1].intValue(),
+                                          punten[1].intValue());
       case CaissaConstants.PARTIJ_ZWART_WINT:
-        return String.format("%d-%d", punten[2].intValue(),
-                                      punten[0].intValue());
+        return String.format(FMT_UITSLAG, punten[2].intValue(),
+                                          punten[0].intValue());
       default: return "0-0";
     }
   }
@@ -777,7 +776,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       return;
     }
 
-    var tiebreak  = (String) toernooi.get(JSON_TAG_TIEBREAK);
+    tiebreak  = ((String) toernooi.get(JSON_TAG_TIEBREAK)).toUpperCase();
 
     if (!tiebreaks.contains(tiebreak)) {
       fouten.add(
