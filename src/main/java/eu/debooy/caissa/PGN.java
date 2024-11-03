@@ -385,9 +385,7 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public String getZuivereZetten() {
-  // TODO Kijk of dit wel juist is.
-    if (!zuivereZetten.isEmpty()
-        && zetten.isEmpty()) {
+    if (!zuivereZetten.isEmpty()) {
       return zuivereZetten;
     }
 
@@ -514,8 +512,9 @@ public class PGN implements Comparable<PGN>, Serializable {
       this.zetten = zetten;
     }
 
-    ranked  = !this.zetten.contains(CaissaConstants.PARTIJ_UNRANKED);
-    rated   = !this.zetten.contains(CaissaConstants.PARTIJ_UNRATED);
+    ranked        = !this.zetten.contains(CaissaConstants.PARTIJ_UNRANKED);
+    rated         = !this.zetten.contains(CaissaConstants.PARTIJ_UNRATED);
+    zuivereZetten = "";
   }
 
   public void setZetten(String zetten, String vanTaal) throws PgnException {

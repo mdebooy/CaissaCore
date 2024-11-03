@@ -337,40 +337,69 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
-  public void testZetten2() throws PgnException {
-    var partijEn  = CaissaUtils.laadPgnBestand(getTemp() + File.separator
-                                       + TestConstants.BST_PARTIJ_PGN);
-    var partijNl  = CaissaUtils.laadPgnBestand(getTemp() + File.separator
-                                       + TestConstants.BST_PARTIJ_NL_PGN);
+  public void testZetten2() {
+    try {
+      var partijEn  = CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                         + TestConstants.BST_PARTIJ_PGN);
+      var partijNl  = CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                         + TestConstants.BST_PARTIJ_NL_PGN);
 
-    assertEquals(partijEn.iterator().next().getZetten("nl"),
-                 partijNl.iterator().next().getZetten());
+      assertEquals(partijEn.iterator().next().getZetten("nl"),
+                   partijNl.iterator().next().getZetten());
+    } catch (PgnException ex) {
+      fail("Er had geen PgnException mogen wezen.");
+    }
   }
 
   @Test
-  public void testZuivereZetten() throws PgnException {
-    List<PGN> partijen      = new ArrayList<>();
-    partijen
-        .addAll(
-            CaissaUtils.laadPgnBestand(getTemp() + File.separator
-                                       + TestConstants.BST_COMMENTAAR_PGN));
-    var       i             = 0;
-    PGN       partij;
-    String    resultaat;
-    String    zuivereZetten;
+  public void testZuivereZetten1() {
+    try {
+      List<PGN> partijen      = new ArrayList<>();
+      partijen
+          .addAll(
+              CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                         + TestConstants.BST_COMMENTAAR_PGN));
+      var       i             = 0;
+      PGN       partij;
+      String    resultaat;
+      String    zuivereZetten;
 
-    while (i < partijen.size()) {
-      partij        = partijen.get(i);
-      if (partij.hasTag("Vertaal")) {
-        resultaat   = partij.getZuivereZetten(partij.getTag("Vertaal"));
-      } else {
-        resultaat   = partij.getZuivereZetten();
+      while (i < partijen.size()) {
+        partij        = partijen.get(i);
+        if (partij.hasTag("Vertaal")) {
+          resultaat   = partij.getZuivereZetten(partij.getTag("Vertaal"));
+        } else {
+          resultaat   = partij.getZuivereZetten();
+        }
+        partij        = partijen.get(i+1);
+        zuivereZetten = partij.getZetten();
+        assertEquals("Verkeerd bij partij " + (i+1),
+                     zuivereZetten, resultaat);
+        i += 2;
       }
-      partij        = partijen.get(i+1);
-      zuivereZetten = partij.getZetten();
-      assertEquals("Verkeerd bij partij " + (i+1),
-                   zuivereZetten, resultaat);
-      i += 2;
+    } catch (PgnException ex) {
+      fail("Er had geen PgnException mogen wezen.");
+    }
+  }
+
+  @Test
+  public void testZuivereZetten2() {
+    try {
+      List<PGN> partijen      = new ArrayList<>();
+      partijen
+              .addAll(
+                      CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                              + TestConstants.BST_COMMENTAAR_PGN));
+      var partij        = partijen.get(0);
+      var zetten        = partijen.get(2).getZetten();
+      var zuivereZetten = partij.getZuivereZetten();
+
+      partij.setZetten(zetten);
+      assertNotEquals(zuivereZetten, partij.getZuivereZetten());
+      assertEquals(partijen.get(2).getZuivereZetten(),
+                   partij.getZuivereZetten());
+    } catch (PgnException ex) {
+      fail("Er had geen PgnException mogen wezen.");
     }
   }
 }

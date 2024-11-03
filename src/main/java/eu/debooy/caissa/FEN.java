@@ -62,7 +62,6 @@ import java.util.ResourceBundle;
  *
  * @author Marco de Booij
  */
-//TODO Aanpassen aan schaak960 ivm rochade.
 public class FEN implements Serializable {
   private static final long serialVersionUID  = 1L;
 
