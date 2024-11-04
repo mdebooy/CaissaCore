@@ -15,14 +15,21 @@
  */
 package eu.debooy.caissa;
 
+import static eu.debooy.caissa.CaissaConstants.BYE;
+import static eu.debooy.caissa.TestConstants.ALICE;
+import static eu.debooy.caissa.TestConstants.BOB;
+import static eu.debooy.caissa.TestConstants.CAROL;
+import static eu.debooy.caissa.TestConstants.DAVE;
 import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.FenException;
 import eu.debooy.caissa.exceptions.PgnException;
+import eu.debooy.caissa.exceptions.ZetException;
 import eu.debooy.doosutils.DoosConstants;
 import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -31,6 +38,7 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertArrayEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -201,7 +209,25 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema1() throws CompetitieException {
+  public void testDraaiBord() {
+    try {
+      var fen   = new FEN();
+      fen.doeZet(new Zet(' ', 35, 55));
+      var bord  = fen.getBord();
+      var draai = fen.getBord();
+
+      CaissaUtils.draaiBord(draai);
+      assertFalse(Arrays.equals(bord, draai));
+
+      CaissaUtils.draaiBord(draai);
+      assertArrayEquals(bord, draai);
+    } catch (ZetException ex) {
+      fail("Er had geen ZetException mogen wezen.");
+    }
+  }
+
+  @Test
+  public void testGenereerSpeelschema01() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -214,7 +240,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema2() throws CompetitieException {
+  public void testGenereerSpeelschema02() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE4);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -227,7 +253,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema3() throws CompetitieException {
+  public void testGenereerSpeelschema03() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE4HEEN);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -240,7 +266,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema4() throws CompetitieException {
+  public void testGenereerSpeelschema04() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE4TERUG);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -253,7 +279,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema5() throws CompetitieException {
+  public void testGenereerSpeelschema05() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE4_1);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -272,7 +298,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema6() throws CompetitieException {
+  public void testGenereerSpeelschema06() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE5);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -285,7 +311,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema7() throws CompetitieException {
+  public void testGenereerSpeelschema07() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE5HEEN);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -298,7 +324,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema8() throws CompetitieException {
+  public void testGenereerSpeelschema08() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE5TERUG);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -311,7 +337,7 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGenereerSpeelschema9() throws CompetitieException {
+  public void testGenereerSpeelschema09() throws CompetitieException {
     var               competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE5_1);
     Set<Partij>       partijen    = CaissaUtils.genereerSpeelschema(competitie);
@@ -327,6 +353,64 @@ public class CaissaUtilsTest extends BatchTest {
     Set<Partij> partijen4 = CaissaUtils.genereerSpeelschema(competitie);
 
     assertEquals(partijen4.toString(), partijen.toString());
+  }
+
+  @Test
+  public void testGenereerSpeelschema10()
+      throws CompetitieException, PgnException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
+    var               partijen    =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + PGN_COMPETITIE3);
+    Set<Partij>       schema      = CaissaUtils.genereerSpeelschema(competitie,
+                                                                    partijen);
+    long              byes        = schema.stream()
+                                            .filter(partij -> partij.isBye())
+                                            .count();
+
+    assertEquals(12, schema.size());
+    assertEquals(6, byes);
+    var game  = schema.stream()
+                      .filter(ptij -> ptij.getWitspeler().getNaam()
+                                          .equals(ALICE))
+                      .filter(ptij -> ptij.getZwartspeler().getNaam()
+                                          .equals(BOB))
+                      .findFirst().orElse(null);
+    if (null != game) {
+      assertEquals(CaissaConstants.PARTIJ_WIT_WINT, game.getUitslag());
+    }
+  }
+
+  @Test
+  public void testGetBye() {
+    var bye = CaissaUtils.getBye();
+
+    assertEquals(CaissaConstants.BYE, bye.getNaam());
+    assertEquals(Integer.valueOf(Integer.MAX_VALUE), bye.getSpelerId());
+    assertEquals(Integer.valueOf(Integer.MAX_VALUE), bye.getSpelerSeq());
+  }
+
+  @Test
+  public void testGetToernooitype() {
+    assertEquals((Object) Competitie.TOERNOOI_ENKEL,
+                 (Object) CaissaUtils.getToernooitype(DoosConstants.WAAR));
+    assertEquals((Object) Competitie.TOERNOOI_DUBBEL,
+                 (Object) CaissaUtils.getToernooitype(DoosConstants.ONWAAR));
+    assertEquals((Object) Competitie.TOERNOOI_MATCH,
+                 (Object) CaissaUtils.getToernooitype("X"));
+  }
+
+  @Test
+  public void testGetSpelerIndex() throws CompetitieException {
+    var competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
+
+    assertEquals(-1, CaissaUtils.getSpelerIndex(BYE, competitie.getSpelers()));
+    assertEquals(-1, CaissaUtils.getSpelerIndex(DAVE, competitie.getSpelers()));
+    assertEquals(0, CaissaUtils.getSpelerIndex(ALICE, competitie.getSpelers()));
+    assertEquals(1, CaissaUtils.getSpelerIndex(BOB, competitie.getSpelers()));
+    assertEquals(2, CaissaUtils.getSpelerIndex(CAROL, competitie.getSpelers()));
   }
 
   @Test
@@ -373,6 +457,17 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
+  @SuppressWarnings({"java:S1481", "java:S1854"})
+  public void testLaadPgnBestand() {
+    try {
+      var partijen  = CaissaUtils.laadPgnBestand(JSON_COMPETITIE3);
+      fail("Er had een PgnException moeten wezen.");
+    } catch (PgnException e) {
+
+    }
+  }
+
+  @Test
   public void testPgnZettenToChessTheatre() throws PgnException {
     var pgnZetten     =
         "1.e4 e5 2.d4 exd4 3.Nf3 Nc6 4.Bc4 d6 5.O-O Bg4 6.c3 dxc3 7.Nxc3 Nf6 "
@@ -392,12 +487,9 @@ public class CaissaUtilsTest extends BatchTest {
   }
 
   @Test
-  public void testGetToernooitype() {
-    assertEquals((Object) Competitie.TOERNOOI_ENKEL,
-                 (Object) CaissaUtils.getToernooitype(DoosConstants.WAAR));
-    assertEquals((Object) Competitie.TOERNOOI_DUBBEL,
-                 (Object) CaissaUtils.getToernooitype(DoosConstants.ONWAAR));
-    assertEquals((Object) Competitie.TOERNOOI_MATCH,
-                 (Object) CaissaUtils.getToernooitype("X"));
+  public void testZoekStuk() {
+    assertEquals(-7, CaissaUtils.zoekStuk('x'));
+    assertEquals(-4, CaissaUtils.zoekStuk('r'));
+    assertEquals(4,  CaissaUtils.zoekStuk('R'));
   }
 }

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNull;
@@ -202,6 +203,19 @@ public class SpelerinfoTest extends BatchTest {
                                   .isEquals());
     spelerinfo.setAlias(null);
     assertNull(spelerinfo.getAlias());
+  }
+
+  @Test
+  public void testByNaamComparator() {
+    var spelers = new TreeSet<>(new Spelerinfo.ByNaamComparator());
+
+    spelers.add(spelerinfo4);
+    spelers.add(spelerinfo3);
+    spelers.add(spelerinfo2);
+
+    assertEquals(0, spelers.headSet(spelerinfo2).size());
+    assertEquals(1, spelers.headSet(spelerinfo3).size());
+    assertEquals(2, spelers.headSet(spelerinfo4).size());
   }
 
   @Test

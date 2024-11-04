@@ -212,6 +212,7 @@ public class SpeelrondeTest extends TestCase {
     var partij1     = new Partij();
     var partij2     = new Partij();
     var partij3     = new Partij();
+    var partij4     = new Partij();
 
     partij1.setRonde(new Round("1"));
     partij1.setWitspeler(speler01);
@@ -222,10 +223,14 @@ public class SpeelrondeTest extends TestCase {
     partij3.setRonde(new Round("1"));
     partij3.setWitspeler(speler05);
     partij3.setZwartspeler(spelerbye);
+    partij4.setRonde(new Round("1"));
+    partij4.setWitspeler(spelerbye);
+    partij4.setZwartspeler(speler06);
 
     inhaalronde.addPartij(partij1);
     inhaalronde.addPartij(partij2);
     inhaalronde.addPartij(partij3);
+    inhaalronde.addPartij(partij4);
     inhaalronde.setRonde(1);
     inhaalronde.setSpeeldatum(TestConstants.RUSHDATUM);
 

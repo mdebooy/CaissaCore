@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,6 +32,24 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class FENTest extends BatchTest {
+  public static final String  BORD        = "8 rnbqkbnr\n" +
+                                            "7 pppppppp\n" +
+                                            "6 ........\n" +
+                                            "5 ........\n" +
+                                            "4 ........\n" +
+                                            "3 ........\n" +
+                                            "2 PPPPPPPP\n" +
+                                            "1 RNBQKBNR\n" +
+                                            "  ABCDEFGH\n";
+  public static final String  BORD_1E2E4  = "8 rnbqkbnr\n" +
+                                            "7 pppppppp\n" +
+                                            "6 ........\n" +
+                                            "5 ........\n" +
+                                            "4 ....P...\n" +
+                                            "3 ........\n" +
+                                            "2 PPPP.PPP\n" +
+                                            "1 RNBQKBNR\n" +
+                                            "  ABCDEFGH\n";
   public static final String  FEN_1E2E4  =
       "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
   public static final String  FEN_1E7E5   =
@@ -46,8 +65,6 @@ public class FENTest extends BatchTest {
   public static final String  FEN_KORT    =
       "rnbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3";
 
-  private FEN fen;
-
   @BeforeClass
   public static void beforeClass() {
     Locale.setDefault(new Locale.Builder()
@@ -58,10 +75,24 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet1() throws ZetException, FenException {
-    fen = new FEN();
-    Zet e2e4    = new Zet(' ', 35, 55);
-    FEN fenE2e4 = new FEN(FEN_1E2E4);
+  public void testEquals() throws FenException {
+    var fen       = new FEN(FEN_1E2E4);
+    var instance  = new FEN(FEN_1E7E5);
+
+    assertEquals(fen, fen);
+    assertNotEquals(fen, null);
+    assertNotEquals(fen, TestConstants.ALICE);
+    assertNotEquals(fen, instance);
+
+    instance.setFen(FEN_1E2E4);
+    assertEquals(fen, instance);
+  }
+
+  @Test
+  public void testGeefZet1() throws FenException, ZetException {
+    var fen = new FEN();
+    var e2e4    = new Zet(' ', 35, 55);
+    var fenE2e4 = new FEN(FEN_1E2E4);
 
     Zet zet;
     try {
@@ -73,10 +104,10 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet2() throws ZetException, FenException {
-    fen = new FEN();
-    Zet e2e4    = new Zet(' ', 35, 55);
-    FEN fenE2e4 = new FEN(FEN_1E2E4);
+  public void testGeefZet2() throws FenException, ZetException {
+    var fen     = new FEN();
+    var e2e4    = new Zet(' ', 35, 55);
+    var fenE2e4 = new FEN(FEN_1E2E4);
 
     Zet zet;
     try {
@@ -90,8 +121,8 @@ public class FENTest extends BatchTest {
   @Test
   @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testGeefZet3() throws FenException {
-    fen = new FEN();
-    FEN fen2Ke8e7 = new FEN(FEN_2KE8E7);
+    var fen       = new FEN();
+    var fen2Ke8e7 = new FEN(FEN_2KE8E7);
 
     try {
       var zet = fen2Ke8e7.geefZet(fen);
@@ -105,8 +136,8 @@ public class FENTest extends BatchTest {
   @Test
   @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testGeefZet4() throws FenException {
-    fen = new FEN();
-    FEN fen3d2d4 = new FEN(FEN_3D2D4);
+    var fen       = new FEN();
+    var fen3d2d4  = new FEN(FEN_3D2D4);
 
     try {
       var zet = fen3d2d4.geefZet(fen);
@@ -120,8 +151,8 @@ public class FENTest extends BatchTest {
   @Test
   @SuppressWarnings({"java:S1481", "java:S1854"})
   public void testGeefZet5() throws FenException {
-    fen = new FEN();
-    FEN fenFout = new FEN(FEN_FOUT);
+    var fen     = new FEN();
+    var fenFout = new FEN(FEN_FOUT);
 
     try {
       var zet = fenFout.geefZet(fen);
@@ -134,14 +165,24 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testKorteFen() throws FenException {
-    fen = new FEN(FEN_3D2D4);
+    var fen = new FEN(FEN_3D2D4);
 
     assertEquals(FEN_KORT, fen.getKorteFen());
   }
 
   @Test
+  public void testPrintBord() throws FenException, ZetException {
+    var fen = new FEN();
+
+    assertEquals(BORD, fen.printBord());
+
+    fen.doeZet(new Zet(' ', 35, 55));
+    assertEquals(BORD_1E2E4, fen.printBord());
+  }
+
+  @Test
   public void testRokade() {
-    fen = new FEN();
+    var fen = new FEN();
 
     assertTrue(fen.getWitKorteRokade());
     assertTrue(fen.getWitLangeRokade());
@@ -151,7 +192,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testSetFEN() throws FenException {
-    fen = new FEN();
+    var fen = new FEN();
     fen.setFen(FEN_1E2E4);
     assertEquals('b', fen.getAanZet());
     assertEquals("e3", fen.getEnPassant());
@@ -164,7 +205,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testDoeE2e4() throws ZetException {
-    fen = new FEN();
+    var fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
     assertEquals('b', fen.getAanZet());
     assertEquals(Integer.valueOf(0), fen.getHalvezetten());
@@ -175,7 +216,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testDoeE7e5() throws FenException, ZetException {
-    fen = new FEN(FEN_1E2E4);
+    var fen = new FEN(FEN_1E2E4);
     fen.doeZet(new Zet(' ', 85, 65));
     assertEquals('w', fen.getAanZet());
     assertEquals("e6", fen.getEnPassant());
@@ -187,7 +228,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testDoeKe1e2() throws FenException, ZetException {
-    fen = new FEN(FEN_1E7E5);
+    var fen = new FEN(FEN_1E7E5);
     fen.doeZet(new Zet('K', 25, 35));
     assertEquals('b', fen.getAanZet());
     assertEquals("-", fen.getEnPassant());
@@ -199,7 +240,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testDoeKe8e7() throws FenException, ZetException {
-    fen = new FEN(FEN_2KE1E2);
+    var fen = new FEN(FEN_2KE1E2);
     fen.doeZet(new Zet('K', 95, 85));
     assertEquals('w', fen.getAanZet());
     assertEquals("-", fen.getEnPassant());
@@ -211,7 +252,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testDoeD2d4() throws FenException, ZetException {
-    fen = new FEN(FEN_2KE8E7);
+    var fen = new FEN(FEN_2KE8E7);
     fen.doeZet(new Zet(' ', 34, 54));
     assertEquals('b', fen.getAanZet());
     assertEquals("d3", fen.getEnPassant());
@@ -223,7 +264,7 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testDoeZetten() throws ZetException {
-    fen = new FEN();
+    var fen = new FEN();
     fen.doeZet(new Zet(' ', 35, 55));
     fen.doeZet(new Zet(' ', 85, 65));
     fen.doeZet(new Zet('K', 25, 35));

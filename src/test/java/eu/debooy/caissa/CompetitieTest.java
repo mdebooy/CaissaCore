@@ -33,6 +33,7 @@ import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -69,6 +70,11 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_5T   = "competitie5terug.json";
   private static final  String  BST_COMP_PGN  = "competitie_pgn.pgn";
 
+  private static final  String  TST_TOSTRING      =
+      "event: HH Caissa 21/22\n" + "site: Schaakvereniging 'Caissa'\n"
+        + "eventdate: 2021.09.28\n" + "toernooitype: 2\n"
+        + "spelers: \n" + "   naam: Speler, Alice\n" + "   naam: Speler, Bob\n"
+        + "   naam: Speler, Carol\n";
   private static final  String  TST_INHAALPARTIJ1 =
       "{\"datum\":\"16\\/11\\/2021\",\"wit\":\"Speler, Bob\",\"ronde\":1,\"zwart\":\"Speler, Carol\"}";
   private static final  String  TST_INHAALPARTIJ2 =
@@ -193,7 +199,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(3), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -226,7 +232,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -245,7 +251,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(3), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -263,7 +269,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -281,7 +287,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -299,7 +305,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -317,7 +323,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(10), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -335,7 +341,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -353,7 +359,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(8), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -374,7 +380,7 @@ public class CompetitieTest extends BatchTest {
       assertEquals(5, rondesH.intValue());
       assertEquals(3, rondesT.intValue());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -392,7 +398,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(8), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -413,7 +419,7 @@ public class CompetitieTest extends BatchTest {
       assertEquals(3, rondesH.intValue());
       assertEquals(5, rondesT.intValue());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -432,7 +438,7 @@ public class CompetitieTest extends BatchTest {
                    Integer.valueOf(competitie.getSpeeldata().size()));
       assertEquals(Integer.valueOf(6), competitie.getRondes());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -465,7 +471,7 @@ public class CompetitieTest extends BatchTest {
       assertTrue(competitie.getKalender().isEmpty());
       assertEquals(3, competitie.getSpelers().size());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -489,7 +495,7 @@ public class CompetitieTest extends BatchTest {
       assertEquals(metPgn.getEventdate(), metJson.getEventdate());
       assertEquals(metPgn.getSite(), metJson.getSite());
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -513,7 +519,7 @@ public class CompetitieTest extends BatchTest {
                      metJson.getSpeler(deelnemer.getNaam()).getNaam());
       });
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -558,7 +564,7 @@ public class CompetitieTest extends BatchTest {
                    competitie.getPuntenBye(CaissaConstants.PARTIJ_ZWART_WINT,
                                            false));
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -603,7 +609,24 @@ public class CompetitieTest extends BatchTest {
                    competitie.getPuntenBye(CaissaConstants.PARTIJ_ZWART_WINT,
                                            false));
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testEquals() {
+    try {
+      var competitie  = new Competitie(getTemp() + File.separator + BST_COMP_3);
+      var instance    = new Competitie(getTemp() + File.separator
+                                        + BST_COMP_DZ);
+
+      assertEquals(competitie, competitie);
+      assertNotEquals(competitie, null);
+      assertNotEquals(competitie, TestConstants.ALICE);
+      assertNotEquals(competitie, instance);
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
@@ -897,11 +920,23 @@ public class CompetitieTest extends BatchTest {
           ((JSONObject) kalender.get(8))
               .get(Competitie.JSON_TAG_KALENDER_DATUM));
     } catch (CompetitieException e) {
-      fail("Er had geen CompetitieException moeten wezen. "
+      fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
     }
   }
 
+  @Test
+  public void testToString() {
+    try {
+      var competitie  =
+              new Competitie(getTemp() + File.separator + BST_COMP_3);
+
+      assertEquals(TST_TOSTRING, competitie.toString());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException mogen wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
   @Test
   public void testUitslag01() {
     var partij  = new Partij();
