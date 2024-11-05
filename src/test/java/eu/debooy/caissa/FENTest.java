@@ -75,6 +75,93 @@ public class FENTest extends BatchTest {
   }
 
   @Test
+  public void testDoeD2d4() throws FenException, ZetException {
+    var fen = new FEN(FEN_2KE8E7);
+
+    fen.doeZet(new Zet(' ', 34, 54));
+
+    assertEquals('b', fen.getAanZet());
+    assertEquals("d3", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("-", fen.getRokade());
+    assertEquals(Integer.valueOf(3), fen.getZetnummer());
+    assertEquals(FEN_3D2D4, fen.getFen());
+  }
+
+  @Test
+  public void testDoeE2e4() throws ZetException {
+    var fen = new FEN();
+
+    fen.doeZet(new Zet(' ', 35, 55));
+
+    assertEquals('b', fen.getAanZet());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("KQkq", fen.getRokade());
+    assertEquals(Integer.valueOf(1), fen.getZetnummer());
+    assertEquals(FEN_1E2E4, fen.getFen());
+  }
+
+  @Test
+  public void testDoeE7e5() throws FenException, ZetException {
+    var fen = new FEN(FEN_1E2E4);
+
+    fen.doeZet(new Zet(' ', 85, 65));
+
+    assertEquals('w', fen.getAanZet());
+    assertEquals("e6", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("KQkq", fen.getRokade());
+    assertEquals(Integer.valueOf(2), fen.getZetnummer());
+    assertEquals(FEN_1E7E5, fen.getFen());
+  }
+
+  @Test
+  public void testDoeKe1e2() throws FenException, ZetException {
+    var fen = new FEN(FEN_1E7E5);
+
+    fen.doeZet(new Zet('K', 25, 35));
+
+    assertEquals('b', fen.getAanZet());
+    assertEquals("-", fen.getEnPassant());
+    assertEquals(Integer.valueOf(1), fen.getHalvezetten());
+    assertEquals("kq", fen.getRokade());
+    assertEquals(Integer.valueOf(2), fen.getZetnummer());
+    assertEquals(FEN_2KE1E2, fen.getFen());
+  }
+
+  @Test
+  public void testDoeKe8e7() throws FenException, ZetException {
+    var fen = new FEN(FEN_2KE1E2);
+
+    fen.doeZet(new Zet('K', 95, 85));
+
+    assertEquals('w', fen.getAanZet());
+    assertEquals("-", fen.getEnPassant());
+    assertEquals(Integer.valueOf(2), fen.getHalvezetten());
+    assertEquals("-", fen.getRokade());
+    assertEquals(Integer.valueOf(3), fen.getZetnummer());
+    assertEquals(FEN_2KE8E7, fen.getFen());
+  }
+
+  @Test
+  public void testDoeZetten() throws ZetException {
+    var fen = new FEN();
+
+    fen.doeZet(new Zet(' ', 35, 55));
+    fen.doeZet(new Zet(' ', 85, 65));
+    fen.doeZet(new Zet('K', 25, 35));
+    fen.doeZet(new Zet('K', 95, 85));
+    fen.doeZet(new Zet(' ', 34, 54));
+
+    assertEquals('b', fen.getAanZet());
+    assertEquals("d3", fen.getEnPassant());
+    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
+    assertEquals("-", fen.getRokade());
+    assertEquals(Integer.valueOf(3), fen.getZetnummer());
+    assertEquals(FEN_3D2D4, fen.getFen());
+  }
+
+  @Test
   public void testEquals() throws FenException {
     var fen       = new FEN(FEN_1E2E4);
     var instance  = new FEN(FEN_1E7E5);
@@ -90,13 +177,12 @@ public class FENTest extends BatchTest {
 
   @Test
   public void testGeefZet1() throws FenException, ZetException {
-    var fen = new FEN();
-    var e2e4    = new Zet(' ', 35, 55);
-    var fenE2e4 = new FEN(FEN_1E2E4);
-
-    Zet zet;
     try {
-      zet = fen.geefZet(fenE2e4);
+      var fen     = new FEN();
+      var e2e4    = new Zet(' ', 35, 55);
+      var fenE2e4 = new FEN(FEN_1E2E4);
+      var zet     = fen.geefZet(fenE2e4);
+
       assertEquals(e2e4, zet);
     } catch (FenException e) {
       fail(e.getLocalizedMessage());
@@ -104,28 +190,26 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testGeefZet2() throws FenException, ZetException {
-    var fen     = new FEN();
-    var e2e4    = new Zet(' ', 35, 55);
-    var fenE2e4 = new FEN(FEN_1E2E4);
-
-    Zet zet;
+  public void testGeefZet2() {
     try {
-      zet = fenE2e4.geefZet(fen);
+      var fen     = new FEN();
+      var e2e4    = new Zet(' ', 35, 55);
+      var fenE2e4 = new FEN(FEN_1E2E4);
+      var zet     = fenE2e4.geefZet(fen);
+
       assertEquals(e2e4, zet);
-    } catch (FenException e) {
+    } catch (FenException | ZetException e) {
       fail(e.getLocalizedMessage());
     }
   }
 
   @Test
   @SuppressWarnings({"java:S1481", "java:S1854"})
-  public void testGeefZet3() throws FenException {
-    var fen       = new FEN();
-    var fen2Ke8e7 = new FEN(FEN_2KE8E7);
-
+  public void testGeefZet3() {
     try {
-      var zet = fen2Ke8e7.geefZet(fen);
+      var fen       = new FEN();
+      var fen2Ke8e7 = new FEN(FEN_2KE8E7);
+      var zet       = fen2Ke8e7.geefZet(fen);
       fail("Er had een FenException moeten wezen.");
     } catch (FenException e) {
       assertEquals(resourceBundle.getString(FEN.ERR_ZET),
@@ -135,12 +219,11 @@ public class FENTest extends BatchTest {
 
   @Test
   @SuppressWarnings({"java:S1481", "java:S1854"})
-  public void testGeefZet4() throws FenException {
-    var fen       = new FEN();
-    var fen3d2d4  = new FEN(FEN_3D2D4);
-
+  public void testGeefZet4() {
     try {
-      var zet = fen3d2d4.geefZet(fen);
+      var fen       = new FEN();
+      var fen3d2d4  = new FEN(FEN_3D2D4);
+      var zet       = fen3d2d4.geefZet(fen);
       fail("Er had een FenException moeten wezen.");
     } catch (FenException e) {
       assertEquals(resourceBundle.getString(FEN.ERR_ZET),
@@ -150,12 +233,11 @@ public class FENTest extends BatchTest {
 
   @Test
   @SuppressWarnings({"java:S1481", "java:S1854"})
-  public void testGeefZet5() throws FenException {
-    var fen     = new FEN();
-    var fenFout = new FEN(FEN_FOUT);
-
+  public void testGeefZet5() {
     try {
-      var zet = fenFout.geefZet(fen);
+      var fen     = new FEN();
+      var fenFout = new FEN(FEN_FOUT);
+      var zet     = fenFout.geefZet(fen);
       fail("Er had een FenException moeten wezen.");
     } catch (FenException e) {
       assertEquals(resourceBundle.getString(FEN.ERR_ZET),
@@ -171,7 +253,7 @@ public class FENTest extends BatchTest {
   }
 
   @Test
-  public void testPrintBord() throws FenException, ZetException {
+  public void testPrintBord() throws ZetException {
     var fen = new FEN();
 
     assertEquals(BORD, fen.printBord());
@@ -201,80 +283,5 @@ public class FENTest extends BatchTest {
     assertEquals("rnbqkbnrpppppppp20P11PPPP1PPPRNBQKBNR",
                  fen.getKortePositie());
     assertEquals(Integer.valueOf(1), fen.getZetnummer());
-  }
-
-  @Test
-  public void testDoeE2e4() throws ZetException {
-    var fen = new FEN();
-    fen.doeZet(new Zet(' ', 35, 55));
-    assertEquals('b', fen.getAanZet());
-    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("KQkq", fen.getRokade());
-    assertEquals(Integer.valueOf(1), fen.getZetnummer());
-    assertEquals(FEN_1E2E4, fen.getFen());
-  }
-
-  @Test
-  public void testDoeE7e5() throws FenException, ZetException {
-    var fen = new FEN(FEN_1E2E4);
-    fen.doeZet(new Zet(' ', 85, 65));
-    assertEquals('w', fen.getAanZet());
-    assertEquals("e6", fen.getEnPassant());
-    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("KQkq", fen.getRokade());
-    assertEquals(Integer.valueOf(2), fen.getZetnummer());
-    assertEquals(FEN_1E7E5, fen.getFen());
-  }
-
-  @Test
-  public void testDoeKe1e2() throws FenException, ZetException {
-    var fen = new FEN(FEN_1E7E5);
-    fen.doeZet(new Zet('K', 25, 35));
-    assertEquals('b', fen.getAanZet());
-    assertEquals("-", fen.getEnPassant());
-    assertEquals(Integer.valueOf(1), fen.getHalvezetten());
-    assertEquals("kq", fen.getRokade());
-    assertEquals(Integer.valueOf(2), fen.getZetnummer());
-    assertEquals(FEN_2KE1E2, fen.getFen());
-  }
-
-  @Test
-  public void testDoeKe8e7() throws FenException, ZetException {
-    var fen = new FEN(FEN_2KE1E2);
-    fen.doeZet(new Zet('K', 95, 85));
-    assertEquals('w', fen.getAanZet());
-    assertEquals("-", fen.getEnPassant());
-    assertEquals(Integer.valueOf(2), fen.getHalvezetten());
-    assertEquals("-", fen.getRokade());
-    assertEquals(Integer.valueOf(3), fen.getZetnummer());
-    assertEquals(FEN_2KE8E7, fen.getFen());
-  }
-
-  @Test
-  public void testDoeD2d4() throws FenException, ZetException {
-    var fen = new FEN(FEN_2KE8E7);
-    fen.doeZet(new Zet(' ', 34, 54));
-    assertEquals('b', fen.getAanZet());
-    assertEquals("d3", fen.getEnPassant());
-    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("-", fen.getRokade());
-    assertEquals(Integer.valueOf(3), fen.getZetnummer());
-    assertEquals(FEN_3D2D4, fen.getFen());
-  }
-
-  @Test
-  public void testDoeZetten() throws ZetException {
-    var fen = new FEN();
-    fen.doeZet(new Zet(' ', 35, 55));
-    fen.doeZet(new Zet(' ', 85, 65));
-    fen.doeZet(new Zet('K', 25, 35));
-    fen.doeZet(new Zet('K', 95, 85));
-    fen.doeZet(new Zet(' ', 34, 54));
-    assertEquals('b', fen.getAanZet());
-    assertEquals("d3", fen.getEnPassant());
-    assertEquals(Integer.valueOf(0), fen.getHalvezetten());
-    assertEquals("-", fen.getRokade());
-    assertEquals(Integer.valueOf(3), fen.getZetnummer());
-    assertEquals(FEN_3D2D4, fen.getFen());
   }
 }

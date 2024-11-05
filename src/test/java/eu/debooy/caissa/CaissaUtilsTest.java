@@ -69,9 +69,13 @@ public class CaissaUtilsTest extends BatchTest {
       "competitie5heen.json";
   protected static final  String      JSON_COMPETITIE5TERUG =
       "competitie5terug.json";
+  protected static final  String      JSON_COMPETITIEDZ     =
+      "competitieDZ.json";
 
   protected static final  String      PGN_COMPETITIE3       =
       "competitie3.pgn";
+  protected static final  String      PGN_COMPETITIEDZ      =
+      "competitieDZ.pgn";
 
   public static final String[]  testrondes4   =
         {"1-4 2-3",
@@ -98,7 +102,8 @@ public class CaissaUtilsTest extends BatchTest {
                                      JSON_COMPETITIE4HEEN,
                                      JSON_COMPETITIE4TERUG, JSON_COMPETITIE5_1,
                                      JSON_COMPETITIE5, JSON_COMPETITIE5HEEN,
-                                     JSON_COMPETITIE5TERUG, PGN_COMPETITIE3});
+                                     JSON_COMPETITIE5TERUG, JSON_COMPETITIEDZ,
+                                     PGN_COMPETITIE3, PGN_COMPETITIEDZ});
   }
 
   @BeforeClass
@@ -129,8 +134,12 @@ public class CaissaUtilsTest extends BatchTest {
                      getTemp() + File.separator + JSON_COMPETITIE5HEEN);
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE5TERUG,
                      getTemp() + File.separator + JSON_COMPETITIE5TERUG);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIEDZ,
+                     getTemp() + File.separator + JSON_COMPETITIEDZ);
       kopieerBestand(CLASSLOADER, PGN_COMPETITIE3,
                      getTemp() + File.separator + PGN_COMPETITIE3);
+      kopieerBestand(CLASSLOADER, PGN_COMPETITIEDZ,
+                     getTemp() + File.separator + PGN_COMPETITIEDZ);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
       throw new BestandException(e);
@@ -154,7 +163,7 @@ public class CaissaUtilsTest extends BatchTest {
         assertEquals(tieBreak[i], spelers.get(i).getTieBreakScore());
       }
     } catch (CompetitieException | PgnException e) {
-      fail(String.format("Er had geen %s moeten wezen.",
+      fail(String.format("Er had geen %s mogen wezen.",
                          e.getClass().getCanonicalName()));
     }
   }
@@ -176,7 +185,7 @@ public class CaissaUtilsTest extends BatchTest {
         assertEquals(tieBreak[i], spelers.get(i).getTieBreakScore());
       }
     } catch (CompetitieException | PgnException e) {
-      fail(String.format("Er had geen %s moeten wezen.",
+      fail(String.format("Er had geen %s mogen wezen.",
                          e.getClass().getCanonicalName()));
     }
   }
@@ -371,6 +380,35 @@ public class CaissaUtilsTest extends BatchTest {
 
     assertEquals(12, schema.size());
     assertEquals(6, byes);
+
+    var game  = schema.stream()
+                      .filter(ptij -> ptij.getWitspeler().getNaam()
+                                          .equals(ALICE))
+                      .filter(ptij -> ptij.getZwartspeler().getNaam()
+                                          .equals(BOB))
+                      .findFirst().orElse(null);
+    if (null != game) {
+      assertEquals(CaissaConstants.PARTIJ_WIT_WINT, game.getUitslag());
+    }
+  }
+
+  @Test
+  public void testGenereerSpeelschema11()
+      throws CompetitieException, PgnException {
+    var               competitie  =
+        new Competitie(getTemp() + File.separator + JSON_COMPETITIEDZ);
+    var               partijen    =
+        CaissaUtils.laadPgnBestand(getTemp() + File.separator
+                                    + PGN_COMPETITIEDZ);
+    Set<Partij>       schema      = CaissaUtils.genereerSpeelschema(competitie,
+                                                                    partijen);
+    long              byes        = schema.stream()
+                                            .filter(partij -> partij.isBye())
+                                            .count();
+
+    assertEquals(4, schema.size());
+    assertEquals(1, byes);
+
     var game  = schema.stream()
                       .filter(ptij -> ptij.getWitspeler().getNaam()
                                           .equals(ALICE))
@@ -406,10 +444,10 @@ public class CaissaUtilsTest extends BatchTest {
     var competitie  =
         new Competitie(getTemp() + File.separator + JSON_COMPETITIE3);
 
-    assertEquals(-1, CaissaUtils.getSpelerIndex(BYE, competitie.getSpelers()));
+    assertEquals(-1, CaissaUtils.getSpelerIndex(BYE,  competitie.getSpelers()));
     assertEquals(-1, CaissaUtils.getSpelerIndex(DAVE, competitie.getSpelers()));
     assertEquals(0, CaissaUtils.getSpelerIndex(ALICE, competitie.getSpelers()));
-    assertEquals(1, CaissaUtils.getSpelerIndex(BOB, competitie.getSpelers()));
+    assertEquals(1, CaissaUtils.getSpelerIndex(BOB,   competitie.getSpelers()));
     assertEquals(2, CaissaUtils.getSpelerIndex(CAROL, competitie.getSpelers()));
   }
 

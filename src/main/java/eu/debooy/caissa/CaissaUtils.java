@@ -272,8 +272,12 @@ public final class CaissaUtils {
 
     opRonde.addAll(partijen);
     for (var pgn : opRonde) {
-      var ronde   =
-            Integer.parseInt(pgn.getTag(PGN.PGNTAG_ROUND).split("\\.")[0]);
+      int ronde   = 0;
+      try {
+        ronde =  Integer.parseInt(pgn.getTag(PGN.PGNTAG_ROUND).split("\\.")[0]);
+      } catch (NumberFormatException e) {
+        // Laat de ronde op 0 staan.
+      }
       if (ronde != vorigeRonde) {
         vorigeRonde   = ronde;
         partijnummer  = 0;
