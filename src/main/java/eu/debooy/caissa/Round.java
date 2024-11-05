@@ -46,21 +46,6 @@ public class Round implements Comparable<Round>, Serializable {
     this.ronde = ronde;
   }
 
-  public Integer getRonde() {
-    if (DoosUtils.isBlankOrNull(ronde)) {
-      return -1;
-    }
-    return Integer.valueOf(getRound().split("\\.")[0]);
-  }
-
-  public String getRound() {
-    return ronde;
-  }
-
-  public void setRound(String ronde) {
-    this.ronde = ronde;
-  }
-
   @Override
   public int compareTo(Round other) {
     if (this.equals(other)) {
@@ -73,11 +58,9 @@ public class Round implements Comparable<Round>, Serializable {
     int min = Math.min(thisRound.length, otherRound.length);
 
     for (var i = 0; i < min; i++) {
-      var diff  = Integer.valueOf(thisRound[i].replace("-", "-1")
-                                              .replace("?", "-2"))
+      var diff  = Integer.valueOf(getRound(thisRound[i]))
                          .compareTo(
-                  Integer.valueOf(otherRound[i].replace("-", "-1")
-                                               .replace("?", "-2")));
+                  Integer.valueOf(getRound(otherRound[i])));
       if (diff != 0) {
         return diff;
       }
@@ -99,9 +82,35 @@ public class Round implements Comparable<Round>, Serializable {
     return ((Round) other).getRound().equals(getRound());
   }
 
+  public Integer getRonde() {
+    if (DoosUtils.isBlankOrNull(ronde)) {
+      return -1;
+    }
+    return Integer.valueOf(getRound(getRound().split("\\.")[0]));
+  }
+
+  public String getRound() {
+    return ronde;
+  }
+
+  private String getRound(String round) {
+    switch (round) {
+      case "-":
+        return "-1";
+      case "?":
+        return "-2";
+      default:
+        return round.replaceAll( "[^\\d]", "");
+    }
+  }
+
   @Override
   public int hashCode() {
     return ronde.hashCode();
+  }
+
+  public void setRound(String ronde) {
+    this.ronde = ronde;
   }
 
   @Override

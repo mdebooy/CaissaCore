@@ -79,13 +79,15 @@ public class RoundTest extends TestCase {
 
   @Test
   public void testGetRonde() {
-    var round1  = new Round("1.2");
-    var round2  = new Round("2");
-    var round3  = new Round("3.2");
+    Round[] round = { new Round("1.2"), new Round("2"), new Round("3.2"),
+                      new Round("-"), new Round("?"), new Round("4aB#-"),
+                      new Round("-12"), new Round("-.12"), new Round("?.12") };
+    int[]   ronde = { 1, 2, 3, -1, -2, 4, 12, -1, -2 };
 
-    assertEquals(1, round1.getRonde().intValue());
-    assertEquals(2, round2.getRonde().intValue());
-    assertEquals(3, round3.getRonde().intValue());
+    for (var i = 0; i < round.length; i++) {
+      assertEquals("ronde: " + round[i], ronde[i],
+                   round[i].getRonde().intValue());
+    }
   }
 
   @Test
