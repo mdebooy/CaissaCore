@@ -124,7 +124,6 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   private List<Spelerinfo>  spelers;
   private JSONObject        toernooi;
   private String            tiebreak      = CaissaConstants.TIEBREAK_SB;
-  private Integer           type;
 
   public Competitie(String jsonbestand) throws CompetitieException {
     try (var invoer = new JsonBestand.Builder()
@@ -230,6 +229,16 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public boolean containsKey(String sleutel) {
     return toernooi.containsKey(sleutel);
+  }
+
+  private void eendagstoernooi() throws ParseException {
+    if (null == rondes) {
+      rondes  = spelers.size() * (isDubbel()? 2 : 1);
+    }
+
+    for (var i = 1; i <= rondes; i++) {
+      speeldata.add(Datum.toDate(getEventdate(), PGN.PGN_DATUM_FORMAAT));
+    }
   }
 
   @Override
@@ -499,7 +508,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public Integer getType() {
-    return type;
+    return Integer.parseInt(toernooi.get(JSON_TAG_TOERNOOITYPE).toString());
   }
 
   public String getUitslag(Partij partij) {
@@ -563,26 +572,26 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public boolean isDubbel() {
-    return type.equals(TOERNOOI_DUBBEL)
-        || type.equals(TOERNOOI_DUBBEL_ZWITSERS);
+    return getType().equals(TOERNOOI_DUBBEL)
+        || getType().equals(TOERNOOI_DUBBEL_ZWITSERS);
   }
 
   public boolean isEnkel() {
-    return type.equals(TOERNOOI_ENKEL)
-        || type.equals(TOERNOOI_ZWITSERS);
+    return getType().equals(TOERNOOI_ENKEL)
+        || getType().equals(TOERNOOI_ZWITSERS);
   }
 
   public boolean isMatch() {
-    return type.equals(TOERNOOI_MATCH);
+    return getType().equals(TOERNOOI_MATCH);
   }
 
   public boolean isRoundrobin() {
-    return roundrobin.contains(type);
+    return roundrobin.contains(getType());
   }
 
   public boolean isZwitsers() {
-    return type.equals(TOERNOOI_ZWITSERS)
-        || type.equals(TOERNOOI_DUBBEL_ZWITSERS);
+    return getType().equals(TOERNOOI_ZWITSERS)
+        || getType().equals(TOERNOOI_DUBBEL_ZWITSERS);
   }
 
   public final boolean metBye() {
@@ -686,12 +695,6 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   private void validateRondes(List<String> fouten) {
-    if (toernooi.containsKey(JSON_TAG_RONDES)) {
-      rondes  = getInteger(JSON_TAG_RONDES);
-    } else {
-      rondes  = null;
-    }
-
     if (isMatch()) {
         validateRondesMatch(fouten);
     }
@@ -791,8 +794,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       return false;
     }
 
-    type  = ((Long) toernooi.get(JSON_TAG_TOERNOOITYPE)).intValue();
-    if (!types.contains(type)) {
+    if (!types.contains(getType())) {
       fouten.add(resourceBundle.getString(ERR_TYPE));
       return false;
     }
@@ -801,7 +803,14 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   private void vulSpeeldata() throws ParseException {
-     if (!toernooi.containsKey(JSON_TAG_KALENDER)) {
+    if (toernooi.containsKey(JSON_TAG_RONDES)) {
+      rondes  = getInteger(JSON_TAG_RONDES);
+    } else {
+      rondes  = null;
+    }
+
+    if (!toernooi.containsKey(JSON_TAG_KALENDER)) {
+      eendagstoernooi();
       return;
     }
 

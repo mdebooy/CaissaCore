@@ -49,6 +49,7 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_DZA  = "competitieDZa.json";
   private static final  String  BST_COMP_M    = "competitiem.json";
   private static final  String  BST_COMP_MF   = "competitiemf.json";
+  private static final  String  BST_COMP_MI   = "competitie_minimaal.json";
   private static final  String  BST_COMP_3    = "competitie3.json";
   private static final  String  BST_COMP_31   = "competitie3_1.json";
   private static final  String  BST_COMP_32   = "competitie3_2.json";
@@ -94,8 +95,9 @@ public class CompetitieTest extends BatchTest {
                                      BST_COMP_3M, BST_COMP_4, BST_COMP_41,
                                      BST_COMP_4E, BST_COMP_4H, BST_COMP_4T,
                                      BST_COMP_5, BST_COMP_51, BST_COMP_5H,
-                                     BST_COMP_5T, BST_COMP_M, BST_COMP_MF,
-                                     BST_COMP_DZ, BST_COMP_DZA, BST_COMP_PGN});
+                                     BST_COMP_5T, BST_COMP_DZ, BST_COMP_DZA,
+                                     BST_COMP_M, BST_COMP_MF, BST_COMP_MI,
+                                     BST_COMP_PGN});
   }
 
   @BeforeClass
@@ -148,14 +150,16 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_5H);
       kopieerBestand(CLASSLOADER, BST_COMP_5T,
                      getTemp() + File.separator + BST_COMP_5T);
-      kopieerBestand(CLASSLOADER, BST_COMP_M,
-                     getTemp() + File.separator + BST_COMP_M);
-      kopieerBestand(CLASSLOADER, BST_COMP_MF,
-                     getTemp() + File.separator + BST_COMP_MF);
       kopieerBestand(CLASSLOADER, BST_COMP_DZ,
                      getTemp() + File.separator + BST_COMP_DZ);
       kopieerBestand(CLASSLOADER, BST_COMP_DZA,
                      getTemp() + File.separator + BST_COMP_DZA);
+      kopieerBestand(CLASSLOADER, BST_COMP_M,
+                     getTemp() + File.separator + BST_COMP_M);
+      kopieerBestand(CLASSLOADER, BST_COMP_MF,
+                     getTemp() + File.separator + BST_COMP_MF);
+      kopieerBestand(CLASSLOADER, BST_COMP_MI,
+                     getTemp() + File.separator + BST_COMP_MI);
       kopieerBestand(CLASSLOADER, BST_COMP_PGN,
                      getTemp() + File.separator + BST_COMP_PGN);
     } catch (IOException e) {
@@ -926,6 +930,23 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
+  public void testMinimaleJson() {
+    try {
+      var competitie  =
+              new Competitie(getTemp() + File.separator + BST_COMP_MI);
+
+      assertEquals(6, competitie.getSpeeldata().size());
+      for (var datum : competitie.getSpeeldata()) {
+        assertEquals(competitie.getEventdate(),
+                     Datum.fromDate(datum, PGN.PGN_DATUM_FORMAAT));
+      }
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException mogen wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
   public void testToString() {
     try {
       var competitie  =
@@ -937,6 +958,7 @@ public class CompetitieTest extends BatchTest {
             + e.getLocalizedMessage());
     }
   }
+
   @Test
   public void testUitslag01() {
     var partij  = new Partij();
