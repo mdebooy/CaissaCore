@@ -1,0 +1,13 @@
+{
+  "event": "HH Caissa 21/22",
+  "site": "Schaakvereniging 'Caissa'",
+  "eventdate": "2021.09.??",
+  "toernooitype": 2,
+  "spelers": [
+    { "naam": "Speler, Alice"},
+    { "naam": "Speler, Bob"},
+    { "naam": "Speler, Carol"}
+  ],
+  "kalender": [
+  ]
+}

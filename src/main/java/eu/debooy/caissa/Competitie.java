@@ -818,11 +818,16 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     }
 
     if (!toernooi.containsKey(JSON_TAG_KALENDER)) {
+      return;
+    }
+
+    var kalender  = (JSONArray) toernooi.get(JSON_TAG_KALENDER);
+    if (kalender.isEmpty()) {
       eendagstoernooi();
       return;
     }
 
-    for (var item: (JSONArray) toernooi.get(JSON_TAG_KALENDER)) {
+    for (var item: kalender) {
       var ronde  = (JSONObject) item;
       if (ronde.containsKey(JSON_TAG_KALENDER_RONDE)
           && ronde.containsKey(JSON_TAG_KALENDER_DATUM)) {

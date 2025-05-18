@@ -45,11 +45,6 @@ public class CompetitieTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       CompetitieTest.class.getClassLoader();
 
-  private static final  String  BST_COMP_DZ   = "competitieDZ.json";
-  private static final  String  BST_COMP_DZA  = "competitieDZa.json";
-  private static final  String  BST_COMP_M    = "competitiem.json";
-  private static final  String  BST_COMP_MF   = "competitiemf.json";
-  private static final  String  BST_COMP_MI   = "competitie_minimaal.json";
   private static final  String  BST_COMP_3    = "competitie3.json";
   private static final  String  BST_COMP_31   = "competitie3_1.json";
   private static final  String  BST_COMP_32   = "competitie3_2.json";
@@ -69,6 +64,13 @@ public class CompetitieTest extends BatchTest {
   private static final  String  BST_COMP_51   = "competitie5-1.json";
   private static final  String  BST_COMP_5H   = "competitie5heen.json";
   private static final  String  BST_COMP_5T   = "competitie5terug.json";
+  private static final  String  BST_COMP_DZ   = "competitieDZ.json";
+  private static final  String  BST_COMP_DZA  = "competitieDZa.json";
+  private static final  String  BST_COMP_LK1  = "competitie_legekalender1.json";
+  private static final  String  BST_COMP_LK2  = "competitie_legekalender2.json";
+  private static final  String  BST_COMP_M    = "competitiem.json";
+  private static final  String  BST_COMP_MF   = "competitiemf.json";
+  private static final  String  BST_COMP_MI   = "competitie_minimaal.json";
   private static final  String  BST_COMP_PGN  = "competitie_pgn.pgn";
 
   private static final  String  TST_TOSTRING      =
@@ -96,8 +98,8 @@ public class CompetitieTest extends BatchTest {
                                      BST_COMP_4E, BST_COMP_4H, BST_COMP_4T,
                                      BST_COMP_5, BST_COMP_51, BST_COMP_5H,
                                      BST_COMP_5T, BST_COMP_DZ, BST_COMP_DZA,
-                                     BST_COMP_M, BST_COMP_MF, BST_COMP_MI,
-                                     BST_COMP_PGN});
+                                     BST_COMP_LK1, BST_COMP_LK2, BST_COMP_M,
+                                     BST_COMP_MF, BST_COMP_MI, BST_COMP_PGN});
   }
 
   @BeforeClass
@@ -154,6 +156,10 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_DZ);
       kopieerBestand(CLASSLOADER, BST_COMP_DZA,
                      getTemp() + File.separator + BST_COMP_DZA);
+      kopieerBestand(CLASSLOADER, BST_COMP_LK1,
+                     getTemp() + File.separator + BST_COMP_LK1);
+      kopieerBestand(CLASSLOADER, BST_COMP_LK2,
+                     getTemp() + File.separator + BST_COMP_LK2);
       kopieerBestand(CLASSLOADER, BST_COMP_M,
                      getTemp() + File.separator + BST_COMP_M);
       kopieerBestand(CLASSLOADER, BST_COMP_MF,
@@ -930,16 +936,42 @@ public class CompetitieTest extends BatchTest {
   }
 
   @Test
-  public void testMinimaleJson() {
+  public void testLegeKalender1() {
     try {
       var competitie  =
-              new Competitie(getTemp() + File.separator + BST_COMP_MI);
+              new Competitie(getTemp() + File.separator + BST_COMP_LK1);
 
       assertEquals(6, competitie.getSpeeldata().size());
       for (var datum : competitie.getSpeeldata()) {
         assertEquals(competitie.getEventdate(),
                      Datum.fromDate(datum, PGN.PGN_DATUM_FORMAAT));
       }
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException mogen wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testLegeKalender2() {
+    try {
+      var competitie  =
+              new Competitie(getTemp() + File.separator + BST_COMP_LK2);
+
+      assertEquals(0, competitie.getSpeeldata().size());
+    } catch (CompetitieException e) {
+      fail("Er had geen CompetitieException mogen wezen. "
+            + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testMinimaleJson() {
+    try {
+      var competitie  =
+              new Competitie(getTemp() + File.separator + BST_COMP_MI);
+
+      assertEquals(0, competitie.getSpeeldata().size());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
