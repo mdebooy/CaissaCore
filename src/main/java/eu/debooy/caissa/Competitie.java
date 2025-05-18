@@ -231,13 +231,21 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     return toernooi.containsKey(sleutel);
   }
 
-  private void eendagstoernooi() throws ParseException {
+  private void eendagstoernooi() {
+    Date  eventdate;
+
+    try {
+      eventdate = Datum.toDate(getEventdate(), PGN.PGN_DATUM_FORMAAT);
+    } catch (ParseException e) {
+      return;
+    }
+
     if (null == rondes) {
       rondes  = spelers.size() * (isDubbel()? 2 : 1);
     }
 
     for (var i = 1; i <= rondes; i++) {
-      speeldata.add(Datum.toDate(getEventdate(), PGN.PGN_DATUM_FORMAAT));
+      speeldata.add(eventdate);
     }
   }
 
