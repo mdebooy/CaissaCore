@@ -466,17 +466,19 @@ public class PGN implements Comparable<PGN>, Serializable {
   }
 
   public boolean isValid() {
-    for (String str : sevenTagRoster) {
-      if (!tags.containsKey(str)) {
-        return false;
+    boolean valid = true;
+    for (String tag : sevenTagRoster) {
+      if (!tags.containsKey(tag)) {
+        valid = false;
       } else {
-        if (DoosUtils.isBlankOrNull(tags.get(str))) {
-          return false;
+        if (DoosUtils.isBlankOrNull(tags.get(tag))
+            && !tag.equals(PGNTAG_ROUND)) {
+          valid = false;
         }
       }
     }
 
-    return true;
+    return valid;
   }
 
   public void setRated(boolean rated) {

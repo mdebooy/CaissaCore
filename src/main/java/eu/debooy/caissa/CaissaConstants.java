@@ -65,12 +65,12 @@ public final class CaissaConstants {
 
   public static final String  BYE = "bye";
 
-  private static final  String  BSLTDK  = "BSLTDK";
-
   public static final String  RESOURCEBUNDLE  = "CaissaCore";
 
-  public static final char  WIT   = 'w';
-  public static final char  ZWART = 'b';
+  public static final char    WIT   = 'w';
+  public static final char    ZWART = 'b';
+
+  private static final  String  BSLTDK  = "BSLTDK";
 
   private CaissaConstants() {
   }

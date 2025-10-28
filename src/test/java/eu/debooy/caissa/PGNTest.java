@@ -183,6 +183,18 @@ public class PGNTest extends BatchTest {
   }
 
   @Test
+  public void testLegeRound() {
+    pgn.deleteTag(PGN.PGNTAG_ROUND);
+    try {
+      pgn.setTag(PGN.PGNTAG_ROUND, "");
+    } catch (PgnException e) {
+      fail("Er had geen PgnException moeten wezen.");
+    }
+    System.out.println(pgn.toString());
+    assertTrue(pgn.isValid());
+  }
+
+  @Test
   public void testMissingBlack() {
     pgn.deleteTag(PGN.PGNTAG_BLACK);
     assertFalse(pgn.isValid());
