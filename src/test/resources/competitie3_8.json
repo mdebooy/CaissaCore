@@ -1,0 +1,29 @@
+ {
+    "event": "HH Caissa 21/22",
+    "site": "Schaakvereniging 'Caissa'",
+    "eventdate": "2021.09.28",
+    "toernooitype": 2,
+    "spelers": [
+      { "naam": "Speler, Alice1"},
+      { "naam": "Speler, Bob2"},
+      { "naam": "Speler, Carol"},
+      { "naam": "bye"}
+    ],
+    "inhalen": [
+      { "ronde": 1,
+        "datum": "16/11/2021",
+        "wit": "Speler, Bob",
+        "zwart": "Speler, Carol"}
+    ],
+    "kalender": [
+      { "datum": "28/09/2021", "ronde": 1},
+      { "datum": "05/10/2021", "ronde": 2},
+      { "datum": "12/10/2021", "ronde": 3},
+      { "datum": "19/10/2021", "inhaal": 1},
+      { "datum": "26/10/2021", "ronde": 4},
+      { "datum": "02/11/2021", "ronde": 5},
+      { "datum": "09/11/2021", "ronde": 6},
+      { "datum": "16/11/2021", "inhaal": 2},
+      { "datum": "23/11/2021", "inhaal": 3}
+    ]
+  }

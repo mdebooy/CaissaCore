@@ -30,9 +30,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -50,15 +52,18 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       ResourceBundle.getBundle(CaissaConstants.RESOURCEBUNDLE,
                                Locale.getDefault());
 
-  public static final String  ERR_DATUM         = "cmp.error.datum";
-  public static final String  ERR_KALENDER      = "cmp.error.kalender";
-  public static final String  ERR_MATCH         = "cmp.error.match";
-  public static final String  ERR_MATCHSPELERS  = "cmp.error.match.spelers";
-  public static final String  ERR_RONDES        = "cmp.error.rondes";
-  public static final String  ERR_PUNTEN        = "cmp.error.punten";
-  public static final String  ERR_SPELERS       = "cmp.error.spelers";
-  public static final String  ERR_TIEBREAK      = "cmp.error.tiebreak";
-  public static final String  ERR_TYPE          = "cmp.error.type";
+  public static final String  ERR_DATUM           = "cmp.error.datum";
+  public static final String  ERR_KALENDER        = "cmp.error.kalender";
+  public static final String  ERR_MATCH           = "cmp.error.match";
+  public static final String  ERR_MATCHSPELERS    = "cmp.error.match.spelers";
+  public static final String  ERR_SPELERONBEKEND  = "cmp.error.speler.onbekend";
+  public static final String  ERR_SPELERSONBEKEND =
+      "cmp.error.spelers.onbekend";
+  public static final String  ERR_RONDES          = "cmp.error.rondes";
+  public static final String  ERR_PUNTEN          = "cmp.error.punten";
+  public static final String  ERR_SPELERS         = "cmp.error.spelers";
+  public static final String  ERR_TIEBREAK        = "cmp.error.tiebreak";
+  public static final String  ERR_TYPE            = "cmp.error.type";
 
   public static final String  FMT_UITSLAG = "%d-%d";
 
@@ -117,6 +122,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   private Spelerinfo        bye           = new Spelerinfo();
   private List<Date>        inhaaldata;
+  private Set<String>       onbekend;
   private Double[]          punten        =
       new Double[] {1.0, 0.5, 0.0, 0.0, 0.0, 0.0};
   private Integer           rondes;
@@ -130,6 +136,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
                                      .setBestand(jsonbestand)
                                      .build()) {
       inhaaldata  = new ArrayList<>();
+      onbekend    = new HashSet<>();
       speeldata   = new ArrayList<>();
       spelers     = new ArrayList<>();
       toernooi    = (JSONObject) invoer.read();
@@ -155,6 +162,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     List<String>  deelnemers  = new ArrayList<>();
 
     inhaaldata  = new ArrayList<>();
+    onbekend    = new HashSet<>();
     speeldata   = new ArrayList<>();
     spelers     = new ArrayList<>();
     toernooi    = new JSONObject();
@@ -195,6 +203,10 @@ public class Competitie implements Comparable<Competitie>, Serializable {
       bye.setSpelerSeq(spelers.get(spelers.size() - 1)
                                      .getSpelerSeq() + 1);
     }
+  }
+
+  protected void addOnbekend(String speler) {
+    onbekend.add(speler);
   }
 
   private Integer berekenRondes() {
@@ -342,35 +354,38 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public JSONArray getInhaalpartijen() {
     var inhaalpartijen  = new JSONArray();
-    if (toernooi.containsKey(JSON_TAG_INHALEN)) {
-      var               partijen  = (JSONArray) toernooi.get(JSON_TAG_INHALEN);
-      List<JSONObject>  json      = new ArrayList<>();
-      for (var i = 0; i < partijen.size(); i++) {
-        checkInhaalpartij((JSONObject) partijen.get(i));
-        json.add((JSONObject) partijen.get(i));
-      }
 
-      Collections.sort(json, (JSONObject partij1,
-                              JSONObject partij2) -> new CompareToBuilder()
-              .append(formatDatum(partij1.get(JSON_TAG_KALENDER_DATUM)
-                                         .toString()),
-                      formatDatum(partij2.get(JSON_TAG_KALENDER_DATUM)
-                                         .toString()))
-              .append(partij1.get(JSON_TAG_KALENDER_RONDE),
-                      partij2.get(JSON_TAG_KALENDER_RONDE))
-              .append(partij1.get(JSON_TAG_INHALEN_WIT).toString()
+    if (!toernooi.containsKey(JSON_TAG_INHALEN)) {
+      return inhaalpartijen;
+    }
+
+    var               partijen  = (JSONArray) toernooi.get(JSON_TAG_INHALEN);
+    List<JSONObject>  json      = new ArrayList<>();
+    for (var i = 0; i < partijen.size(); i++) {
+      checkInhaalpartij((JSONObject) partijen.get(i));
+      json.add((JSONObject) partijen.get(i));
+    }
+
+    Collections.sort(json, (JSONObject partij1,
+                            JSONObject partij2) -> new CompareToBuilder()
+            .append(formatDatum(partij1.get(JSON_TAG_KALENDER_DATUM)
+                                       .toString()),
+                    formatDatum(partij2.get(JSON_TAG_KALENDER_DATUM)
+                                       .toString()))
+            .append(partij1.get(JSON_TAG_KALENDER_RONDE),
+                    partij2.get(JSON_TAG_KALENDER_RONDE))
+            .append(partij1.get(JSON_TAG_INHALEN_WIT).toString()
+                                                     .toUpperCase(),
+                    partij2.get(JSON_TAG_INHALEN_WIT).toString()
+                                                     .toUpperCase())
+            .append(partij1.get(JSON_TAG_INHALEN_ZWART).toString()
                                                        .toUpperCase(),
-                      partij2.get(JSON_TAG_INHALEN_WIT).toString()
+                    partij2.get(JSON_TAG_INHALEN_ZWART).toString()
                                                        .toUpperCase())
-              .append(partij1.get(JSON_TAG_INHALEN_ZWART).toString()
-                                                         .toUpperCase(),
-                      partij2.get(JSON_TAG_INHALEN_ZWART).toString()
-                                                         .toUpperCase())
-              .toComparison());
+            .toComparison());
 
-      for (var i = 0; i < partijen.size(); i++) {
-        inhaalpartijen.add(json.get(i));
-      }
+    for (var i = 0; i < partijen.size(); i++) {
+      inhaalpartijen.add(json.get(i));
     }
 
     return inhaalpartijen;
@@ -394,6 +409,10 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public String getMissingTag(String tag) {
     return MessageFormat.format(resourceBundle.getString(MIS_TAG), tag);
+  }
+
+  protected Set<String> getOnbekend() {
+    return new HashSet<>(onbekend);
   }
 
   public Double getPunten(String uitslag, boolean isWit) {
@@ -516,7 +535,7 @@ public class Competitie implements Comparable<Competitie>, Serializable {
   }
 
   public Integer getType() {
-    return Integer.parseInt(toernooi.get(JSON_TAG_TOERNOOITYPE).toString());
+    return Integer.valueOf(toernooi.get(JSON_TAG_TOERNOOITYPE).toString());
   }
 
   public String getUitslag(Partij partij) {
@@ -595,6 +614,16 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public boolean isRoundrobin() {
     return roundrobin.contains(getType());
+  }
+
+  public boolean isValid() {
+    try {
+      validate();
+    } catch (CompetitieException e) {
+      return false;
+    }
+
+    return true;
   }
 
   public boolean isZwitsers() {
@@ -779,6 +808,14 @@ public class Competitie implements Comparable<Competitie>, Serializable {
     if (!rondes.equals(teSpelen)) {
       fouten.add(MessageFormat.format(resourceBundle.getString(ERR_SPELERS),
                                       teSpelen, rondes));
+    }
+
+    if (!onbekend.isEmpty()) {
+      onbekend.forEach(
+          speler ->
+              fouten.add(
+                  MessageFormat.format(
+                      resourceBundle.getString(ERR_SPELERONBEKEND), speler)));
     }
   }
 

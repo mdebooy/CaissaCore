@@ -49,50 +49,42 @@ import org.junit.Test;
 public class CaissaUtilsTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       CaissaUtilsTest.class.getClassLoader();
-  protected static final  String      JSON_COMPETITIE3      =
-      "competitie3.json";
-  protected static final  String      JSON_COMPETITIE3TB    =
-      "competitie3tb.json";
-  protected static final  String      JSON_COMPETITIE4_1    =
-      "competitie4-1.json";
-  protected static final  String      JSON_COMPETITIE4      =
-      "competitie4.json";
-  protected static final  String      JSON_COMPETITIE4HEEN  =
-      "competitie4heen.json";
-  protected static final  String      JSON_COMPETITIE4TERUG =
-      "competitie4terug.json";
-  protected static final  String      JSON_COMPETITIE5_1    =
-      "competitie5-1.json";
-  protected static final  String      JSON_COMPETITIE5      =
-      "competitie5.json";
-  protected static final  String      JSON_COMPETITIE5HEEN  =
-      "competitie5heen.json";
-  protected static final  String      JSON_COMPETITIE5TERUG =
-      "competitie5terug.json";
-  protected static final  String      JSON_COMPETITIEDZ     =
-      "competitieDZ.json";
 
-  protected static final  String      PGN_COMPETITIE3       =
-      "competitie3.pgn";
-  protected static final  String      PGN_COMPETITIEDZ      =
-      "competitieDZ.pgn";
+  protected static final  String  JSON_COMPETITIE3      = "competitie3.json";
+  protected static final  String  JSON_COMPETITIE3TB    = "competitie3tb.json";
+  protected static final  String  JSON_COMPETITIE4_1    = "competitie4-1.json";
+  protected static final  String  JSON_COMPETITIE4      = "competitie4.json";
+  protected static final  String  JSON_COMPETITIE4HEEN  =
+      "competitie4heen.json";
+  protected static final  String  JSON_COMPETITIE4TERUG =
+      "competitie4terug.json";
+  protected static final  String  JSON_COMPETITIE5_1    = "competitie5-1.json";
+  protected static final  String  JSON_COMPETITIE5      = "competitie5.json";
+  protected static final  String  JSON_COMPETITIE5HEEN  =
+      "competitie5heen.json";
+  protected static final  String  JSON_COMPETITIE5TERUG =
+      "competitie5terug.json";
+  protected static final  String  JSON_COMPETITIEDZ     = "competitieDZ.json";
+
+  protected static final  String  PGN_COMPETITIE3       = "competitie3.pgn";
+  protected static final  String  PGN_COMPETITIEDZ      = "competitieDZ.pgn";
 
   public static final String[]  testrondes4   =
         {"1-4 2-3",
          "4-3 1-2",
          "2-4 3-1"};
-    public static final String[]  testrondes12  =
-        {"1-12 2-11 3-10 4-9 5-8 6-7",
-         "12-7 8-6 9-5 10-4 11-3 1-2",
-         "2-12 3-1 4-11 5-10 6-9 7-8",
-         "12-8 9-7 10-6 11-5 1-4 2-3",
-         "3-12 4-2 5-1 6-11 7-10 8-9",
-         "12-9 10-8 11-7 1-6 2-5 3-4",
-         "4-12 5-3 6-2 7-1 8-11 9-10",
-         "12-10 11-9 1-8 2-7 3-6 4-5",
-         "5-12 6-4 7-3 8-2 9-1 10-11",
-         "12-11 1-10 2-9 3-8 4-7 5-6",
-         "6-12 7-5 8-4 9-3 10-2 11-1"};
+  public static final String[]  testrondes12  =
+      {"1-12 2-11 3-10 4-9 5-8 6-7",
+       "12-7 8-6 9-5 10-4 11-3 1-2",
+       "2-12 3-1 4-11 5-10 6-9 7-8",
+       "12-8 9-7 10-6 11-5 1-4 2-3",
+       "3-12 4-2 5-1 6-11 7-10 8-9",
+       "12-9 10-8 11-7 1-6 2-5 3-4",
+       "4-12 5-3 6-2 7-1 8-11 9-10",
+       "12-10 11-9 1-8 2-7 3-6 4-5",
+       "5-12 6-4 7-3 8-2 9-1 10-11",
+       "12-11 1-10 2-9 3-8 4-7 5-6",
+       "6-12 7-5 8-4 9-3 10-2 11-1"};
 
   @AfterClass
   public static void afterClass() {
@@ -111,8 +103,8 @@ public class CaissaUtilsTest extends BatchTest {
     Locale.setDefault(new Locale.Builder()
                                 .setLanguage(TestConstants.TST_TAAL)
                                 .build());
-    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
-                                                Locale.getDefault());
+    resourceBundle  = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
+                                               Locale.getDefault());
     try {
       kopieerBestand(CLASSLOADER, JSON_COMPETITIE3,
                      getTemp() + File.separator + JSON_COMPETITIE3);
@@ -501,7 +493,7 @@ public class CaissaUtilsTest extends BatchTest {
       var partijen  = CaissaUtils.laadPgnBestand(JSON_COMPETITIE3);
       fail("Er had een PgnException moeten wezen.");
     } catch (PgnException e) {
-
+      // Is OK.
     }
   }
 

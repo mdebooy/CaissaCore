@@ -30,13 +30,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -70,26 +70,20 @@ public class PGNTest extends BatchTest {
     resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
                                                 Locale.getDefault());
     try {
-      kopieerBestand(CLASSLOADER,
-                     TestConstants.BST_COMMENTAAR_PGN,
+      kopieerBestand(CLASSLOADER, TestConstants.BST_COMMENTAAR_PGN,
                      getTemp() + File.separator
                       + TestConstants.BST_COMMENTAAR_PGN);
-      kopieerBestand(CLASSLOADER,
-                     TestConstants.BST_DEFAULT_PGN,
+      kopieerBestand(CLASSLOADER, TestConstants.BST_DEFAULT_PGN,
                      getTemp() + File.separator
                       + TestConstants.BST_DEFAULT_PGN);
-      kopieerBestand(CLASSLOADER,
-                     TestConstants.BST_EVENT_PGN,
+      kopieerBestand(CLASSLOADER,  TestConstants.BST_EVENT_PGN,
                      getTemp() + File.separator + TestConstants.BST_EVENT_PGN);
-      kopieerBestand(CLASSLOADER,
-                     TestConstants.BST_PARTIJ_PGN,
+      kopieerBestand(CLASSLOADER, TestConstants.BST_PARTIJ_PGN,
                      getTemp() + File.separator + TestConstants.BST_PARTIJ_PGN);
-      kopieerBestand(CLASSLOADER,
-                     TestConstants.BST_PARTIJ_NL_PGN,
+      kopieerBestand(CLASSLOADER, TestConstants.BST_PARTIJ_NL_PGN,
                      getTemp() + File.separator
-                        + TestConstants.BST_PARTIJ_NL_PGN);
-      kopieerBestand(CLASSLOADER,
-                     TestConstants.BST_TEST_PGN,
+                      + TestConstants.BST_PARTIJ_NL_PGN);
+      kopieerBestand(CLASSLOADER, TestConstants.BST_TEST_PGN,
                      getTemp() + File.separator + TestConstants.BST_TEST_PGN);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
@@ -190,7 +184,6 @@ public class PGNTest extends BatchTest {
     } catch (PgnException e) {
       fail("Er had geen PgnException moeten wezen.");
     }
-    System.out.println(pgn.toString());
     assertTrue(pgn.isValid());
   }
 

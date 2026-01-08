@@ -16,6 +16,7 @@
  */
 package eu.debooy.caissa;
 
+import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosConstants;
@@ -648,6 +649,16 @@ public final class CaissaUtils {
     var iWit      = competitie.getSpelerIndex(wit);
     var iZwart    = competitie.getSpelerIndex(zwart);
 
+    if (iWit == -1 || iZwart == -1) {
+      if (iWit == -1) {
+        competitie.addOnbekend(wit);
+      }
+      if (iZwart == -1) {
+        competitie.addOnbekend(zwart);
+      }
+      return;
+    }
+
     int ronde;
     try {
       ronde =
@@ -679,6 +690,7 @@ public final class CaissaUtils {
     var spelers = competitie.getDeelnemers();
     iWit    = getSpelerIndex(wit, spelers);
     iZwart  = getSpelerIndex(zwart, spelers);
+
     if (competitie.isDubbel()) {
       kolomW  = iZwart * dubbel;
       kolomZ  = iWit * dubbel + dubbel - 1;
@@ -770,7 +782,8 @@ public final class CaissaUtils {
 
   public static double[][] vulToernooiMatrix(Collection<PGN> partijen,
                                              Competitie competitie,
-                                             boolean sorteerOpStand) {
+                                             boolean sorteerOpStand)
+      throws CompetitieException {
     var noSpelers = competitie.getDeelnemers().size();
     var kolommen  =
         (competitie.isMatch() ? partijen.size()
@@ -793,13 +806,34 @@ public final class CaissaUtils {
   private static void zetInMatrix(Collection<PGN> partijen,
                                   double[][] matrix,
                                   Competitie competitie,
-                                  boolean telUitslag) {
+                                  boolean telUitslag)
+      throws CompetitieException {
     for (PGN partij: partijen) {
       if (partij.isRanked()
           && partij.isBeeindigd()
           && (!partij.isBye() || competitie.metBye())) {
         verwerkPartijInMatrix(partij, matrix, competitie, telUitslag);
       }
+    }
+
+    var onbekend  = competitie.getOnbekend().toArray(new String[0]);
+    if (onbekend.length > 0) {
+      String  message;
+      if (onbekend.length == 1)  {
+        message =
+            MessageFormat.format(resourceBundle
+                                    .getString(Competitie.ERR_SPELERONBEKEND),
+                                 onbekend[0]);
+      } else {
+        message = 
+          MessageFormat.format(resourceBundle
+                                  .getString(Competitie.ERR_SPELERSONBEKEND),
+                               String.join("', '",
+                                           Arrays.copyOf(onbekend,
+                                                         onbekend.length - 1)),
+                               onbekend[onbekend.length - 1]);
+      }
+      throw new CompetitieException(message);
     }
   }
 

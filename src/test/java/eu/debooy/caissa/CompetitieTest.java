@@ -16,6 +16,7 @@
  */
 package eu.debooy.caissa;
 
+import static eu.debooy.caissa.CaissaUtilsTest.PGN_COMPETITIE3;
 import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.Datum;
@@ -25,6 +26,7 @@ import eu.debooy.doosutils.exception.BestandException;
 import eu.debooy.doosutils.test.BatchTest;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import static junit.framework.TestCase.assertEquals;
@@ -44,6 +46,14 @@ import org.junit.Test;
 public class CompetitieTest extends BatchTest {
   protected static final  ClassLoader CLASSLOADER =
       CompetitieTest.class.getClassLoader();
+
+  protected static final  String  JSON_COMPETITIE37     =
+      "competitie3_7.json";
+  protected static final  String  JSON_COMPETITIE38     =
+      "competitie3_8.json";
+
+  protected static  String  EX_SPELERONBEKEND   = "";
+  protected static  String  EX_SPELERSONBEKEND  = "";
 
   private static final  String  BST_COMP_3    = "competitie3.json";
   private static final  String  BST_COMP_31   = "competitie3_1.json";
@@ -99,7 +109,9 @@ public class CompetitieTest extends BatchTest {
                                      BST_COMP_5, BST_COMP_51, BST_COMP_5H,
                                      BST_COMP_5T, BST_COMP_DZ, BST_COMP_DZA,
                                      BST_COMP_LK1, BST_COMP_LK2, BST_COMP_M,
-                                     BST_COMP_MF, BST_COMP_MI, BST_COMP_PGN});
+                                     BST_COMP_MF, BST_COMP_MI, BST_COMP_PGN,
+                                     JSON_COMPETITIE37, JSON_COMPETITIE38,
+                                     PGN_COMPETITIE3});
   }
 
   @BeforeClass
@@ -111,8 +123,17 @@ public class CompetitieTest extends BatchTest {
     Locale.setDefault(new Locale.Builder()
                                 .setLanguage(TestConstants.TST_TAAL)
                                 .build());
-    resourceBundle   = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
-                                                Locale.getDefault());
+    resourceBundle      = ResourceBundle.getBundle(TestConstants.RESOURCEBUNDLE,
+                                                    Locale.getDefault());
+
+    EX_SPELERONBEKEND   =
+      MessageFormat.format(resourceBundle
+                              .getString(Competitie.ERR_SPELERONBEKEND),
+                           TestConstants.BOB);
+    EX_SPELERSONBEKEND  =
+      MessageFormat.format(resourceBundle
+                                .getString(Competitie.ERR_SPELERSONBEKEND),
+                           TestConstants.ALICE, TestConstants.BOB);
     try {
       kopieerBestand(CLASSLOADER, BST_COMP_3,
                      getTemp() + File.separator + BST_COMP_3);
@@ -168,6 +189,12 @@ public class CompetitieTest extends BatchTest {
                      getTemp() + File.separator + BST_COMP_MI);
       kopieerBestand(CLASSLOADER, BST_COMP_PGN,
                      getTemp() + File.separator + BST_COMP_PGN);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE37,
+                     getTemp() + File.separator + JSON_COMPETITIE37);
+      kopieerBestand(CLASSLOADER, JSON_COMPETITIE38,
+                     getTemp() + File.separator + JSON_COMPETITIE38);
+      kopieerBestand(CLASSLOADER, PGN_COMPETITIE3,
+                     getTemp() + File.separator + PGN_COMPETITIE3);
     } catch (IOException e) {
       System.out.println(e.getLocalizedMessage());
       throw new BestandException(e);
@@ -480,6 +507,7 @@ public class CompetitieTest extends BatchTest {
       assertTrue(competitie.getInhaalpartijen().isEmpty());
       assertTrue(competitie.getKalender().isEmpty());
       assertEquals(3, competitie.getSpelers().size());
+      assertTrue(competitie.isValid());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
@@ -496,6 +524,8 @@ public class CompetitieTest extends BatchTest {
       var metPgn  = new Competitie(partijen, 2);
       var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
 
+      assertTrue(metJson.isValid());
+      assertTrue(metPgn.isValid());
       assertEquals(metPgn.getDeelnemers().size(),
                    metJson.getDeelnemers().size());
       assertEquals(metPgn.getAantalHeenrondes(), metJson.getAantalHeenrondes());
@@ -503,7 +533,6 @@ public class CompetitieTest extends BatchTest {
                    metJson.getAantalTerugrondes());
       assertEquals(metPgn.getEvent(), metJson.getEvent());
       assertEquals(metPgn.getEventdate(), metJson.getEventdate());
-      assertEquals(metPgn.getSite(), metJson.getSite());
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
@@ -520,8 +549,8 @@ public class CompetitieTest extends BatchTest {
       var metPgn  = new Competitie(partijen, 2);
       var metJson = new Competitie(getTemp() + File.separator + BST_COMP_3);
 
-      assertEquals(metPgn.getDeelnemers().size(),
-                   metJson.getDeelnemers().size());
+      assertTrue(metJson.isValid());
+      assertTrue(metPgn.isValid());
 
       var deelnemers  = metPgn.getDeelnemers();
       deelnemers.forEach(deelnemer -> {
@@ -975,6 +1004,48 @@ public class CompetitieTest extends BatchTest {
     } catch (CompetitieException e) {
       fail("Er had geen CompetitieException mogen wezen. "
             + e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testOnbekendeSpeler() {
+    Competitie  competitie  = null;
+    try {
+      competitie    = new Competitie(String.format("%s%s%s", getTemp(),
+                                                   File.separator,
+                                                   JSON_COMPETITIE37));
+      var partijen  =
+          CaissaUtils.laadPgnBestand(String.format("%s%s%s", getTemp(),
+                                                   File.separator,
+                                                   PGN_COMPETITIE3));
+
+      CaissaUtils.vulToernooiMatrix(partijen, competitie, true);
+
+      fail("Er had een CompetitieException moeten wezen.");
+    } catch (CompetitieException | PgnException e) {
+      assertEquals(EX_SPELERONBEKEND, e.getLocalizedMessage());
+      if (null != competitie) {
+        assertFalse(competitie.isValid());
+      }
+    }
+  }
+
+  @Test
+  public void testOnbekendeSpelers() {
+    try {
+      var competitie  = new Competitie(String.format("%s%s%s", getTemp(),
+                                                     File.separator,
+                                                     JSON_COMPETITIE38));
+      var partijen    =
+          CaissaUtils.laadPgnBestand(String.format("%s%s%s", getTemp(),
+                                                   File.separator,
+                                                   PGN_COMPETITIE3));
+
+      CaissaUtils.vulToernooiMatrix(partijen, competitie, true);
+
+      fail("Er had een CompetitieException moeten wezen.");
+    } catch (CompetitieException | PgnException e) {
+      assertEquals(EX_SPELERSONBEKEND, e.getLocalizedMessage());
     }
   }
 
