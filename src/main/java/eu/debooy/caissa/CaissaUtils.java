@@ -487,11 +487,15 @@ public final class CaissaUtils {
     maakUniek(zetten);
   }
 
+  @Deprecated(forRemoval = true, since = "0.5.0")
+  // deprecated 
   public static String pgnZettenToChessTheatre(String pgnZetten)
       throws PgnException {
     return pgnZettenToChessTheatre(new FEN(), pgnZetten);
   }
 
+  @Deprecated(forRemoval = true, since = "0.5.0")
+  // deprecated 
   public static String pgnZettenToChessTheatre(FEN fen, String pgnZetten)
       throws PgnException {
     var pgnZet        = "";
