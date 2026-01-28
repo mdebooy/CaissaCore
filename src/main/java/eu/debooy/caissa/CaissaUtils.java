@@ -647,7 +647,7 @@ public final class CaissaUtils {
                                             Competitie competitie,
                                             boolean telUitslag) {
     var dubbel    = competitie.getHeenTerug();
-    var rondes    = matrix[0].length;
+    var rondes    = competitie.getRondes();
     var wit       = partij.getTag(PGN.PGNTAG_WHITE);
     var zwart     = partij.getTag(PGN.PGNTAG_BLACK);
     var iWit      = competitie.getSpelerIndex(wit);
