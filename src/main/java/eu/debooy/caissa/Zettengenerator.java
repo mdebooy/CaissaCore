@@ -32,26 +32,33 @@ import java.util.logging.Logger;
  * @author Marco de Booij
  */
 public class Zettengenerator {
-  private final List<Zet>   zetten        = new ArrayList<>();
-  private       boolean     korteRokade   = false;
-  private       boolean     langeRokade   = false;
-  private       FEN         fen           = null;
-  private       int[]       bord          = new int[120];
-  private       int         enPassant     = 0;
-  private       int         koning;
-  private final int         kortetoren;
-  private final int         kortekoning   = CaissaUtils.externToIntern("g1");
-  private final int         langetoren;
-  private final int         langekoning   = CaissaUtils.externToIntern("c1");
-  private       int         rokadekoning;
-  private       int         schaakDoel;
-  private final int[]       loop          = {9, 11, -9, -11, 10, 1, -1, -10,
-                                              19, 21, 12, 8, -21, -19, -12, -8};
+  private final int       kortekoning   = CaissaUtils.externToIntern("g1");
+  private final int       kortetoren;
+  private final int       langekoning   = CaissaUtils.externToIntern("c1");
+  private final int       langetoren;
+  private final int[]     loop          = {9, 11, -9, -11, 10, 1, -1, -10,
+                                            19, 21, 12, 8, -21, -19, -12, -8};
+  private final List<Zet> zetten        = new ArrayList<>();
+
+  private int[]   bord          = new int[120];
+  private boolean chess960;
+  private int     enPassant     = 0;
+  private FEN     fen           = null;
+  private int     koning;
+  private boolean korteRokade   = false;
+  private boolean langeRokade   = false;
+  private int     rokadekoning;
+  private int     schaakDoel;
 
   public Zettengenerator(FEN fen) {
-    this.fen  = fen;
-    bord      = fen.getBord();
-    var ep    = fen.getEnPassant();
+    this(fen, false);
+  }
+
+  public Zettengenerator(FEN fen, boolean chess960) {
+    this.chess960 = chess960;
+    this.fen      = fen;
+    bord          = fen.getBord();
+    var ep        = fen.getEnPassant();
     if (!"-".equals(ep)) {
       enPassant = CaissaUtils.externToIntern(ep);
     }
@@ -313,8 +320,9 @@ public class Zettengenerator {
     return aanvalTorenDame(schaakDoel, 1);
  }
 
-  private boolean kanRokeren(int koning, int rokadekoning) {
-    if (aangevallen(koning)) {
+  private boolean kanRokeren(boolean rokeren, int koning, int rokadekoning) {
+    if (!rokeren
+        && aangevallen(koning)) {
       return false;
     }
 
@@ -464,13 +472,12 @@ public class Zettengenerator {
         && !langeRokade) {
       return;
     }
-    if (korteRokade
-        && kanRokeren(koning, kortekoning)) {
+
+    if (kanRokeren(korteRokade, koning, kortekoning)) {
         addZet('K', koning, kortekoning, CaissaConstants.TOREN);
     }
 
-    if (langeRokade
-        && kanRokeren(koning, langekoning)) {
+    if (kanRokeren(langeRokade, koning, langekoning)) {
         addZet('K', koning, langekoning, CaissaConstants.TOREN);
     }
   }

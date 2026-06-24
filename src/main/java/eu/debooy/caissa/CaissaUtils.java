@@ -20,7 +20,6 @@ import eu.debooy.caissa.exceptions.CompetitieException;
 import eu.debooy.caissa.exceptions.PgnException;
 import eu.debooy.doosutils.Datum;
 import eu.debooy.doosutils.DoosConstants;
-import eu.debooy.doosutils.access.BestandConstants;
 import eu.debooy.doosutils.access.TekstBestand;
 import eu.debooy.doosutils.exception.BestandException;
 import java.nio.charset.Charset;
@@ -346,17 +345,11 @@ public final class CaissaUtils {
   public static int getToernooitype(String enkelrondig) {
     int enkel;
 
-    switch (enkelrondig) {
-      case DoosConstants.WAAR:
-        enkel = Competitie.TOERNOOI_ENKEL;
-        break;
-      case DoosConstants.ONWAAR:
-        enkel = Competitie.TOERNOOI_DUBBEL;
-        break;
-      default:
-        enkel = Competitie.TOERNOOI_MATCH;
-        break;
-    }
+    enkel = switch (enkelrondig) {
+      case DoosConstants.WAAR -> Competitie.TOERNOOI_ENKEL;
+      case DoosConstants.ONWAAR -> Competitie.TOERNOOI_DUBBEL;
+      default -> Competitie.TOERNOOI_MATCH;
+    };
 
     return enkel;
   }
@@ -428,8 +421,8 @@ public final class CaissaUtils {
       throws PgnException {
     try (var input = new TekstBestand.Builder()
                               .setBestand(bestand
-                                  + (bestand.endsWith(BestandConstants.EXT_PGN)
-                                        ? "" : BestandConstants.EXT_PGN))
+                                  + (bestand.endsWith(DoosConstants.EXT_PGN)
+                                        ? "" : DoosConstants.EXT_PGN))
                               .setCharset(charSet).build()) {
       return verwerkBestand(input);
     } catch (BestandException e) {
@@ -485,46 +478,6 @@ public final class CaissaUtils {
           zet.setKorteNotatieLevel(zet.getKorteNotatieLevel()+1)));
 
     maakUniek(zetten);
-  }
-
-  @Deprecated(forRemoval = true, since = "0.5.0")
-  // deprecated 
-  public static String pgnZettenToChessTheatre(String pgnZetten)
-      throws PgnException {
-    return pgnZettenToChessTheatre(new FEN(), pgnZetten);
-  }
-
-  @Deprecated(forRemoval = true, since = "0.5.0")
-  // deprecated 
-  public static String pgnZettenToChessTheatre(FEN fen, String pgnZetten)
-      throws PgnException {
-    var pgnZet        = "";
-    var halveZetten   = pgnZetten.split(" ");
-    var chessTheatre  = new StringBuilder();
-
-    for (String halveZet : halveZetten) {
-      if (halveZet.indexOf('.') >= 0) {
-        if (halveZet.indexOf('.') == (halveZet.length() - 1)) {
-          throw new PgnException(MessageFormat.format(
-              resourceBundle.getString(PGN.ERR_HALVEZET),
-              halveZet, pgnZetten));
-        }
-        pgnZet  = halveZet.substring(halveZet.lastIndexOf('.') + 1);
-      } else {
-        pgnZet  = halveZet;
-      }
-      var juisteZet = vindZet(fen, pgnZet);
-      // Zwart moet in lowercase.
-      if (halveZet.indexOf('.') >= 0) {
-        chessTheatre.append(juisteZet.getChessTheatreZet()).append(" ");
-      } else {
-        chessTheatre.append(juisteZet.getChessTheatreZet().toLowerCase())
-                    .append(" ");
-      }
-      fen.doeZet(juisteZet);
-    }
-
-    return chessTheatre.toString().trim();
   }
 
   private static void schrijfTag(PGN partij, String line) throws PgnException {

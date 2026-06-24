@@ -32,24 +32,28 @@ import org.junit.Test;
  * @author Marco de Booij
  */
 public class FENTest extends BatchTest {
-  public static final String  BORD        = "8 rnbqkbnr\n" +
-                                            "7 pppppppp\n" +
-                                            "6 ........\n" +
-                                            "5 ........\n" +
-                                            "4 ........\n" +
-                                            "3 ........\n" +
-                                            "2 PPPPPPPP\n" +
-                                            "1 RNBQKBNR\n" +
-                                            "  ABCDEFGH\n";
-  public static final String  BORD_1E2E4  = "8 rnbqkbnr\n" +
-                                            "7 pppppppp\n" +
-                                            "6 ........\n" +
-                                            "5 ........\n" +
-                                            "4 ....P...\n" +
-                                            "3 ........\n" +
-                                            "2 PPPP.PPP\n" +
-                                            "1 RNBQKBNR\n" +
-                                            "  ABCDEFGH\n";
+  public static final String  BORD        = """
+                                            8 rnbqkbnr
+                                            7 pppppppp
+                                            6 ........
+                                            5 ........
+                                            4 ........
+                                            3 ........
+                                            2 PPPPPPPP
+                                            1 RNBQKBNR
+                                              ABCDEFGH
+                                            """;
+  public static final String  BORD_1E2E4  = """
+                                            8 rnbqkbnr
+                                            7 pppppppp
+                                            6 ........
+                                            5 ........
+                                            4 ....P...
+                                            3 ........
+                                            2 PPPP.PPP
+                                            1 RNBQKBNR
+                                              ABCDEFGH
+                                            """;
   public static final String  FEN_1E2E4  =
       "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
   public static final String  FEN_1E7E5   =
@@ -64,6 +68,10 @@ public class FENTest extends BatchTest {
       "1nbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3 0 3";
   public static final String  FEN_KORT    =
       "rnbq1bnr/ppppkppp/8/4p3/3PP3/8/PPP1KPPP/RNBQ1BNR b - d3";
+  public static final String  FEN360      =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w AHah - 0 1";
+  public static final String  FENX      =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQbg - 0 1";
 
   @BeforeClass
   public static void beforeClass() {
@@ -175,16 +183,38 @@ public class FENTest extends BatchTest {
     assertEquals(fen, instance);
   }
 
+//  @Test
+//  public void testFen360() {
+//    try {
+//      var fen = new FEN(FEN360);
+//
+//      assertEquals("BGbg", fen.getRokade());
+//    } catch (FenException e) {
+//      fail(e.getLocalizedMessage());
+//    }
+//  }
+//
+//  @Test
+//  public void testFenX() {
+//    try {
+//      var fen = new FEN(FENX);
+//
+//      assertEquals("AHah", fen.getRokade());
+//    } catch (FenException e) {
+//      fail(e.getLocalizedMessage());
+//    }
+//  }
+
   @Test
-  public void testGeefZet1() throws FenException, ZetException {
+  public void testGeefZet1() throws ZetException {
+    var fen     = new FEN();
     try {
-      var fen     = new FEN();
       var e2e4    = new Zet(' ', 35, 55);
       var fenE2e4 = new FEN(FEN_1E2E4);
       var zet     = fen.geefZet(fenE2e4);
 
       assertEquals(e2e4, zet);
-    } catch (FenException e) {
+    } catch (FenException | ZetException e) {
       fail(e.getLocalizedMessage());
     }
   }

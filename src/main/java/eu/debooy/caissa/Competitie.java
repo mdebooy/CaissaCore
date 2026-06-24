@@ -438,22 +438,26 @@ public class Competitie implements Comparable<Competitie>, Serializable {
 
   public Double getPuntenBye(String uitslag, boolean isWit) {
     switch (uitslag) {
-      case CaissaConstants.PARTIJ_WIT_WINT:
+      case CaissaConstants.PARTIJ_WIT_WINT -> {
         if (isWit) {
           return punten[3];
         } else {
           return punten[5];
         }
-      case CaissaConstants.PARTIJ_REMISE:
+      }
+      case CaissaConstants.PARTIJ_REMISE -> {
         return punten[4];
-      case CaissaConstants.PARTIJ_ZWART_WINT:
+      }
+      case CaissaConstants.PARTIJ_ZWART_WINT -> {
         if (isWit) {
           return punten[5];
         } else {
           return punten[3];
         }
-      default:
+      }
+      default -> {
         return 0.0;
+      }
     }
   }
 

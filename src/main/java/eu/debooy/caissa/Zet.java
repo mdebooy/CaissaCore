@@ -127,6 +127,8 @@ public class Zet implements Comparable<Zet>, Serializable {
                                  .toComparison();
   }
 
+  @Deprecated(forRemoval = true, since = "0.5.0")
+  // deprecated 
   private String doeChessTheatreRokade() {
     if ((van - naar) == -2) {
       if (van == 25) {
@@ -143,6 +145,8 @@ public class Zet implements Comparable<Zet>, Serializable {
     }
   }
 
+  @Deprecated(forRemoval = true, since = "0.5.0")
+  // deprecated 
   private void doeEp(StringBuilder zet, int voor) {
     if (van < naar) {
       // Wit
@@ -161,6 +165,8 @@ public class Zet implements Comparable<Zet>, Serializable {
     }
   }
 
+  @Deprecated(forRemoval = true, since = "0.5.0")
+  // deprecated 
   private void doeGewoneZet(StringBuilder zet, int voor, int na) {
     if (voor > 1) {
       zet.append((voor - 1));
@@ -199,6 +205,8 @@ public class Zet implements Comparable<Zet>, Serializable {
                               .isEquals();
   }
 
+  @Deprecated(forRemoval = true, since = "0.5.0")
+  // deprecated 
   public String getChessTheatreZet() {
     var zet   = new StringBuilder();
 
